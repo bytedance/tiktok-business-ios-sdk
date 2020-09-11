@@ -18,17 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Method to clear persisted app events
  */
-+ (void)clearPersistedAppEventsStates;
++ (void)clearPersistedAppEvents;
 
 /**
- * @brief Method to read app event state, append, and write all
+ * @brief Method to read events in disk, append events in queue, and write combined into disk
  */
 + (void)persistAppEventsData:(TikTokEventQueue *)queue;
 
 /**
  * @brief Method to return the array of saved app event states and deletes them.
  */
-+ (NSArray *)retrievePersistedAppEventsStates;
++ (NSArray *)retrievePersistedAppEvents;
 
 @end
 

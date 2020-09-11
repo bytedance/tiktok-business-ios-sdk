@@ -27,7 +27,6 @@
     if (copy) {
         copy->_appID = [self.appID copyWithZone:zone];
         copy->_eventName = [self.eventName copyWithZone:zone];
-        copy->_jsonParameters = [self.jsonParameters copyWithZone:zone];
         copy.parameters = [self.parameters copyWithZone:zone];
     }
 
