@@ -27,14 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 
 /**
- * @brief Additional parameters in the form of a JSON object
- * TODO: if should be NSDictionary parameters, remove this
- */
-@property (nonatomic, copy, readonly, nonnull) NSString *jsonParameters;
-
-/**
  * @brief Additional parameters in the form of NSDictionary
- * TODO: if should be json parameters, remove this
  */
 @property (nonatomic) NSDictionary *parameters;
 

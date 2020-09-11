@@ -8,6 +8,11 @@
 
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventQueue.h"
+#import "TikTokAppEventStore.h"
+#import "TikTokAppEventUtility.h"
+
+#define EVENT_NUMBER_THRESHOLD 100
+#define FLUSH_PERIOD_IN_SECONDS 15
 
 @implementation TikTokAppEventQueue
 
@@ -15,18 +20,29 @@
     if (self == nil) return nil;
     self.eventQueue = [NSMutableArray array];
     
+    __weak TikTokAppEventQueue *weakSelf = self;
+    self.flushTimer = [TikTokAppEventUtility startTimerWithInterval:FLUSH_PERIOD_IN_SECONDS
+                                                        block:^{
+        [weakSelf flush:@"Timer"];
+    }];
+    
     return self;
 }
 
 - (void)addEvent:(TikTokAppEvent *)event {
     [self.eventQueue addObject:event];
+    if(self.eventQueue.count > EVENT_NUMBER_THRESHOLD) {
+        [self flush:@"Threshold"];
+    }
 }
 
 - (void)flush:(NSString *)flushReason {
-    @synchronized (self) {
-        [self.eventQueue removeAllObjects];
-    }
-    // TODO: implement additional flush logic
+    NSLog(@"Start flush, with flush reason: %@", flushReason);
+    NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
+    NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:self.eventQueue];
+    [eventsToBeFlushed addObjectsFromArray:eventsFromDisk];
+    
+    [self.eventQueue removeAllObjects];
 }
 
 

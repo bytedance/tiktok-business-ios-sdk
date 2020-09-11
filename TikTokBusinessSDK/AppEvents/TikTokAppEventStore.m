@@ -14,7 +14,7 @@ static BOOL canSkipDiskCheck = NO;
 
 @implementation TikTokAppEventStore
 
-+ (void)clearPersistedAppEventsStates {
++ (void)clearPersistedAppEvents {
     // TODO: Implement logging
     [[NSFileManager defaultManager] removeItemAtPath:[[self class] getFilePath]
                                                error:NULL];
@@ -26,7 +26,7 @@ static BOOL canSkipDiskCheck = NO;
     if (!queue.eventQueue.count) {
         return;
     }
-    NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEventsStates]];
+    NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
     
     [existingEvents addObject:queue];
     
@@ -41,8 +41,8 @@ static BOOL canSkipDiskCheck = NO;
     canSkipDiskCheck = NO;
 }
 
-+ (NSArray *)retrievePersistedAppEventsStates {
-    NSMutableArray *eventsStates = [NSMutableArray array];
++ (NSArray *)retrievePersistedAppEvents {
+    NSMutableArray *events = [NSMutableArray array];
     if (!canSkipDiskCheck) {
         // TODO: implement condition for iOS 11 and add logic below
         // [eventsStates addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] filePath]]];
@@ -52,12 +52,12 @@ static BOOL canSkipDiskCheck = NO;
         NSError *errorUnarchiving = nil;
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&errorUnarchiving];
         [unarchiver setRequiresSecureCoding:NO];
-        [eventsStates addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
+        [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
         
         // TODO: Implement logging
-        [[self class] clearPersistedAppEventsStates];
+        [[self class] clearPersistedAppEvents];
     }
-    return eventsStates;
+    return events;
 }
 
 #pragma mark - Private Helpers
