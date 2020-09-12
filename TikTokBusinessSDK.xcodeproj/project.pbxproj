@@ -8,18 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		8B23DF8F2502BA73008351FA /* TikTokBusinessSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8B23DF9C2502BA8C008351FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DF9B2502BA8C008351FA /* AppDelegate.swift */; };
-		8B23DF9E2502BA8C008351FA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DF9D2502BA8C008351FA /* SceneDelegate.swift */; };
-		8B23DFA02502BA8C008351FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DF9F2502BA8C008351FA /* ViewController.swift */; };
-		8B23DFA32502BA8C008351FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B23DFA12502BA8C008351FA /* Main.storyboard */; };
-		8B23DFA52502BA8E008351FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B23DFA42502BA8E008351FA /* Assets.xcassets */; };
-		8B23DFA82502BA8E008351FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B23DFA62502BA8E008351FA /* LaunchScreen.storyboard */; };
-		8B23DFAE2502BA9F008351FA /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
-		8B23DFAF2502BA9F008351FA /* TikTokBusinessSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8B23DFB72505DE7F008351FA /* TikTokLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFB52505DE7F008351FA /* TikTokLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFB62505DE7F008351FA /* TikTokLogger.m */; };
+		8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFB925080821008351FA /* TikTokConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBA25080821008351FA /* TikTokConfig.m */; };
+		8B23DFBF25080872008351FA /* TikTok.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFBD25080872008351FA /* TikTok.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B23DFC025080872008351FA /* TikTok.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBE25080872008351FA /* TikTok.m */; };
+		8B23DFC425083370008351FA /* TestTikTokEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFC225083370008351FA /* TestTikTokEvent.m */; };
+		8B23DFC5250868B1008351FA /* TestTikTokEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFC125083370008351FA /* TestTikTokEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8BB88F1E250A96CA00EC9D74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F1D250A96CA00EC9D74 /* AppDelegate.swift */; };
+		8BB88F20250A96CA00EC9D74 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F1F250A96CA00EC9D74 /* SceneDelegate.swift */; };
+		8BB88F22250A96CA00EC9D74 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F21250A96CA00EC9D74 /* ViewController.swift */; };
+		8BB88F25250A96CA00EC9D74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F23250A96CA00EC9D74 /* Main.storyboard */; };
+		8BB88F27250A96CB00EC9D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F26250A96CB00EC9D74 /* Assets.xcassets */; };
+		8BB88F2A250A96CB00EC9D74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */; };
+		8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
+		8BB88F30250A96D400EC9D74 /* TikTokBusinessSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F34250A986600EC9D74 /* FormViewController.swift */; };
+		8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F36250A9A4100EC9D74 /* EventViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8B23DFB02502BA9F008351FA /* PBXContainerItemProxy */ = {
+		8BB88F31250A96D400EC9D74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B23DF812502BA73008351FA /* Project object */;
 			proxyType = 1;
@@ -29,13 +39,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8B23DFB22502BA9F008351FA /* Embed Frameworks */ = {
+		8BB88F33250A96D400EC9D74 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8B23DFAF2502BA9F008351FA /* TikTokBusinessSDK.framework in Embed Frameworks */,
+				8BB88F30250A96D400EC9D74 /* TikTokBusinessSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,14 +56,24 @@
 		8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TikTokBusinessSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokBusinessSDK.h; sourceTree = "<group>"; };
 		8B23DF8E2502BA73008351FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8B23DF992502BA8C008351FA /* TikTokBusinessSDKTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TikTokBusinessSDKTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B23DF9B2502BA8C008351FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8B23DF9D2502BA8C008351FA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8B23DF9F2502BA8C008351FA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8B23DFA22502BA8C008351FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8B23DFA42502BA8E008351FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8B23DFA72502BA8E008351FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8B23DFA92502BA8E008351FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B23DFB52505DE7F008351FA /* TikTokLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokLogger.h; sourceTree = "<group>"; };
+		8B23DFB62505DE7F008351FA /* TikTokLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokLogger.m; sourceTree = "<group>"; };
+		8B23DFB925080821008351FA /* TikTokConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokConfig.h; sourceTree = "<group>"; };
+		8B23DFBA25080821008351FA /* TikTokConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokConfig.m; sourceTree = "<group>"; };
+		8B23DFBD25080872008351FA /* TikTok.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTok.h; sourceTree = "<group>"; };
+		8B23DFBE25080872008351FA /* TikTok.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTok.m; sourceTree = "<group>"; };
+		8B23DFC125083370008351FA /* TestTikTokEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTikTokEvent.h; sourceTree = "<group>"; };
+		8B23DFC225083370008351FA /* TestTikTokEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTikTokEvent.m; sourceTree = "<group>"; };
+		8BB88F1B250A96CA00EC9D74 /* TikTokBusinessSDKTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TikTokBusinessSDKTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BB88F1D250A96CA00EC9D74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8BB88F1F250A96CA00EC9D74 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		8BB88F21250A96CA00EC9D74 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8BB88F24250A96CA00EC9D74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8BB88F26250A96CB00EC9D74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8BB88F29250A96CB00EC9D74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8BB88F2B250A96CB00EC9D74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8BB88F34250A986600EC9D74 /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
+		8BB88F36250A9A4100EC9D74 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,11 +84,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8B23DF962502BA8C008351FA /* Frameworks */ = {
+		8BB88F18250A96CA00EC9D74 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B23DFAE2502BA9F008351FA /* TikTokBusinessSDK.framework in Frameworks */,
+				8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,9 +99,9 @@
 			isa = PBXGroup;
 			children = (
 				8B23DF8C2502BA73008351FA /* TikTokBusinessSDK */,
-				8B23DF9A2502BA8C008351FA /* TikTokBusinessSDKTestApp */,
-				8B23DF8B2502BA73008351FA /* Products */,
+				8BB88F1C250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */,
 				8B23DFAD2502BA9F008351FA /* Frameworks */,
+				8B23DF8B2502BA73008351FA /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -89,7 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */,
-				8B23DF992502BA8C008351FA /* TikTokBusinessSDKTestApp.app */,
+				8BB88F1B250A96CA00EC9D74 /* TikTokBusinessSDKTestApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,22 +119,16 @@
 			children = (
 				8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */,
 				8B23DF8E2502BA73008351FA /* Info.plist */,
+				8B23DFB52505DE7F008351FA /* TikTokLogger.h */,
+				8B23DFB62505DE7F008351FA /* TikTokLogger.m */,
+				8B23DFB925080821008351FA /* TikTokConfig.h */,
+				8B23DFBA25080821008351FA /* TikTokConfig.m */,
+				8B23DFBD25080872008351FA /* TikTok.h */,
+				8B23DFBE25080872008351FA /* TikTok.m */,
+				8B23DFC125083370008351FA /* TestTikTokEvent.h */,
+				8B23DFC225083370008351FA /* TestTikTokEvent.m */,
 			);
 			path = TikTokBusinessSDK;
-			sourceTree = "<group>";
-		};
-		8B23DF9A2502BA8C008351FA /* TikTokBusinessSDKTestApp */ = {
-			isa = PBXGroup;
-			children = (
-				8B23DF9B2502BA8C008351FA /* AppDelegate.swift */,
-				8B23DF9D2502BA8C008351FA /* SceneDelegate.swift */,
-				8B23DF9F2502BA8C008351FA /* ViewController.swift */,
-				8B23DFA12502BA8C008351FA /* Main.storyboard */,
-				8B23DFA42502BA8E008351FA /* Assets.xcassets */,
-				8B23DFA62502BA8E008351FA /* LaunchScreen.storyboard */,
-				8B23DFA92502BA8E008351FA /* Info.plist */,
-			);
-			path = TikTokBusinessSDKTestApp;
 			sourceTree = "<group>";
 		};
 		8B23DFAD2502BA9F008351FA /* Frameworks */ = {
@@ -124,6 +138,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8BB88F1C250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */ = {
+			isa = PBXGroup;
+			children = (
+				8BB88F1D250A96CA00EC9D74 /* AppDelegate.swift */,
+				8BB88F1F250A96CA00EC9D74 /* SceneDelegate.swift */,
+				8BB88F21250A96CA00EC9D74 /* ViewController.swift */,
+				8BB88F36250A9A4100EC9D74 /* EventViewController.swift */,
+				8BB88F34250A986600EC9D74 /* FormViewController.swift */,
+				8BB88F23250A96CA00EC9D74 /* Main.storyboard */,
+				8BB88F26250A96CB00EC9D74 /* Assets.xcassets */,
+				8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */,
+				8BB88F2B250A96CB00EC9D74 /* Info.plist */,
+			);
+			path = TikTokBusinessSDKTestApp;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -131,7 +161,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B23DFBF25080872008351FA /* TikTok.h in Headers */,
+				8B23DFC5250868B1008351FA /* TestTikTokEvent.h in Headers */,
+				8B23DFB72505DE7F008351FA /* TikTokLogger.h in Headers */,
 				8B23DF8F2502BA73008351FA /* TikTokBusinessSDK.h in Headers */,
+				8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,23 +190,23 @@
 			productReference = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		8B23DF982502BA8C008351FA /* TikTokBusinessSDKTestApp */ = {
+		8BB88F1A250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8B23DFAA2502BA8E008351FA /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTestApp" */;
+			buildConfigurationList = 8BB88F2C250A96CB00EC9D74 /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTestApp" */;
 			buildPhases = (
-				8B23DF952502BA8C008351FA /* Sources */,
-				8B23DF962502BA8C008351FA /* Frameworks */,
-				8B23DF972502BA8C008351FA /* Resources */,
-				8B23DFB22502BA9F008351FA /* Embed Frameworks */,
+				8BB88F17250A96CA00EC9D74 /* Sources */,
+				8BB88F18250A96CA00EC9D74 /* Frameworks */,
+				8BB88F19250A96CA00EC9D74 /* Resources */,
+				8BB88F33250A96D400EC9D74 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				8B23DFB12502BA9F008351FA /* PBXTargetDependency */,
+				8BB88F32250A96D400EC9D74 /* PBXTargetDependency */,
 			);
 			name = TikTokBusinessSDKTestApp;
 			productName = TikTokBusinessSDKTestApp;
-			productReference = 8B23DF992502BA8C008351FA /* TikTokBusinessSDKTestApp.app */;
+			productReference = 8BB88F1B250A96CA00EC9D74 /* TikTokBusinessSDKTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -187,8 +221,9 @@
 				TargetAttributes = {
 					8B23DF892502BA73008351FA = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
 					};
-					8B23DF982502BA8C008351FA = {
+					8BB88F1A250A96CA00EC9D74 = {
 						CreatedOnToolsVersion = 11.6;
 					};
 				};
@@ -207,7 +242,7 @@
 			projectRoot = "";
 			targets = (
 				8B23DF892502BA73008351FA /* TikTokBusinessSDK */,
-				8B23DF982502BA8C008351FA /* TikTokBusinessSDKTestApp */,
+				8BB88F1A250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */,
 			);
 		};
 /* End PBXProject section */
@@ -220,13 +255,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8B23DF972502BA8C008351FA /* Resources */ = {
+		8BB88F19250A96CA00EC9D74 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B23DFA82502BA8E008351FA /* LaunchScreen.storyboard in Resources */,
-				8B23DFA52502BA8E008351FA /* Assets.xcassets in Resources */,
-				8B23DFA32502BA8C008351FA /* Main.storyboard in Resources */,
+				8BB88F2A250A96CB00EC9D74 /* LaunchScreen.storyboard in Resources */,
+				8BB88F27250A96CB00EC9D74 /* Assets.xcassets in Resources */,
+				8BB88F25250A96CA00EC9D74 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,42 +272,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B23DFC425083370008351FA /* TestTikTokEvent.m in Sources */,
+				8B23DFC025080872008351FA /* TikTok.m in Sources */,
+				8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */,
+				8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8B23DF952502BA8C008351FA /* Sources */ = {
+		8BB88F17250A96CA00EC9D74 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B23DFA02502BA8C008351FA /* ViewController.swift in Sources */,
-				8B23DF9C2502BA8C008351FA /* AppDelegate.swift in Sources */,
-				8B23DF9E2502BA8C008351FA /* SceneDelegate.swift in Sources */,
+				8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */,
+				8BB88F22250A96CA00EC9D74 /* ViewController.swift in Sources */,
+				8BB88F1E250A96CA00EC9D74 /* AppDelegate.swift in Sources */,
+				8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */,
+				8BB88F20250A96CA00EC9D74 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8B23DFB12502BA9F008351FA /* PBXTargetDependency */ = {
+		8BB88F32250A96D400EC9D74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8B23DF892502BA73008351FA /* TikTokBusinessSDK */;
-			targetProxy = 8B23DFB02502BA9F008351FA /* PBXContainerItemProxy */;
+			targetProxy = 8BB88F31250A96D400EC9D74 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		8B23DFA12502BA8C008351FA /* Main.storyboard */ = {
+		8BB88F23250A96CA00EC9D74 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8B23DFA22502BA8C008351FA /* Base */,
+				8BB88F24250A96CA00EC9D74 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		8B23DFA62502BA8E008351FA /* LaunchScreen.storyboard */ = {
+		8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8B23DFA72502BA8E008351FA /* Base */,
+				8BB88F29250A96CB00EC9D74 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -399,6 +440,7 @@
 		8B23DF932502BA73008351FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -414,6 +456,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = btd.TikTokBusinessSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -421,6 +465,7 @@
 		8B23DF942502BA73008351FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -436,11 +481,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = btd.TikTokBusinessSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		8B23DFAB2502BA8E008351FA /* Debug */ = {
+		8BB88F2D250A96CB00EC9D74 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -459,7 +505,7 @@
 			};
 			name = Debug;
 		};
-		8B23DFAC2502BA8E008351FA /* Release */ = {
+		8BB88F2E250A96CB00EC9D74 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -499,11 +545,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8B23DFAA2502BA8E008351FA /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTestApp" */ = {
+		8BB88F2C250A96CB00EC9D74 /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8B23DFAB2502BA8E008351FA /* Debug */,
-				8B23DFAC2502BA8E008351FA /* Release */,
+				8BB88F2D250A96CB00EC9D74 /* Debug */,
+				8BB88F2E250A96CB00EC9D74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
