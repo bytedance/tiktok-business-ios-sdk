@@ -7,14 +7,13 @@
 //
 
 import UIKit
+import TikTokBusinessSDK
 
 class ViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
+//        let tiktok = TikTok.init(duringTest: <#T##()#>)
         // Do any additional setup after loading the view.
     }
-
-
 }
 

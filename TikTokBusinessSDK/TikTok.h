@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTok : NSObject
 
-- (instancetype)initDuringTest;
+- (instancetype)initDuringTest: (BOOL) testEnvironment;
 
 @end
 
