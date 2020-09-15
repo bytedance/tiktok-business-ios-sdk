@@ -7,21 +7,27 @@
 //
 
 #import "TikTok.h"
+#import "TikTokLogger.h"
+
+@interface TikTok()
+
+@property (nonatomic, assign) BOOL testEnvironment;
+
+@end
 
 @implementation TikTok
 
--(instancetype)initDuringTest
+-(instancetype)initDuringTest:(BOOL)testEnvironment
 {
     self = [super init];
     
     if(self)
     {
-        NSLog(@"TikTok SDK has been initialized");
+        self.testEnvironment = testEnvironment;
+        NSLog(@"TikTok SDK initialized");
     }
     
     return self;
-    
-    
 }
 
 @end

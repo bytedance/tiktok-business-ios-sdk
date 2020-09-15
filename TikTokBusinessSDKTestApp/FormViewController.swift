@@ -14,6 +14,7 @@ class FormViewController: UIViewController {
     
     var eventToField =
         [
+            "CUSTOM_EVENT": [],
             "LAUNCH_APP": [],
             "INSTALL_APP": [],
             "RETENTION_2D": [],
@@ -56,28 +57,33 @@ class FormViewController: UIViewController {
         
         let fieldsNames = eventToField[titleName]
         
-        let createPayload = UIButton(frame: CGRect(x: 10.0, y:100.0, width: UIScreen.main.bounds.size.width - 20.0, height: 50.0))
+        let createPayload = UIButton(frame: CGRect(x: 10.0, y:100.0, width: UIScreen.main.bounds.size.width - 80.0, height: 50.0))
+        let addField = UIButton(frame: CGRect(x: UIScreen.main.bounds.size.width - 60.0, y:100.0, width: 50.0, height: 50.0))
         createPayload.backgroundColor = .blue
+        addField.backgroundColor = .purple
         createPayload.setTitle("Create Payload", for: .normal)
+        addField.setTitle("+", for: .normal)
         createPayload.addTarget(self, action: #selector(self.didCreatePayload(sender:)), for: .touchUpInside)
-        
+        addField.addTarget(self, action: #selector(self.addFieldToEvent(sender:)), for: .touchUpInside)
+
         self.view.addSubview(createPayload)
+        self.view.addSubview(addField)
         for fieldIndex in 0 ..< fieldsNames!.count {
             let field = UITextField(frame: CGRect(x: 10.0, y:(100.0 + CGFloat((fieldIndex + 1) * 60)), width: UIScreen.main.bounds.size.width/2 - 15.0, height: 50.0))
             field.text = fieldsNames?[fieldIndex]
             field.backgroundColor = .yellow
             field.tag = fieldIndex
+            field.autocorrectionType = .no
             let parameter = UITextField(frame: CGRect(x:UIScreen.main.bounds.size.width/2 + 5.0, y:(100.0 + CGFloat((fieldIndex + 1) * 60)), width: UIScreen.main.bounds.size.width/2 - 15.0, height: 50.0))
             parameter.text = randomText(from: 5, to: 20)
             parameter.backgroundColor = .red
             parameter.tag = fieldIndex
+            parameter.autocorrectionType = .no
             self.fields.append(field)
             self.parameters.append(parameter)
             self.view.addSubview(field)
             self.view.addSubview(parameter)
         }
-        
-
     }
     
     
@@ -104,6 +110,23 @@ class FormViewController: UIViewController {
         self.payload = self.payload + "}"
         performSegue(withIdentifier: "segueToEvent", sender: self)
         
+    }
+    
+    @IBAction func addFieldToEvent(sender: UIButton) {
+        
+        let field = UITextField(frame: CGRect(x: 10.0, y:(100.0 + CGFloat((self.fields.count + 1) * 60)), width: UIScreen.main.bounds.size.width/2 - 15.0, height: 50.0))
+        field.backgroundColor = .yellow
+        field.tag = self.fields.count
+        field.autocorrectionType = .no
+        let parameter = UITextField(frame: CGRect(x:UIScreen.main.bounds.size.width/2 + 5.0, y:(100.0 + CGFloat((self.fields.count + 1) * 60)), width: UIScreen.main.bounds.size.width/2 - 15.0, height: 50.0))
+        parameter.text = randomText(from: 5, to: 20)
+        parameter.backgroundColor = .red
+        parameter.tag = self.fields.count
+        parameter.autocorrectionType = .no
+        self.fields.append(field)
+        self.parameters.append(parameter)
+        self.view.addSubview(field)
+        self.view.addSubview(parameter)
     }
     
     func fieldsForTag( tag: Int ) -> UITextField? {
