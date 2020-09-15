@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TikTokAppEvent : NSObject
+@interface TikTokAppEvent : NSObject<NSCopying>
 /**
  * @brief Application ID
  */

@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TikTokAppEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTok : NSObject
 
 - (instancetype)initDuringTest: (BOOL) testEnvironment;
+
+- (void)trackEvent:(nullable TikTokAppEvent *)event;
 
 @end
 

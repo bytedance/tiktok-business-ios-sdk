@@ -21,11 +21,12 @@ class EventViewController: UIViewController {
     var titleForForm = "LAUNCH_APP"
     var payload = "{\n\n}"
     var eventTitle = ""
+    var tiktok = TikTok();
         
     override func viewDidLoad() {
         super.viewDidLoad()
         // Initializing TikTok SDK
-        let tiktok = TikTok.init(duringTest: true)
+        tiktok = TikTok.init(duringTest: true);
         title = "Event"
         eventPickerView.dataSource = self
         eventPickerView.delegate = self
@@ -58,9 +59,10 @@ class EventViewController: UIViewController {
     }
     
     @IBAction func eventPosted(_ sender: Any) {
+        let event = TikTokAppEvent(eventName:eventTitle)
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
-//        TiktokEvent.track('event_name')
+        tiktok.trackEvent(event)
     }
     
     @IBAction func clearPayload(_ sender: Any) {
