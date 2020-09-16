@@ -31,8 +31,6 @@
 
 - (void)addEvent:(TikTokAppEvent *)event {
     [self.eventQueue addObject:event];
-    // TODO: Find places to persist app events
-    // [TikTokAppEventStore persistAppEventsData:self];
     if(self.eventQueue.count > EVENT_NUMBER_THRESHOLD) {
         [self flush:@"Threshold"];
     }
@@ -49,6 +47,8 @@
     for (TikTokAppEvent* event in eventsToBeFlushed) {
         NSLog(@"%@", event.eventName);
     }
+    // TODO: If flushing fails, persist app events
+    // [TikTokAppEventStore persistAppEvents:self];
     [self.eventQueue removeAllObjects];
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
