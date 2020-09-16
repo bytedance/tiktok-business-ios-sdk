@@ -39,12 +39,18 @@
 - (void)flush:(NSString *)flushReason {
     NSLog(@"Start flush, with flush reason: %@ current queue count: %lu", flushReason, self.eventQueue.count);
     NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
+    NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
     NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:self.eventQueue];
     [eventsToBeFlushed addObjectsFromArray:eventsFromDisk];
+    NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
+    for (TikTokAppEvent* event in eventsToBeFlushed) {
+        NSLog(@"%@", event.eventName);
+    }
+    // TODO: If flushing fails, persist app events
+    // [TikTokAppEventStore persistAppEvents:self];
     [self.eventQueue removeAllObjects];
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
-
 
 @end

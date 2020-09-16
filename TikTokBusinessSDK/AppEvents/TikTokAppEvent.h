@@ -10,12 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TikTokAppEvent : NSObject<NSCopying>
-/**
- * @brief Application ID
- */
-@property (nonatomic, copy, readonly, nonnull) NSString *appID;
-
+@interface TikTokAppEvent : NSObject<NSCopying, NSSecureCoding>
 /**
  * @brief Name of event
  */
@@ -24,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Timestamp
  */
-@property (nonatomic, readonly) NSTimeInterval timestamp;
+@property (nonatomic, nonnull) NSString *timestamp;
 
 /**
  * @brief Additional parameters in the form of NSDictionary
@@ -32,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSDictionary *parameters;
 
 - (instancetype)initWithEventName: (NSString *)eventName;
+
+- (instancetype)initWithEventName: (NSString *)eventName
+                   withParameters: (NSData *)jsonObject;
 
 @end
 

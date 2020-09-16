@@ -28,4 +28,13 @@
     return timer;
 }
 
++ (NSString *)getCurrentTimestampInISO8601 {
+    NSTimeZone *timeZone = [NSTimeZone defaultTimeZone];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:timeZone];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    NSDate *now = [NSDate date];
+    return [dateFormatter stringFromDate:now];
+}
+
 @end

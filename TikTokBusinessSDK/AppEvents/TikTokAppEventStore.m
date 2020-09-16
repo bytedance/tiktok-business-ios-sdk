@@ -6,6 +6,7 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventQueue.h"
 
@@ -21,22 +22,24 @@ static BOOL canSkipDiskCheck = NO;
     canSkipDiskCheck = YES;
 }
 
-+ (void)persistAppEventsData:(TikTokAppEventQueue *)queue {
++ (void)persistAppEvents:(TikTokAppEventQueue *)queue {
     // TODO: Implement logging
     if (!queue.eventQueue.count) {
         return;
     }
     NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
     
-    [existingEvents addObject:queue];
+    [existingEvents addObjectsFromArray:queue.eventQueue];
     
-    // TODO: implement condition for iOS 11 and add logic below
-    // [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] filePath]];
-    
-    // solution for iOS 12 and above
-    NSError *errorArchiving = nil;
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:existingEvents requiringSecureCoding:NO error:&errorArchiving];
-    [data writeToFile:[[self class] getFilePath] atomically:YES];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
+        NSError *errorArchiving = nil;
+        // archivedDataWithRootObject:requiringSecureCoding: available iOS 11.0+
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:existingEvents requiringSecureCoding:NO error:&errorArchiving];
+        [data writeToFile:[[self class] getFilePath] atomically:YES];
+    } else {
+        // archiveRootObject used for iOS versions below 11.0
+        [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
+    }
     
     canSkipDiskCheck = NO;
 }
@@ -44,17 +47,20 @@ static BOOL canSkipDiskCheck = NO;
 + (NSArray *)retrievePersistedAppEvents {
     NSMutableArray *events = [NSMutableArray array];
     if (!canSkipDiskCheck) {
-        // TODO: implement condition for iOS 11 and add logic below
-        // [eventsStates addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] filePath]]];
-        
-        // solution for iOS 12 and above
-        NSData *data = [NSData dataWithContentsOfFile:[[self class] getFilePath]];
-        NSError *errorUnarchiving = nil;
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&errorUnarchiving];
-        [unarchiver setRequiresSecureCoding:NO];
-        [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
+            NSData *data = [NSData dataWithContentsOfFile:[[self class] getFilePath]];
+            NSError *errorUnarchiving = nil;
+            // initForReadingFromData:error: available iOS 11.0+
+            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&errorUnarchiving];
+            [unarchiver setRequiresSecureCoding:NO];
+            [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
+        } else {
+            // unarchiveObjectWithFile used for iOS versions below 11.0
+            [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
+        }
         
         // TODO: Implement logging
+        
         [[self class] clearPersistedAppEvents];
     }
     return events;

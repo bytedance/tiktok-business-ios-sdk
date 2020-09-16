@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (dispatch_source_t)startTimerWithInterval:(double)interval block:(dispatch_block_t)block;
 
++ (NSString *)getCurrentTimestampInISO8601;
+
 @end
 
 NS_ASSUME_NONNULL_END
