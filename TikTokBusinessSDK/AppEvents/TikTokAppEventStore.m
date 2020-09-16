@@ -28,16 +28,15 @@ static BOOL canSkipDiskCheck = NO;
     }
     NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
     
-    [existingEvents addObject:queue];
+    [existingEvents addObjectsFromArray:queue.eventQueue];
     
     // TODO: implement condition for iOS 11 and add logic below
-    // [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] filePath]];
+    // [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
     
     // solution for iOS 12 and above
     NSError *errorArchiving = nil;
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:existingEvents requiringSecureCoding:NO error:&errorArchiving];
     [data writeToFile:[[self class] getFilePath] atomically:YES];
-    
     canSkipDiskCheck = NO;
 }
 
@@ -45,7 +44,7 @@ static BOOL canSkipDiskCheck = NO;
     NSMutableArray *events = [NSMutableArray array];
     if (!canSkipDiskCheck) {
         // TODO: implement condition for iOS 11 and add logic below
-        // [eventsStates addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] filePath]]];
+        // [eventsStates addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getfilePath]]];
         
         // solution for iOS 12 and above
         NSData *data = [NSData dataWithContentsOfFile:[[self class] getFilePath]];

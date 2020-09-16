@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@class TikTokEventQueue;
+@class TikTokAppEventQueue;
 
 @interface TikTokAppEventStore : NSObject
 
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Method to read events in disk, append events in queue, and write combined into disk
  */
-+ (void)persistAppEventsData:(TikTokEventQueue *)queue;
++ (void)persistAppEventsData:(TikTokAppEventQueue *)queue;
 
 /**
  * @brief Method to return the array of saved app event states and deletes them.

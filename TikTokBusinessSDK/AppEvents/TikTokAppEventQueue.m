@@ -31,6 +31,8 @@
 
 - (void)addEvent:(TikTokAppEvent *)event {
     [self.eventQueue addObject:event];
+    // TODO: Find places to persist app events
+    // [TikTokAppEventStore persistAppEventsData:self];
     if(self.eventQueue.count > EVENT_NUMBER_THRESHOLD) {
         [self flush:@"Threshold"];
     }
@@ -39,12 +41,16 @@
 - (void)flush:(NSString *)flushReason {
     NSLog(@"Start flush, with flush reason: %@ current queue count: %lu", flushReason, self.eventQueue.count);
     NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
+    NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
     NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:self.eventQueue];
     [eventsToBeFlushed addObjectsFromArray:eventsFromDisk];
+    NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
+    for (TikTokAppEvent* event in eventsToBeFlushed) {
+        NSLog(@"%@", event.eventName);
+    }
     [self.eventQueue removeAllObjects];
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
-
 
 @end
