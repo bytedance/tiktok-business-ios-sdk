@@ -10,6 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
+{
+  TikTokAppEventsFlushReasonTimer,
+  TikTokAppEventsFlushReasonEventThreshold,
+  TikTokAppEventsFlushReasonEagerlyFlushingEvent
+} NS_SWIFT_NAME(AppEventsUtility.FlushReason);
+
 @interface TikTokAppEventUtility : NSObject
 
 + (dispatch_source_t)startTimerWithInterval:(double)interval block:(dispatch_block_t)block;
