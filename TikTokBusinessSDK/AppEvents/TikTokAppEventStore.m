@@ -22,14 +22,14 @@ static BOOL canSkipDiskCheck = NO;
     canSkipDiskCheck = YES;
 }
 
-+ (void)persistAppEvents:(TikTokAppEventQueue *)queue {
++ (void)persistAppEvents:(NSMutableArray *)queue {
     // TODO: Implement logging
-    if (!queue.eventQueue.count) {
+    if (!queue.count) {
         return;
     }
     NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
     
-    [existingEvents addObjectsFromArray:queue.eventQueue];
+    [existingEvents addObjectsFromArray:queue];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
         NSError *errorArchiving = nil;

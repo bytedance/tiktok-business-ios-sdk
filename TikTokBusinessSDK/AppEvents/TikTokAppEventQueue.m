@@ -10,6 +10,7 @@
 #import "TikTokAppEventQueue.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventUtility.h"
+#import "TikTokAppEventRequestHandler.h"
 
 #define EVENT_NUMBER_THRESHOLD 100
 #define FLUSH_PERIOD_IN_SECONDS 15
@@ -47,8 +48,9 @@
     for (TikTokAppEvent* event in eventsToBeFlushed) {
         NSLog(@"%@", event.eventName);
     }
-    // TODO: If flushing fails, persist app events
-    // [TikTokAppEventStore persistAppEvents:self];
+    
+    [TikTokAppEventRequestHandler sendPOSTRequest:eventsToBeFlushed];
+    
     [self.eventQueue removeAllObjects];
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
