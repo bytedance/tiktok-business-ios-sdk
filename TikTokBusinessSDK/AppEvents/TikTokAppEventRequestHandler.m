@@ -12,7 +12,7 @@
 
 @implementation TikTokAppEventRequestHandler
 
-+ (void)sendPOSTRequest:(NSMutableArray *)eventsToBeFlushed {
++ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed {
     
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
@@ -55,7 +55,6 @@
     options:NSJSONWritingPrettyPrinted
       error:&error];
     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    NSLog(@"postData: %@", postData);
     NSLog(@"postDataJSONString: %@", postDataJSONString);
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
 

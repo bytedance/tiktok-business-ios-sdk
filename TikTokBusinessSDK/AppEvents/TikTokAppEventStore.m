@@ -22,7 +22,7 @@ static BOOL canSkipDiskCheck = NO;
     canSkipDiskCheck = YES;
 }
 
-+ (void)persistAppEvents:(NSMutableArray *)queue {
++ (void)persistAppEvents:(NSArray *)queue {
     // TODO: Implement logging
     if (!queue.count) {
         return;
