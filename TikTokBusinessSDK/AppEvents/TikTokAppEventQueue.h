@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TikTokAppEvent.h"
+#import "TikTokAppEventUtility.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Flush logic
  */
-- (void)flush:(NSString *)flushReason;
+- (void)flush:(TikTokAppEventsFlushReason)flushReason;
 
 @end
 

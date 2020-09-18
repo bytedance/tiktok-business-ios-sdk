@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Method to read events in disk, append events in queue, and write combined into disk
  */
-+ (void)persistAppEvents:(TikTokAppEventQueue *)queue;
++ (void)persistAppEvents:(NSArray *)queue;
 
 /**
  * @brief Method to return the array of saved app event states and deletes them.
