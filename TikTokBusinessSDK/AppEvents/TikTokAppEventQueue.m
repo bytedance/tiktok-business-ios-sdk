@@ -45,13 +45,10 @@
     [eventsToBeFlushed addObjectsFromArray:eventsFromDisk];
     NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
-    for (TikTokAppEvent* event in eventsToBeFlushed) {
-        NSLog(@"%@", event.eventName);
+    if(eventsToBeFlushed.count > 0) {
+        [TikTokAppEventRequestHandler sendPOSTRequest:eventsToBeFlushed];
+        [self.eventQueue removeAllObjects];
     }
-    
-    [TikTokAppEventRequestHandler sendPOSTRequest:eventsToBeFlushed];
-    
-    [self.eventQueue removeAllObjects];
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
 

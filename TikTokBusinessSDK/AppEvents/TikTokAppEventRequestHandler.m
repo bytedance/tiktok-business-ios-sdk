@@ -17,75 +17,88 @@
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
-        NSMutableDictionary *eventDict=[[NSMutableDictionary alloc] init];
-        [eventDict setValue:@"track" forKey:@"type"];
-        [eventDict setValue:event.eventName forKey:@"event"];
-        [eventDict setValue:event.timestamp forKey:@"timestamp"];
-        [eventDict setValue:event.parameters forKey:@"properties"];
+        NSDictionary *eventDict = @{
+            @"type" : @"track",
+            @"event": event.eventName,
+            @"timestamp":event.timestamp,
+            @"properties": event.parameters,
+        };
+        [batch addObject:eventDict];
     }
-    
+
     // TODO: Populate context object from config
-    // context object
-    NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
-    [context setValue:nil forKey:@"ad"];
-    [context setValue:nil forKey:@"app"];
-    [context setValue:nil forKey:@"device"];
-    [context setValue:nil forKey:@"locale"];
-    [context setValue:nil forKey:@"ip"];
-    [context setValue:nil forKey:@"userAgent"];
+    NSDictionary *context = @{
+        @"ad" : [NSNull null],
+        @"app": [NSNull null],
+        @"device": [NSNull null],
+        @"locale": [NSNull null],
+        @"ip": [NSNull null],
+        @"userAgent": [NSNull null],
+    };
     
-    // parameter object
-    NSMutableDictionary *parametersDict=[[NSMutableDictionary alloc] init];
-    // TODO: Populate appID from config
-    [parametersDict setValue:@"123" forKey:@"app_id"];
-    [parametersDict setValue:context forKey:@"context"];
-    [parametersDict setValue:batch forKey:@"batch"];
+    NSError *errorContextJSON;
+    NSData *contextJSON = [NSJSONSerialization dataWithJSONObject:context
+                                                       options:0
+                                                         error:&errorContextJSON];
+    NSString *contextJSONString = [[NSString alloc] initWithData:contextJSON encoding:NSUTF8StringEncoding];
+    NSLog(@"contextJSONString: %@", contextJSONString);
+
+    NSDictionary *parametersDict = @{
+        // TODO: Populate appID from config
+        @"app_id" : @"123",
+        @"batch": batch,
+        @"context": contextJSONString,
+    };
     
     NSError *error = nil;
     NSData *postData = [NSJSONSerialization dataWithJSONObject:parametersDict
     options:NSJSONWritingPrettyPrinted
       error:&error];
+    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+    NSLog(@"postData: %@", postData);
+    NSLog(@"postDataJSONString: %@", postDataJSONString);
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1"]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    // TODO: get access token from TikTok SDK initialization
-    [request setValue:@"XX" forHTTPHeaderField:@"Access-Token"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody:postData];
-    
-    // TODO: Remove test get request below
-//    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
-//    [request setHTTPMethod:@"GET"];
+
+    // TODO: Uncomment block below once API is available
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+//    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1"]];
+//    [request setHTTPMethod:@"POST"];
 //    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    // TODO: get access token from TikTok SDK initialization
+//    [request setValue:@"XX" forHTTPHeaderField:@"Access-Token"];
+//    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+//    [request setHTTPBody:postData];
+    
+    // TODO: Remove get request block below once API is available
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
+    [request setHTTPMethod:@"GET"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
+
         // handle basic connectivity issues
         if(error) {
             NSLog(@"error: %@", error);
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
             return;
         }
-        
+
         // handle HTTP errors
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-            
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
-            
+
             if (statusCode != 200) {
                 NSLog(@"dataTaskWithRequest HTTP status code: %lu", statusCode);
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
                 return;
             }
         }
-        
-        NSString *requestReply = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        NSLog(@"Request reply: %@", requestReply);
-        
+
+        NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+        NSLog(@"Request response: %@", requestResponse);
+
     }] resume];
 }
 
