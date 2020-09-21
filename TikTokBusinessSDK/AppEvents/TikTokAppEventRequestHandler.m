@@ -17,11 +17,16 @@
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
+        NSError *errorPropertiesJSON;
+        NSData *propertiesJSON = [NSJSONSerialization dataWithJSONObject:event.parameters
+                                                           options:0
+                                                             error:&errorPropertiesJSON];
+        NSString *propertiesJSONString = [[NSString alloc] initWithData:propertiesJSON encoding:NSUTF8StringEncoding];
         NSDictionary *eventDict = @{
             @"type" : @"track",
             @"event": event.eventName,
             @"timestamp":event.timestamp,
-            @"properties": event.parameters,
+            @"properties": propertiesJSONString,
         };
         [batch addObject:eventDict];
     }
@@ -45,7 +50,7 @@
 
     NSDictionary *parametersDict = @{
         // TODO: Populate appID from config
-        @"app_id" : @"123",
+        @"app_id" : @"1211123727",
         @"batch": batch,
         @"context": contextJSONString,
     };
@@ -58,21 +63,15 @@
     NSLog(@"postDataJSONString: %@", postDataJSONString);
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
 
-    // TODO: Uncomment block below once API is available
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-//    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1"]];
-//    [request setHTTPMethod:@"POST"];
-//    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    // TODO: get access token from TikTok SDK initialization
-//    [request setValue:@"XX" forHTTPHeaderField:@"Access-Token"];
-//    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-//    [request setHTTPBody:postData];
-    
-    // TODO: Remove get request block below once API is available
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
-    [request setHTTPMethod:@"GET"];
+    // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
+    [request setURL:[NSURL URLWithString:@"http://10.231.17.7:9335/open_api/2/app/batch/"]];
+    [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    // TODO: get access token from TikTok SDK initialization
+    [request setValue:@"abcdabcdabcdabcd00509731ca2343bbecb2b846" forHTTPHeaderField:@"Access-Token"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:postData];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
