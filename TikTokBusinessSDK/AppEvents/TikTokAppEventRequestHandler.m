@@ -22,7 +22,6 @@
                                                                  options:0
                                                                    error:&errorPropertiesJSON];
         NSString *propertiesJSONString = [[NSString alloc] initWithData:propertiesJSON encoding:NSUTF8StringEncoding];
-        
         NSDictionary *eventDict = @{
             @"type" : @"track",
             @"event": event.eventName,
