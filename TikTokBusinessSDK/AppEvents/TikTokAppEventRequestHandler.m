@@ -32,7 +32,7 @@
         [batch addObject:eventDict];
     }
     
-    // TODO: Populate context object from config
+    // TODO: Populate app object from config
     NSDictionary *app = @{
         @"name" : [NSNull null],
         @"namespace": [NSNull null],
@@ -40,7 +40,7 @@
         @"build": [NSNull null],
     };
     
-    // TODO: Populate context object from config
+    // TODO: Populate device object from config
     NSDictionary *device = @{
         @"platform" : @"iOS",
         @"idfa": [NSNull null],
@@ -61,7 +61,6 @@
                                                           options:0
                                                             error:&errorContextJSON];
     NSString *contextJSONString = [[NSString alloc] initWithData:contextJSON encoding:NSUTF8StringEncoding];
-    NSLog(@"contextJSONString: %@", contextJSONString);
     
     NSDictionary *parametersDict = @{
         // TODO: Populate appID from config
@@ -80,7 +79,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.17.7:9335/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.8.42:9472/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: get access token from TikTok SDK initialization
@@ -103,10 +102,30 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                NSLog(@"dataTaskWithRequest HTTP status code: %lu", statusCode);
+                NSLog(@"HTTP error status code: %lu", statusCode);
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
                 return;
             }
+            
+        }
+        
+        NSError *dataError = nil;
+        id dataDictionary = [NSJSONSerialization
+                             JSONObjectWithData:data
+                             options:0
+                             error:&dataError];
+        
+        if([dataDictionary isKindOfClass:[NSDictionary class]]) {
+            NSNumber *code = [dataDictionary objectForKey:@"code"];
+            
+            // code != 0 indicates error from API call
+            if([code intValue] != 0) {
+                NSString *message = [dataDictionary objectForKey:@"message"];
+                NSLog(@"code error: %@, message: %@", code, message);
+                [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                return;
+            }
+            
         }
         
         NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
