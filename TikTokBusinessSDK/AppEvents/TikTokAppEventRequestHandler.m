@@ -79,7 +79,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.8.42:9472/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.10.134:9230/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: get access token from TikTok SDK initialization
@@ -117,12 +117,23 @@
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
-            
+            // TODO: Finalize list of nonretryable error codes and add to this set
+            NSSet<NSNumber *> *nonretryableErrorCodeSet = [NSSet setWithArray:
+                                                           @[
+                                                               @40000, // CODE_INVALID_PARAMS
+                                                               @40001, // CODE_PERMISSION_DENIED, CODE_PARAM_ERROR
+                                                               @40002, // CODE_PERMISSION_ERROR
+                                                               @40104, // CODE_EMPTY_ACCESS_TOKEN
+                                                               @40105, // CODE_INVALID_ACCESS_TOKEN
+                                                           ]];
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
                 NSLog(@"code error: %@, message: %@", code, message);
-                [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                // if error code is retryable, persist app events to disk
+                if(![nonretryableErrorCodeSet containsObject:code]) {
+                    [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                }
                 return;
             }
             
