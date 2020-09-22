@@ -14,6 +14,7 @@ class EventViewController: UIViewController {
     @IBOutlet weak var eventTextField: UITextField!
     @IBOutlet weak var finalPayloadTextField: UITextView!
     
+    let delegate = UIApplication.shared.delegate as! AppDelegate
     var eventPickerView = UIPickerView()
     
     let events = ["CUSTOM_EVENT", "LAUNCH_APP", "INSTALL_APP", "RETENTION_2D", "ADD_PAYMENT_INFO", "ADD_TO_CART", "ADD_TO_WISHLIST", "CHECKOUT", "COMPLETE_TUTORIAL", "VIEW_CONTENT", "CREATE_GROUP", "CREATE_ROLE", "GENERATE_LEAD", "IN_APP_AD_CLICK", "IN_APP_AD_IMPR", "JOIN_GROUP", "ACHIEVE_LEVEL", "LOAN_APPLICATION", "LOAN_APPROVAL", "LOAN_DISBURSAL", "LOGIN", "PURCHASE", "RATE", "REGISTRATION", "SEARCH", "SPEND_CREDITS", "START_TRIAL", "SUBSCRIBE", "SHARE", "CONTACT", "UNLOCK_ACHIEVEMENT"]
@@ -21,12 +22,12 @@ class EventViewController: UIViewController {
     var titleForForm = "LAUNCH_APP"
     var payload = "{\n\n}"
     var eventTitle = ""
-    var tiktok = TikTok();
-        
+    var tiktok: Any?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Initializing TikTok SDK
-        tiktok = TikTok.init(duringTest: true);
+//        tiktok = delegate.;
         title = "Event"
         eventPickerView.dataSource = self
         eventPickerView.delegate = self
@@ -62,7 +63,7 @@ class EventViewController: UIViewController {
         let event = TikTokAppEvent(eventName:eventTitle)
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
-        tiktok.trackEvent(event)
+        TikTok.trackEvent(event)
     }
     
     @IBAction func clearPayload(_ sender: Any) {
