@@ -12,31 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-@protocol TikTokAppEventQueue <NSObject>
-
-/**
- * @brief Event queue as a mutable array
- */
-@property (nonatomic, strong) NSMutableArray *eventQueue;
-
-@property (nonatomic, strong) dispatch_source_t flushTimer;
-
-- (id)init;
-
-/**
- * @brief Add event to queue
- */
-- (void)addEvent:(TikTokAppEvent *)event;
-
-/**
- * @brief Flush logic
- */
-- (void)flush:(NSString *)flushReason;
-
-@end
-
-
 @interface TikTokAppEventQueue : NSObject
 
 /**
