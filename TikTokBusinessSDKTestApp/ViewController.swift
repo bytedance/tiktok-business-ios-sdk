@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import TikTokBusinessSDK
 
 class ViewController: UIViewController {
     override func viewDidLoad() {
