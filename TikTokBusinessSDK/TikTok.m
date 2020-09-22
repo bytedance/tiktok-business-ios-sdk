@@ -7,8 +7,8 @@
 //
 #import "TikTok.h"
 #import "TikTokConfig.h"
-#import "TikTokAppEvent.h"
-#import "TikTokAppEventQueue.h"
+#import "AppEvents/TikTokAppEvent.h"
+#import "AppEvents/TikTokAppEventQueue.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -43,11 +43,12 @@ static dispatch_once_t onceToken = 0;
     if(self == nil) {
         return nil;
     }
-    NSLog(@"TikTok SDK Initialized");
     
     self.queue = nil;
     self.logger = [[TikTokLogger alloc] init];
     self.enabled = YES;
+    NSLog(@"TikTok SDK Initialized");
+
     
     return self;
 }
