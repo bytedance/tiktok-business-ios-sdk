@@ -9,6 +9,7 @@
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventRequestHandler.h"
 #import "TikTokAppEventStore.h"
+#import "TikTokDeviceInfo.h"
 
 @implementation TikTokAppEventRequestHandler
 
@@ -32,28 +33,30 @@
         [batch addObject:eventDict];
     }
     
+    TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     // TODO: Populate app object from config
     NSDictionary *app = @{
-        @"name" : [NSNull null],
-        @"namespace": [NSNull null],
-        @"version": [NSNull null],
-        @"build": [NSNull null],
+        @"name" : deviceInfo.appName,
+        @"namespace": deviceInfo.appNamespace,
+        @"version": deviceInfo.appVersion,
+        @"build": deviceInfo.appBuild,
     };
     
     // TODO: Populate device object from config
     NSDictionary *device = @{
-        @"platform" : @"iOS",
-        @"idfa": [NSNull null],
-        @"idfv": [NSNull null],
+        @"platform" : deviceInfo.devicePlatform,
+        @"idfa": deviceInfo.deviceIdForAdvertisers,
+        @"idfv": deviceInfo.deviceVendorId,
     };
+    
     
     // TODO: Populate context object from config
     NSDictionary *context = @{
         @"app": app,
         @"device": device,
-        @"locale": [NSNull null],
-        @"ip": [NSNull null],
-        @"userAgent": [NSNull null],
+        @"locale": deviceInfo.localeInfo,
+        @"ip": deviceInfo.ipInfo,
+        @"userAgent": deviceInfo.userAgent,
     };
     
     NSError *errorContextJSON;
@@ -79,12 +82,15 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.10.134:9230/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.18.94:9419/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: get access token from TikTok SDK initialization
     [request setValue:@"abcdabcdabcdabcd00509731ca2343bbecb2b846" forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    // TODO: Remove 'x-use-boe' and 'x-tt-env' once release in prod
+    [request setValue:@"1" forHTTPHeaderField:@"x-use-boe"];
+    [request setValue:@"jianyi" forHTTPHeaderField:@"x-tt-env"];
     [request setHTTPBody:postData];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -117,7 +123,6 @@
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
-            // TODO: Finalize list of nonretryable error codes and add to this set
             NSSet<NSNumber *> *nonretryableErrorCodeSet = [NSSet setWithArray:
                                                            @[
                                                                @40000, // CODE_INVALID_PARAMS
