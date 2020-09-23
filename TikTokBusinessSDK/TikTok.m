@@ -7,6 +7,7 @@
 //
 #import "TikTok.h"
 #import "TikTokConfig.h"
+#import "UIDevice+TikTokAdditions.h"
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
 
@@ -15,7 +16,7 @@ NSString * const TikTokEnvironmentProduction = @"production";
 
 @interface TikTok()
 
-@property (nonatomic, weak) TikTokLogger *logger;
+@property (nonatomic, strong) TikTokLogger *logger;
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
 @property (nonatomic) BOOL enabled;
 
@@ -47,8 +48,7 @@ static dispatch_once_t onceToken = 0;
     self.queue = nil;
     self.logger = [[TikTokLogger alloc] init];
     self.enabled = YES;
-    NSLog(@"TikTok SDK Initialized");
-
+    [self.logger info:@"TikTok SDK Initialized Successfully!"];
     
     return self;
 }
@@ -89,103 +89,106 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-
-+ (NSString *)adid {
++ (BOOL)appInForeground
+{
     @synchronized (self) {
-        return [[TikTok getInstance] adid];
+        return [[TikTok getInstance] appInForeground];
     }
 }
 
-//+ (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion
-//{
-//    @synchronized (self) {
-//        [[Adjust getInstance] requestTrackingAuthorizationWithCompletionHandler:completion];
-//    }
-//}
++ (BOOL)appInBackground
+{
+    @synchronized (self) {
+        return [[TikTok getInstance] appInBackground];
+    }
+}
+
++ (BOOL)appIsInactive
+{
+    @synchronized (self) {
+        return [[TikTok getInstance] appIsInactive];
+    }
+}
+
++ (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion
+{
+    @synchronized (self) {
+        [[TikTok getInstance] requestTrackingAuthorizationWithCompletionHandler:completion];
+    }
+}
 
 - (void)appDidLaunch:(TikTokConfig *)tiktokConfig
 {
     if(self.queue != nil){
-        [self.logger info:@"TikTok SDK has been initialized already!"];
+        [self.logger warn:@"TikTok SDK has been initialized already!"];
         return;
     }
     
     
     self.queue = [[TikTokAppEventQueue alloc] init];
-    [self.logger info: @"Event Queue has been initialized!"];
+    [self.logger info: @"TikTok Event Queue has been initialized!"];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
+    
+    if (launchedBefore) {
+        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
+    } else {
+        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
+        [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
+        [defaults synchronize];
+    }
+    
 }
 
 - (void)trackEvent:(TikTokAppEvent *)appEvent
 {
     [self.queue addEvent:appEvent];
-    NSLog(@"Queue count: %lu", self.queue.eventQueue.count);
+    [self.logger info:@"Queue count: %lu", self.queue.eventQueue.count];
 }
 
+- (nullable NSString *)idfa
+{
+    return [[TikTokDeviceInfo alloc] deviceIdForAdvertisers];
+}
+
+- (BOOL)appInForeground
+{
+    if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)appInBackground
+{
+    if([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)appIsInactive
+{
+    if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
+{
+    [UIDevice.currentDevice requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status)
+    {
+        if (completion) {
+            completion(status);
+            NSLog(@"%lu", status);
+        }
+        // Might want to add more code here, but not sure at the moment
+    }];
+}
 
 @end
-
-
-
-
-//
-//#import "TikTok.h"
-//#import "TikTokLogger.h"
-//#import "TikTokAppEventQueue.h"
-//
-//@interface TikTok()
-//
-//@property (nonatomic, assign) BOOL testEnvironment;
-//@property (nonatomic, strong) TikTokAppEventQueue *queue;
-//
-//@end
-//
-//@implementation TikTok
-//
-//static TikTok *defaultInstance = nil;
-//static dispatch_once_t onceToken = 0;
-//
-//+ (id)getInstance
-//{
-//    dispatch_once(&onceToken, ^{
-//        defaultInstance = [[self alloc] init];
-//    });
-//    return defaultInstance;
-//}
-//
-//-(instancetype)init
-//{
-//    self = [super init];
-//
-//    if(self)
-//    {
-//        self.testEnvironment = @"PRODUCTION";
-//        self.queue = [[TikTokAppEventQueue alloc] init];
-//        NSLog(@"TikTok SDK initialized");
-//        NSLog(@"Queue count: %lu", self.queue.eventQueue.count);
-//    }
-//
-//    return self;
-//}
-//
-//
-//-(instancetype)initDuringTest:(BOOL)testEnvironment
-//{
-//    self = [super init];
-//
-//    if(self)
-//    {
-//        self.testEnvironment = testEnvironment;
-//        self.queue = [[TikTokAppEventQueue alloc] init];
-//        NSLog(@"TikTok SDK initialized");
-//        NSLog(@"Queue count: %lu", self.queue.eventQueue.count);
-//    }
-//
-//    return self;
-//}
-//
-//- (void)trackEvent:(TikTokAppEvent *)event {
-//    [self.queue addEvent:event];
-//    NSLog(@"Queue count: %lu", self.queue.eventQueue.count);
-//}
-//
-//@end

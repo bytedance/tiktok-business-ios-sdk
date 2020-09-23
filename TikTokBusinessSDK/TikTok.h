@@ -53,7 +53,9 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //+ (void)setPushToken:(nonnull NSString *)pushToken;
 //+ (void)setOfflineMode:(BOOL)enabled;
 + (nullable NSString *)idfa;
-+ (nullable NSString *)adid;
++ (BOOL)appInForeground;
++ (BOOL)appInBackground;
++ (BOOL)appIsInactive;
 //+ (nullable ADJAttribution *)attribution;
 //+ (nullable NSString *)sdkVersion;
 //+ (void)sendFirstPackages;
@@ -75,6 +77,9 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent:(nullable TikTokAppEvent *)appEvent;
 - (void)setEnabled:(BOOL)enabled;
+- (BOOL)appInForeground;
+- (BOOL)appInBackground;
+- (BOOL)appIsInactive;
 //- (void)teardown; // ??
 //- (void)appWillOpenUrl:(nonnull NSURL *)url;
 //
@@ -107,9 +112,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //
 //- (void)trackSubscription:(nonnull ADJSubscription *)subscription;
 - (BOOL)isEnabled;
-- (nullable NSString *)adid;
 - (nullable NSString *)idfa;
-- (nullable NSString *)sdkVersion;
 //- (nullable ADJAttribution *)attribution;
 //
 //- (nullable NSURL *)convertUniversalLink:(nonnull NSURL *)url scheme:(nonnull NSString *)scheme;

@@ -41,6 +41,7 @@ info4:(NSUInteger)info4;
 
 
 @property (nonatomic, assign, readonly) BOOL isSKAdNetworkHandlingActive;
+
 - (void)deactivateSKAdNetworkHandling;
 
 + (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken

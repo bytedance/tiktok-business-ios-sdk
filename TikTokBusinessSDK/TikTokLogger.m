@@ -18,7 +18,7 @@ static NSString * const kLogTag = @"TikTok";
 
 @end
 
-#pragma mark -
+#pragma mark - Public Class Interface
 @implementation TikTokLogger
 
 - (id)init

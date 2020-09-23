@@ -60,10 +60,22 @@ class EventViewController: UIViewController {
     }
     
     @IBAction func eventPosted(_ sender: Any) {
+        // Ideally, user should not even have exposure to TikTokAppEvent class
         let event = TikTokAppEvent(eventName:eventTitle)
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
         TikTok.trackEvent(event)
+//        print("Hello");
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appId)
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appName)
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appNamespace)
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appVersion)
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appBuild)
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").devicePlatform);
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").deviceIdForAdvertisers);
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").deviceVendorId);
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").localeInfo);
+//        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").userAgent);
     }
     
     @IBAction func clearPayload(_ sender: Any) {
