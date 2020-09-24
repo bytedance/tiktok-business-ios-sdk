@@ -10,7 +10,7 @@
 #import "UIDevice+TikTokAdditions.h"
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
-#import "AppEvents/TikTokAppEventStore.h"
+#import "AppEvents/TikTokAppEventUtility.h"
 #import <AdSupport/AdSupport.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <AppTrackingTransparency/ATTrackingManager.h>
@@ -171,8 +171,7 @@ static dispatch_once_t onceToken = 0;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
-    [self.queue.eventQueue removeAllObjects];
+    [self.queue flush:TikTokAppEventsFlushReasonAppEnteredBackground];
 }
 
 - (nullable NSString *)idfa
