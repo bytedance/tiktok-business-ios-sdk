@@ -18,23 +18,16 @@
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
-        NSError *errorPropertiesJSON;
-        NSData *propertiesJSON = [NSJSONSerialization dataWithJSONObject:event.parameters
-                                                                 options:0
-                                                                   error:&errorPropertiesJSON];
-        NSString *propertiesJSONString = [[NSString alloc] initWithData:propertiesJSON encoding:NSUTF8StringEncoding];
-        
         NSDictionary *eventDict = @{
             @"type" : @"track",
             @"event": event.eventName,
             @"timestamp":event.timestamp,
-            @"properties": propertiesJSONString,
+            @"properties": event.parameters,
         };
         [batch addObject:eventDict];
     }
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
-    // TODO: Populate app object from config
     NSDictionary *app = @{
         @"name" : deviceInfo.appName,
         @"namespace": deviceInfo.appNamespace,
@@ -42,15 +35,12 @@
         @"build": deviceInfo.appBuild,
     };
     
-    // TODO: Populate device object from config
     NSDictionary *device = @{
         @"platform" : deviceInfo.devicePlatform,
         @"idfa": deviceInfo.deviceIdForAdvertisers,
         @"idfv": deviceInfo.deviceVendorId,
     };
     
-    
-    // TODO: Populate context object from config
     NSDictionary *context = @{
         @"app": app,
         @"device": device,
@@ -59,17 +49,11 @@
         @"userAgent": deviceInfo.userAgent,
     };
     
-    NSError *errorContextJSON;
-    NSData *contextJSON = [NSJSONSerialization dataWithJSONObject:context
-                                                          options:0
-                                                            error:&errorContextJSON];
-    NSString *contextJSONString = [[NSString alloc] initWithData:contextJSON encoding:NSUTF8StringEncoding];
-    
     NSDictionary *parametersDict = @{
         // TODO: Populate appID from config
         @"app_id" : @"1211123727",
         @"batch": batch,
-        @"context": contextJSONString,
+        @"context": context,
     };
     
     NSError *error = nil;
@@ -82,7 +66,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.18.94:9419/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.18.95:9252/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: get access token from TikTok SDK initialization

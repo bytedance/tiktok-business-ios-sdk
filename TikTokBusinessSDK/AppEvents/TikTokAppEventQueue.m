@@ -23,8 +23,7 @@
     self.eventQueue = [NSMutableArray array];
     
     __weak TikTokAppEventQueue *weakSelf = self;
-    self.flushTimer = [TikTokAppEventUtility startTimerWithInterval:FLUSH_PERIOD_IN_SECONDS
-                                                        block:^{
+    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *time) {
         [weakSelf flush:TikTokAppEventsFlushReasonTimer];
     }];
     
