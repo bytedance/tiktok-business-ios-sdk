@@ -66,7 +66,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.18.95:9252/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.18.38:9496/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: get access token from TikTok SDK initialization
