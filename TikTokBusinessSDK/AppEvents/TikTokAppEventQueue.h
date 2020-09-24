@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) NSMutableArray *eventQueue;
 
-@property (nonatomic, strong) dispatch_source_t flushTimer;
+@property (nonatomic, strong) NSTimer *flushTimer;
 
 - (id)init;
 

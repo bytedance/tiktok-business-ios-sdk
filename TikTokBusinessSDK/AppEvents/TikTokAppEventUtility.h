@@ -19,8 +19,6 @@ typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
 
 @interface TikTokAppEventUtility : NSObject
 
-+ (dispatch_source_t)startTimerWithInterval:(double)interval block:(dispatch_block_t)block;
-
 + (NSString *)getCurrentTimestampInISO8601;
 
 @end

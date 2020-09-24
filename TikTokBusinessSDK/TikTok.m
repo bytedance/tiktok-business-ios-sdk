@@ -10,6 +10,7 @@
 #import "UIDevice+TikTokAdditions.h"
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
+#import "AppEvents/TikTokAppEventStore.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -139,12 +140,21 @@ static dispatch_once_t onceToken = 0;
         [defaults synchronize];
     }
     
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
 }
 
 - (void)trackEvent:(TikTokAppEvent *)appEvent
 {
     [self.queue addEvent:appEvent];
     [self.logger info:@"Queue count: %lu", self.queue.eventQueue.count];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
+    [self.queue.eventQueue removeAllObjects];
 }
 
 - (nullable NSString *)idfa
