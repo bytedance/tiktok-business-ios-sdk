@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A165DA2251E7877005889BD /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
+		0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */; };
 		0A1A065025095429001463B8 /* TikTokAppEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A1A064E25095428001463B8 /* TikTokAppEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A1A065125095429001463B8 /* TikTokAppEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A064F25095428001463B8 /* TikTokAppEvent.m */; };
 		0A1A065425095483001463B8 /* TikTokAppEventQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A1A065225095483001463B8 /* TikTokAppEventQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -47,6 +49,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0A165DA3251E7877005889BD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B23DF812502BA73008351FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B23DF892502BA73008351FA;
+			remoteInfo = TikTokBusinessSDK;
+		};
 		8BB88F31250A96D400EC9D74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B23DF812502BA73008351FA /* Project object */;
@@ -71,6 +80,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A165D9D251E7877005889BD /* TikTokBusinessSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TikTokBusinessSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A165DA1251E7877005889BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventStoreTests.m; sourceTree = "<group>"; };
 		0A1A064E25095428001463B8 /* TikTokAppEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokAppEvent.h; sourceTree = "<group>"; };
 		0A1A064F25095428001463B8 /* TikTokAppEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEvent.m; sourceTree = "<group>"; };
 		0A1A065225095483001463B8 /* TikTokAppEventQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokAppEventQueue.h; sourceTree = "<group>"; };
@@ -113,6 +125,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0A165D9A251E7877005889BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A165DA2251E7877005889BD /* TikTokBusinessSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8B23DF872502BA73008351FA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,6 +153,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A165D9E251E7877005889BD /* TikTokBusinessSDKTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A165DAE251E8B99005889BD /* AppEvents */,
+				0A165DA1251E7877005889BD /* Info.plist */,
+			);
+			path = TikTokBusinessSDKTests;
+			sourceTree = "<group>";
+		};
+		0A165DAE251E8B99005889BD /* AppEvents */ = {
+			isa = PBXGroup;
+			children = (
+				0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */,
+			);
+			path = AppEvents;
+			sourceTree = "<group>";
+		};
 		0A1A064D250953E2001463B8 /* AppEvents */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +192,7 @@
 			children = (
 				8B23DF8C2502BA73008351FA /* TikTokBusinessSDK */,
 				8BB88F1C250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */,
+				0A165D9E251E7877005889BD /* TikTokBusinessSDKTests */,
 				8B23DFAD2502BA9F008351FA /* Frameworks */,
 				8B23DF8B2502BA73008351FA /* Products */,
 			);
@@ -165,6 +203,7 @@
 			children = (
 				8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */,
 				8BB88F1B250A96CA00EC9D74 /* TikTokBusinessSDKTestApp.app */,
+				0A165D9D251E7877005889BD /* TikTokBusinessSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -252,6 +291,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0A165D9C251E7877005889BD /* TikTokBusinessSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A165DA7251E7877005889BD /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTests" */;
+			buildPhases = (
+				0A165D99251E7877005889BD /* Sources */,
+				0A165D9A251E7877005889BD /* Frameworks */,
+				0A165D9B251E7877005889BD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A165DA4251E7877005889BD /* PBXTargetDependency */,
+			);
+			name = TikTokBusinessSDKTests;
+			productName = TikTokBusinessSDKTests;
+			productReference = 0A165D9D251E7877005889BD /* TikTokBusinessSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8B23DF892502BA73008351FA /* TikTokBusinessSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8B23DF922502BA73008351FA /* Build configuration list for PBXNativeTarget "TikTokBusinessSDK" */;
@@ -299,6 +356,9 @@
 				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = bytedance;
 				TargetAttributes = {
+					0A165D9C251E7877005889BD = {
+						CreatedOnToolsVersion = 12.0;
+					};
 					8B23DF892502BA73008351FA = {
 						CreatedOnToolsVersion = 11.6;
 						LastSwiftMigration = 1160;
@@ -323,11 +383,19 @@
 			targets = (
 				8B23DF892502BA73008351FA /* TikTokBusinessSDK */,
 				8BB88F1A250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */,
+				0A165D9C251E7877005889BD /* TikTokBusinessSDKTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0A165D9B251E7877005889BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8B23DF882502BA73008351FA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -348,6 +416,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0A165D99251E7877005889BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8B23DF862502BA73008351FA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -382,6 +458,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0A165DA4251E7877005889BD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B23DF892502BA73008351FA /* TikTokBusinessSDK */;
+			targetProxy = 0A165DA3251E7877005889BD /* PBXContainerItemProxy */;
+		};
 		8BB88F32250A96D400EC9D74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8B23DF892502BA73008351FA /* TikTokBusinessSDK */;
@@ -409,6 +490,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0A165DA5251E7877005889BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TikTokBusinessSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.testc.TikTokBusinessSDKTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0A165DA6251E7877005889BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TikTokBusinessSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.testc.TikTokBusinessSDKTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		8B23DF902502BA73008351FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -617,6 +734,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0A165DA7251E7877005889BD /* Build configuration list for PBXNativeTarget "TikTokBusinessSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A165DA5251E7877005889BD /* Debug */,
+				0A165DA6251E7877005889BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		8B23DF842502BA73008351FA /* Build configuration list for PBXProject "TikTokBusinessSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
