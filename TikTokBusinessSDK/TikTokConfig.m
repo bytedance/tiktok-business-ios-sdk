@@ -8,7 +8,7 @@
 
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
-
+#import "TikTok.h"
 
 @interface TikTokConfig()
 
@@ -16,20 +16,32 @@
 
 @end
 
-@implementation TikTokConfig
+@implementation TikTokConfig: NSObject
 
++ (TikTokConfig *)configWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret{
+    return [[TikTokConfig alloc] initWithAppToken:appToken andAppSecret:appSecret];
+}
 
-//+ (TikTokConfig *)configWithAppToken:(NSString *)appToken
-//                      environment:(NSString *)environment {
-//    return [[TikTokConfig alloc] initWithAppToken:appToken environment:environment];
-//}
+- (id)initWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret
+{
+    self = [super init];
+    
+    if(self == nil) return nil;
+    
+    _appToken = appToken;
+    _secretId = appSecret;
+    
+    self.logger = [[TikTok alloc] init].logger;
+    [self.logger info: @"TikTokConfig was valid!"];
+    return self;
+}
 //
-//+ (TikTokConfig *)configWithAppToken:(NSString *)appToken
-//                      environment:(NSString *)environment
-//             allowSuppressLogLevel:(BOOL)allowSuppressLogLevel
+//- (BOOL)isValid
 //{
-//    return [[TikTokConfig alloc] initWithAppToken:appToken environment:environment allowSuppressLogLevel:allowSuppressLogLevel];
+//
+////    if [NSString ]
 //}
+
 //
 //- (id)initWithAppToken:(NSString *)appToken
 //           environment:(NSString *)environment
@@ -187,5 +199,9 @@
 //                   (unsigned long)info4];
 //}
 
+
+//- (nonnull id)copyWithZone:(nullable NSZone *)zone {
+//    <#code#>
+//}
 
 @end
