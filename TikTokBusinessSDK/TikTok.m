@@ -10,7 +10,7 @@
 #import "UIDevice+TikTokAdditions.h"
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
-#import "AppEvents/TikTokAppEventStore.h"
+#import "AppEvents/TikTokAppEventUtility.h"
 #import <AdSupport/AdSupport.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <AppTrackingTransparency/ATTrackingManager.h>
@@ -154,6 +154,9 @@ static dispatch_once_t onceToken = 0;
         }
     }
     
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+
     [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
     [defaults synchronize];
     
@@ -171,8 +174,7 @@ static dispatch_once_t onceToken = 0;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
-    [self.queue.eventQueue removeAllObjects];
+    [self.queue flush:TikTokAppEventsFlushReasonAppEnteredBackground];
 }
 
 - (nullable NSString *)idfa

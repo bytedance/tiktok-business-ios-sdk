@@ -12,10 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
 {
-  TikTokAppEventsFlushReasonTimer,
-  TikTokAppEventsFlushReasonEventThreshold,
-  TikTokAppEventsFlushReasonEagerlyFlushingEvent
-} NS_SWIFT_NAME(AppEventsUtility.FlushReason);
+    TikTokAppEventsFlushReasonTimer,
+    TikTokAppEventsFlushReasonEventThreshold,
+    TikTokAppEventsFlushReasonEagerlyFlushingEvent,
+    TikTokAppEventsFlushReasonAppEnteredBackground,
+};
 
 @interface TikTokAppEventUtility : NSObject
 
