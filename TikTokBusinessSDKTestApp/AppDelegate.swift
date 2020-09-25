@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        TikTok.appDidLaunch(nil)
+        let config = TikTokConfig.init(appToken: "ENTER_YOUR_APP_TOKEN", andAppSecret: "ENTER_YOUR_APP_SECRET");
+        TikTok.appDidLaunch(config);
         return true
     }
 

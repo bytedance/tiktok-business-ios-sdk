@@ -76,6 +76,8 @@ class EventViewController: UIViewController {
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").deviceVendorId);
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").localeInfo);
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").userAgent);
+        print(TikTokDeviceInfo.init(sdkPrefix: "").ipInfo);
+        
     }
     
     @IBAction func clearPayload(_ sender: Any) {

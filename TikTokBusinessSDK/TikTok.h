@@ -42,6 +42,8 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 
 @interface TikTok : NSObject
 
+@property (nonatomic, strong) TikTokLogger *logger;
+
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
 //+ (void)trackSubsessionStart;
@@ -106,12 +108,12 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //- (void)addSessionPartnerParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
 //
 //- (void)addSessionCallbackParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
-- (void)gdprForgetMe;
+//- (void)gdprForgetMe;
 //
 //- (void)trackAdRevenue:(nonnull NSString *)source payload:(nonnull NSData *)payload;
 //
 //- (void)trackSubscription:(nonnull ADJSubscription *)subscription;
-- (BOOL)isEnabled;
+//- (BOOL)isEnabled;
 - (nullable NSString *)idfa;
 //- (nullable ADJAttribution *)attribution;
 //

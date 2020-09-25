@@ -37,7 +37,7 @@
     self.deviceIdForAdvertisers = getIDFA();
     self.deviceVendorId = device.tiktokVendorId;
     self.localeInfo = [NSString stringWithFormat:@"%@-%@", [locale objectForKey:NSLocaleLanguageCode], [locale objectForKey:NSLocaleCountryCode]];
-    self.ipInfo = @"TODO: IMPLEMENT METHOD AFTER DISCUSSION";
+    self.ipInfo = device.tiktokDeviceIp;
     self.userAgent = getUAString();
     self.trackingEnabled = device.tiktokTrackingEnabled;
     self.deviceType = device.tiktokDeviceType;

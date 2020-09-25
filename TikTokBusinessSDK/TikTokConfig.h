@@ -11,17 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TikTokConfig : NSObject<NSCopying>
+@interface TikTokConfig : NSObject
 
-@property (nonatomic, copy, nullable) NSString* sdkPrefix;
-@property (nonatomic, copy, nullable) NSString* defaultTracker;
-@property (nonatomic, copy, nullable) NSString *externalDeviceId;
+//@property (nonatomic, copy, nullable) NSString* sdkPrefix;
+//@property (nonatomic, copy, nullable) NSString* defaultTracker;
+//@property (nonatomic, copy, nullable) NSString *externalDeviceId;
 
 
 @property (nonatomic, copy, readonly, nonnull) NSString *appToken;
 @property (nonatomic, copy, readonly, nullable) NSString *secretId;
-@property (nonatomic, copy, readonly, nonnull) NSString *environment;
-@property (nonatomic, copy, readonly, nullable) NSString *appSecret;
+//@property (nonatomic, copy, readonly, nonnull) NSString *environment;
+//@property (nonatomic, copy, readonly, nullable) NSString *appSecret;
 
 @property (nonatomic, assign) TikTokLogLevel logLevel;
 @property (nonatomic, assign) BOOL eventBufferingEnabled;
@@ -32,33 +32,31 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) double delayStart;
 @property (nonatomic, copy, nullable) NSString *userAgent;
 @property (nonatomic, assign) BOOL isDeviceKnown;
-
-- (void)setAppSecret:(NSUInteger)secretId
-info1:(NSUInteger)info1
-info2:(NSUInteger)info2
-info3:(NSUInteger)info3
-info4:(NSUInteger)info4;
-
-
 @property (nonatomic, assign, readonly) BOOL isSKAdNetworkHandlingActive;
 
-- (void)deactivateSKAdNetworkHandling;
+//- (void)setAppSecret:(NSUInteger)secretId
+//info1:(NSUInteger)info1
+//info2:(NSUInteger)info2
+//info3:(NSUInteger)info3
+//info4:(NSUInteger)info4;
+
+//- (void)deactivateSKAdNetworkHandling;
 
 + (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
-                               environment:(nonnull NSString *)environment;
+                                 andAppSecret: (nonnull NSString *)appSecret;
 
 - (nullable id)initWithAppToken:(nonnull NSString *)appToken
-                    environment:(nonnull NSString *)environment;
+                   andAppSecret: (nonnull NSString *)appSecret;
 
-+ (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
-                               environment:(nonnull NSString *)environment
-                     allowSuppressLogLevel:(BOOL)allowSuppressLogLevel;
+//+ (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
+//                               environment:(nonnull NSString *)environment
+//                     allowSuppressLogLevel:(BOOL)allowSuppressLogLevel;
+//
+//- (nullable id)initWithAppToken:(nonnull NSString *)appToken
+//                    environment:(nonnull NSString *)environment
+//          allowSuppressLogLevel:(BOOL)allowSuppressLogLevel;
 
-- (nullable id)initWithAppToken:(nonnull NSString *)appToken
-                    environment:(nonnull NSString *)environment
-          allowSuppressLogLevel:(BOOL)allowSuppressLogLevel;
-
-- (BOOL)isValid;
+//- (BOOL)isValid;
 
 @end
 

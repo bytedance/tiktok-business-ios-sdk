@@ -11,13 +11,15 @@
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
 #import "AppEvents/TikTokAppEventStore.h"
+#import <AdSupport/AdSupport.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <AppTrackingTransparency/ATTrackingManager.h>
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
 
 @interface TikTok()
 
-@property (nonatomic, strong) TikTokLogger *logger;
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
 @property (nonatomic) BOOL enabled;
 
@@ -131,6 +133,10 @@ static dispatch_once_t onceToken = 0;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
+    NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
+    NSDate *currentLaunch = [NSDate date];
+    
+    NSLog(@"Current date is: %@", currentLaunch);
     
     if (launchedBefore) {
         [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
@@ -140,8 +146,20 @@ static dispatch_once_t onceToken = 0;
         [defaults synchronize];
     }
     
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    if(lastLaunched) {
+        NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
+        int numberOfDays = secondsBetween / 86400;
+        if (numberOfDays <= 2) {
+            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+        }
+    }
+    
+    [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
+    [defaults synchronize];
+    
+    // Remove this later, based on where modal needs to be called to start tracking
+    // This will be needed to be called before we can call a function to get IDFA
+    [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
     
 }
 
@@ -195,7 +213,17 @@ static dispatch_once_t onceToken = 0;
     {
         if (completion) {
             completion(status);
-            NSLog(@"%lu", status);
+            if (@available(iOS 14, *)) {
+                if(status == ATTrackingManagerAuthorizationStatusAuthorized) {
+                    self.enabled = YES;
+                    NSLog(@"IsTrackingEnabled: %d", self.enabled);
+                } else {
+                    self.enabled = NO;
+                    NSLog(@"IsTrackingEnabled: %d", self.enabled);
+                }
+            } else {
+                // Fallback on earlier versions
+            }
         }
         // Might want to add more code here, but not sure at the moment
     }];

@@ -26,6 +26,8 @@
 		8B23DFC025080872008351FA /* TikTok.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBE25080872008351FA /* TikTok.m */; };
 		8B23DFC425083370008351FA /* TestTikTokEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFC225083370008351FA /* TestTikTokEvent.m */; };
 		8B23DFC5250868B1008351FA /* TestTikTokEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFC125083370008351FA /* TestTikTokEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216C251D7D630041E73B /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8B89A23A251A64E700B61811 /* UIDevice+TikTokAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B89A238251A64E700B61811 /* UIDevice+TikTokAdditions.h */; };
 		8B89A23B251A64E700B61811 /* UIDevice+TikTokAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B89A239251A64E700B61811 /* UIDevice+TikTokAdditions.m */; };
 		8B89A23E251A677300B61811 /* TikTokDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B89A23C251A677300B61811 /* TikTokDeviceInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -90,6 +92,8 @@
 		8B23DFBE25080872008351FA /* TikTok.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTok.m; sourceTree = "<group>"; };
 		8B23DFC125083370008351FA /* TestTikTokEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTikTokEvent.h; sourceTree = "<group>"; };
 		8B23DFC225083370008351FA /* TestTikTokEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTikTokEvent.m; sourceTree = "<group>"; };
+		8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
+		8B6A216C251D7D630041E73B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		8B89A238251A64E700B61811 /* UIDevice+TikTokAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+TikTokAdditions.h"; sourceTree = "<group>"; };
 		8B89A239251A64E700B61811 /* UIDevice+TikTokAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+TikTokAdditions.m"; sourceTree = "<group>"; };
 		8B89A23C251A677300B61811 /* TikTokDeviceInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokDeviceInfo.h; sourceTree = "<group>"; };
@@ -120,6 +124,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */,
+				8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */,
 				8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,6 +193,8 @@
 		8B23DFAD2502BA9F008351FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8B6A216C251D7D630041E73B /* AdSupport.framework */,
+				8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -571,6 +579,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UAJQ5X5GX4;
 				INFOPLIST_FILE = TikTokBusinessSDKTestApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -590,6 +599,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UAJQ5X5GX4;
 				INFOPLIST_FILE = TikTokBusinessSDKTestApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
