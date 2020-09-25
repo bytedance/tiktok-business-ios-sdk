@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventUtility.h"
+#import "TikTokConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSTimer *flushTimer;
 
+@property (nonatomic, strong, nullable) TikTokConfig *config;
+
 - (id)init;
+
+- (id)initWithConfig: (TikTokConfig * _Nullable)config;
 
 /**
  * @brief Add event to queue

@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TikTokConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTokAppEventRequestHandler : NSObject
 
-+ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed;
++ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+             withConfig:(TikTokConfig *)config;
 
 @end
 

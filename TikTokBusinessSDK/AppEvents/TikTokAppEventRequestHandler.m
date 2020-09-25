@@ -10,10 +10,12 @@
 #import "TikTokAppEventRequestHandler.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokDeviceInfo.h"
+#import "TikTokConfig.h"
 
 @implementation TikTokAppEventRequestHandler
 
-+ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed {
++ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+             withConfig:(TikTokConfig *)config {
     
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
@@ -50,7 +52,8 @@
     };
     
     NSDictionary *parametersDict = @{
-        // TODO: Populate appID from config
+        // TODO: Populate appID once change to prod environment
+        // @"app_id" : deviceInfo.appId,
         @"app_id" : @"1211123727",
         @"batch": batch,
         @"context": context,
@@ -60,9 +63,12 @@
     NSData *postData = [NSJSONSerialization dataWithJSONObject:parametersDict
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
-    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    NSLog(@"postDataJSONString: %@", postDataJSONString);
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
+    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+    
+    // TODO: Remove logs below once convert to prod API
+    NSLog(@"Access token: %@", config.appToken);
+    NSLog(@"postDataJSON: %@", postDataJSONString);
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
