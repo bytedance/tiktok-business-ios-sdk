@@ -154,6 +154,9 @@ static dispatch_once_t onceToken = 0;
         }
     }
     
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+
     [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
     [defaults synchronize];
     
