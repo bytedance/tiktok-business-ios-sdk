@@ -12,6 +12,7 @@
 #import "TikTokAppEventUtility.h"
 #import "TikTokAppEventRequestHandler.h"
 #import "TikTokDeviceInfo.h"
+#import "TikTokConfig.h"
 
 #define EVENT_NUMBER_THRESHOLD 100
 #define EVENT_BATCH_REQUEST_THRESHOLD 1000
@@ -21,12 +22,25 @@
 
 - (id)init {
     if (self == nil) return nil;
+    
+    return [self initWithConfig:nil];
+}
+
+- (id)initWithConfig:(TikTokConfig *)config
+{
+    self = [super init];
+    if (self == nil) {
+        return nil;
+    }
+    
     self.eventQueue = [NSMutableArray array];
     
     __weak TikTokAppEventQueue *weakSelf = self;
     self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *time) {
         [weakSelf flush:TikTokAppEventsFlushReasonTimer];
     }];
+    
+    self.config = config;
     
     return self;
 }
@@ -63,7 +77,7 @@
             }
             
             for (NSArray *eventChunk in eventChunks) {
-                [TikTokAppEventRequestHandler sendPOSTRequest:eventChunk];
+                [TikTokAppEventRequestHandler sendPOSTRequest:eventChunk withConfig:self.config];
             }
         } else {
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

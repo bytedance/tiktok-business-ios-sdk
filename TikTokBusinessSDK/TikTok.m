@@ -128,7 +128,7 @@ static dispatch_once_t onceToken = 0;
     }
     
     
-    self.queue = [[TikTokAppEventQueue alloc] init];
+    self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     [self.logger info: @"TikTok Event Queue has been initialized!"];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
