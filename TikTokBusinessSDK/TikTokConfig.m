@@ -18,8 +18,76 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret{
++ (TikTokConfig *)configWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret
+{
     return [[TikTokConfig alloc] initWithAppToken:appToken andAppSecret:appSecret];
+}
+
++ (void)disableTracking
+{
+    [[TikTok getInstance] setTrackingEnabled:NO];
+//    [[[TikTokLogger alloc] init] info:@"Tracking has been disabled"];
+}
+
+- (void)disableTracking
+{
+    [self.logger info:@"Tracking has been disabled!"];
+    [[TikTok getInstance] setTrackingEnabled:NO];
+}
+
++ (void)disableAutomaticLogging
+{
+    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
+}
+
+- (void)disableAutomaticLogging
+{
+    [self.logger info:@"Tracking has been disabled!"];
+    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
+}
+
++ (void)disableInstallLogging
+{
+    [[TikTok getInstance] setInstallLoggingEnabled:NO];
+}
+
+- (void)disableInstallLogging
+{
+    [self.logger info:@"Tracking has been disabled!"];
+    [[TikTok getInstance] setInstallLoggingEnabled:NO];
+}
+
++ (void)disableLaunchLogging
+{
+    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
+}
+
+- (void)disableLaunchLogging
+{
+    [self.logger info:@"Tracking has been disabled!"];
+    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
+}
+
++ (void)disableRetentionLogging
+{
+    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
+}
+
+- (void)disableRetentionLogging
+{
+    [self.logger info:@"Tracking has been disabled!"];
+    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
+}
+
++ (void)disablePaymentLogging
+{
+    [[TikTok getInstance] setPaymentLoggingEnabled:NO];
+}
+
+- (void)disablePaymentLogging
+{
+    [self.logger info:@"Payment Logging has been disabled!"];
+    [[TikTok getInstance] setPaymentLoggingEnabled:NO];
 }
 
 - (id)initWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret
@@ -30,7 +98,7 @@
     
     _appToken = appToken;
     _secretId = appSecret;
-    
+
     self.logger = [[TikTok alloc] init].logger;
     [self.logger info: @"TikTokConfig was valid!"];
     return self;

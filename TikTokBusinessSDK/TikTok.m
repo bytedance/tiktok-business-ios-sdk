@@ -14,6 +14,7 @@
 #import <AdSupport/AdSupport.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <AppTrackingTransparency/ATTrackingManager.h>
+#import <TikTokPaymentObserver.h>
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -21,7 +22,12 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @interface TikTok()
 
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
-@property (nonatomic) BOOL enabled;
+@property (nonatomic) BOOL trackingEnabled;
+@property (nonatomic) BOOL automaticLoggingEnabled;
+@property (nonatomic) BOOL installLoggingEnabled;
+@property (nonatomic) BOOL launchLoggingEnabled;
+@property (nonatomic) BOOL retentionLoggingEnabled;
+@property (nonatomic) BOOL paymentLoggingEnabled;
 
 @end
 
@@ -50,8 +56,13 @@ static dispatch_once_t onceToken = 0;
     
     self.queue = nil;
     self.logger = [[TikTokLogger alloc] init];
-    self.enabled = YES;
-    [self.logger info:@"TikTok SDK Initialized Successfully!"];
+    self.trackingEnabled = YES;
+    self.automaticLoggingEnabled = YES;
+    self.installLoggingEnabled = YES;
+    self.launchLoggingEnabled = YES;
+    self.retentionLoggingEnabled = YES;
+    self.paymentLoggingEnabled = YES;
+    
     
     return self;
 }
@@ -72,10 +83,45 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)setEnabled:(BOOL)enabled
++ (void)setTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setEnabled:enabled];
+        [[TikTok getInstance] setTrackingEnabled:enabled];
+    }
+}
+
++ (void)setAutomaticLoggingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setAutomaticLoggingEnabled:enabled];
+    }
+}
+
++ (void)setInstallLoggingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setInstallLoggingEnabled:enabled];
+    }
+}
+
++ (void)setLaunchLoggingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setLaunchLoggingEnabled:enabled];
+    }
+}
+
++ (void)setRetentionLoggingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setRetentionLoggingEnabled:enabled];
+    }
+}
+
++ (void)setPaymentLoggingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setPaymentLoggingEnabled:enabled];
     }
 }
 
@@ -130,39 +176,53 @@ static dispatch_once_t onceToken = 0;
     
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     [self.logger info: @"TikTok Event Queue has been initialized!"];
-    
+    [self.logger info:@"TikTok SDK Initialized Successfully!"];
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
     NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
     NSDate *currentLaunch = [NSDate date];
     
-    NSLog(@"Current date is: %@", currentLaunch);
-    
-    if (launchedBefore) {
-        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
-    } else {
-        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
-        [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
-        [defaults synchronize];
-    }
-    
-    if(lastLaunched) {
-        NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
-        int numberOfDays = secondsBetween / 86400;
-        if (numberOfDays <= 2) {
-            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+//    NSLog(@"Current date is: %@", currentLaunch);
+    if(self.trackingEnabled){
+        if(self.automaticLoggingEnabled) {
+            if (launchedBefore && self.launchLoggingEnabled) {
+                [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
+            } else {
+                if(!launchedBefore && self.installLoggingEnabled) {
+                    [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
+                }
+                [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
+                [defaults synchronize];
+            }
+            
+            if(lastLaunched && self.retentionLoggingEnabled) {
+                NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
+                int numberOfDays = secondsBetween / 86400;
+                if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
+                    [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+                }
+            } else {
+                [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
+                [defaults synchronize];
+            }
+            
+            if(self.paymentLoggingEnabled){
+                // TODO: this needs to be checked on the test app!
+//                [TikTokPaymentObserver startObservingTransactions];
+            }
         }
+
+     
+        // Remove this later, based on where modal needs to be called to start tracking
+        // This will be needed to be called before we can call a function to get IDFA
+        [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
     }
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-
-    [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
-    [defaults synchronize];
     
-    // Remove this later, based on where modal needs to be called to start tracking
-    // This will be needed to be called before we can call a function to get IDFA
-    [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
+    
     
 }
 
@@ -209,6 +269,36 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
+//- (void)setEnabled:(BOOL)enabled
+//{
+//    self.enabled = enabled;
+//}
+
+//- (void)setAutomaticLoggingEnabled:(BOOL)enabled
+//{
+//    self.automaticLoggingEnabled = enabled;
+//}
+//
+//- (void)setInstallLoggingEnabled:(BOOL)enabled
+//{
+//    self.installLoggingEnabled = enabled;
+//}
+//
+//- (void)setLaunchLoggingEnabled:(BOOL)enabled
+//{
+//    self.launchLoggingEnabled = enabled;
+//}
+//
+//- (void)setRetentionLoggingEnabled:(BOOL)enabled
+//{
+//    self.retentionLoggingEnabled = enabled;
+//}
+//
+//- (void)setPaymentLoggingEnabled:(BOOL)enabled
+//{
+//    self.paymentLoggingEnabled = enabled;
+//}
+
 - (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {
     [UIDevice.currentDevice requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status)
@@ -217,11 +307,11 @@ static dispatch_once_t onceToken = 0;
             completion(status);
             if (@available(iOS 14, *)) {
                 if(status == ATTrackingManagerAuthorizationStatusAuthorized) {
-                    self.enabled = YES;
-                    NSLog(@"IsTrackingEnabled: %d", self.enabled);
+                    self.trackingEnabled = YES;
+                    [self.logger info:@"Tracking is enabled"];
                 } else {
-                    self.enabled = NO;
-                    NSLog(@"IsTrackingEnabled: %d", self.enabled);
+                    self.trackingEnabled = NO;
+                    [self.logger info:@"Tracking is disabled"];
                 }
             } else {
                 // Fallback on earlier versions
