@@ -48,7 +48,10 @@ static BOOL canSkipDiskCheck = NO;
         [data writeToFile:[[self class] getFilePath] atomically:YES];
     } else {
         // archiveRootObject used for iOS versions below 11.0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
+#pragma clang diagnostic pop
     }
     
     canSkipDiskCheck = NO;
@@ -66,7 +69,10 @@ static BOOL canSkipDiskCheck = NO;
             [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
         } else {
             // unarchiveObjectWithFile used for iOS versions below 11.0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
+#pragma clang diagnostic pop
         }
         
         // TODO: Implement logging
