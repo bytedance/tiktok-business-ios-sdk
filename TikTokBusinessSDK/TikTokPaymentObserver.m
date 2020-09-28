@@ -90,7 +90,7 @@
 
 -(void)handleTransaction: (SKPaymentTransaction *)transaction
 {
-    [[TikTok getInstance] trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"PURCHASE" withParameters: [NSData alloc]]];
+    [[TikTok getInstance] trackPurchase:[[TikTokAppEvent alloc] initWithEventName:@"PURCHASE" withParameters: [NSData alloc]]];
 }
 
 @end

@@ -83,6 +83,13 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)trackPurchase:(TikTokAppEvent *)appEvent
+{
+    @synchronized (self) {
+        [[TikTok getInstance] trackPurchase:appEvent];
+    }
+}
+
 + (void)setTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
@@ -230,6 +237,12 @@ static dispatch_once_t onceToken = 0;
 {
     [self.queue addEvent:appEvent];
     [self.logger info:@"Queue count: %lu", self.queue.eventQueue.count];
+}
+
+- (void)trackPurchase:(TikTokAppEvent *)appEvent
+{
+    [self trackEvent:appEvent];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
