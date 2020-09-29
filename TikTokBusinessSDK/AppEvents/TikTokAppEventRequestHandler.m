@@ -20,8 +20,6 @@
         return nil;
     }
     
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    
     return self;
 }
 

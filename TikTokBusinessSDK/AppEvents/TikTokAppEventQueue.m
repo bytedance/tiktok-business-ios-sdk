@@ -61,11 +61,13 @@
         NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
         NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
         NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
-        [eventsToBeFlushed addObjectsFromArray:self.eventQueue];
+        NSArray *copiedEventQueue = [self.eventQueue copy];
+        [eventsToBeFlushed addObjectsFromArray:copiedEventQueue];
         [self.eventQueue removeAllObjects];
-      dispatch_async(dispatch_get_main_queue(), ^{
-        [self flushOnMainQueue:eventsToBeFlushed forReason:flushReason];
-      });
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self flushOnMainQueue:eventsToBeFlushed forReason:flushReason];
+        });
     }
 }
 
