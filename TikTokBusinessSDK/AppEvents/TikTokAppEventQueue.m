@@ -56,11 +56,21 @@
 }
 
 - (void)flush:(TikTokAppEventsFlushReason)flushReason {
-    NSLog(@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count);
-    NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
-    NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
-    NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
-    [eventsToBeFlushed addObjectsFromArray:self.eventQueue];
+    @synchronized (self) {
+        NSLog(@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count);
+        NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
+        NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
+        NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
+        [eventsToBeFlushed addObjectsFromArray:self.eventQueue];
+        [self.eventQueue removeAllObjects];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self flushOnMainQueue:eventsToBeFlushed forReason:flushReason];
+      });
+    }
+}
+
+- (void)flushOnMainQueue:(NSMutableArray *)eventsToBeFlushed
+               forReason:(TikTokAppEventsFlushReason)flushReason {
     NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
     if(eventsToBeFlushed.count > 0){
@@ -85,7 +95,6 @@
         } else {
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
         }
-        [self.eventQueue removeAllObjects];
     }
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }
