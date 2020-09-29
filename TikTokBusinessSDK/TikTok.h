@@ -46,6 +46,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
++ (void)trackPurchase: (nullable TikTokAppEvent *)appEvent;
 //+ (void)trackSubsessionStart;
 //+ (void)trackSubsessionEnd;
 + (void)setTrackingEnabled: (BOOL)enabled;

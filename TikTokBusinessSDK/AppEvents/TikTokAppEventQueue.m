@@ -13,6 +13,7 @@
 #import "TikTokAppEventRequestHandler.h"
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
+#import "TikTokAppEventRequestHandler.h"
 
 #define EVENT_NUMBER_THRESHOLD 100
 #define EVENT_BATCH_REQUEST_THRESHOLD 1000
@@ -42,6 +43,8 @@
     
     self.config = config;
     
+    self.requestHandler = [[TikTokAppEventRequestHandler alloc] init];
+    
     return self;
 }
 
@@ -53,11 +56,23 @@
 }
 
 - (void)flush:(TikTokAppEventsFlushReason)flushReason {
-    NSLog(@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count);
-    NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
-    NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
-    NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
-    [eventsToBeFlushed addObjectsFromArray:self.eventQueue];
+    @synchronized (self) {
+        NSLog(@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count);
+        NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
+        NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
+        NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
+        NSArray *copiedEventQueue = [self.eventQueue copy];
+        [eventsToBeFlushed addObjectsFromArray:copiedEventQueue];
+        [self.eventQueue removeAllObjects];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self flushOnMainQueue:eventsToBeFlushed forReason:flushReason];
+        });
+    }
+}
+
+- (void)flushOnMainQueue:(NSMutableArray *)eventsToBeFlushed
+               forReason:(TikTokAppEventsFlushReason)flushReason {
     NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
     if(eventsToBeFlushed.count > 0){
@@ -77,12 +92,11 @@
             }
             
             for (NSArray *eventChunk in eventChunks) {
-                [TikTokAppEventRequestHandler sendPOSTRequest:eventChunk withConfig:self.config];
+                [self.requestHandler sendPOSTRequest:eventChunk withConfig:self.config];
             }
         } else {
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
         }
-        [self.eventQueue removeAllObjects];
     }
     NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
 }

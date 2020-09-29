@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTokAppEventRequestHandler : NSObject
 
-+ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+@property (atomic, strong, nullable) NSURLSession *session;
+
+- (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config;
 
 @end

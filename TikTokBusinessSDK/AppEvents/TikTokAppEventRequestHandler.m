@@ -14,7 +14,16 @@
 
 @implementation TikTokAppEventRequestHandler
 
-+ (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+- (id)init:(TikTokConfig *)config
+{
+    if (self == nil) {
+        return nil;
+    }
+    
+    return self;
+}
+
+- (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config {
     
     // format events into object[]
@@ -64,9 +73,9 @@
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
-    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     
     // TODO: Remove logs below once convert to prod API
+    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     NSLog(@"Access token: %@", config.appToken);
     NSLog(@"postDataJSON: %@", postDataJSONString);
     
@@ -83,8 +92,10 @@
     [request setValue:@"jianyi" forHTTPHeaderField:@"x-tt-env"];
     [request setHTTPBody:postData];
     
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    if(self.session == nil) {
+        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    }
+    [[self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         // handle basic connectivity issues
         if(error) {
