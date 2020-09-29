@@ -17,7 +17,7 @@
 		0A1A06592509551F001463B8 /* TikTokAppEventStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A06572509551F001463B8 /* TikTokAppEventStore.m */; };
 		0A29066E250B232B00CF3B73 /* TikTokAppEventUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A29066C250B232B00CF3B73 /* TikTokAppEventUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A29066F250B232B00CF3B73 /* TikTokAppEventUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A29066D250B232B00CF3B73 /* TikTokAppEventUtility.m */; };
-		0A5E15B825141CFB00120131 /* TikTokAppEventRequestHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A5E15B625141CFA00120131 /* TikTokAppEventRequestHandler.h */; };
+		0A5E15B825141CFB00120131 /* TikTokAppEventRequestHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A5E15B625141CFA00120131 /* TikTokAppEventRequestHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A5E15B925141CFB00120131 /* TikTokAppEventRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E15B725141CFA00120131 /* TikTokAppEventRequestHandler.m */; };
 		8B1811DB251EABF800CBBE2E /* TikTokPaymentObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */; };
 		8B1811DC251EABF800CBBE2E /* TikTokPaymentObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */; };

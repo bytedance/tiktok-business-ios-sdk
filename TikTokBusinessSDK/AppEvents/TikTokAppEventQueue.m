@@ -13,6 +13,7 @@
 #import "TikTokAppEventRequestHandler.h"
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
+#import "TikTokAppEventRequestHandler.h"
 
 #define EVENT_NUMBER_THRESHOLD 100
 #define EVENT_BATCH_REQUEST_THRESHOLD 1000
@@ -41,6 +42,8 @@
     }];
     
     self.config = config;
+    
+    self.requestHandler = [[TikTokAppEventRequestHandler alloc] init];
     
     return self;
 }
@@ -77,7 +80,7 @@
             }
             
             for (NSArray *eventChunk in eventChunks) {
-                [TikTokAppEventRequestHandler sendPOSTRequest:eventChunk withConfig:self.config];
+                [self.requestHandler sendPOSTRequest:eventChunk withConfig:self.config];
             }
         } else {
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
