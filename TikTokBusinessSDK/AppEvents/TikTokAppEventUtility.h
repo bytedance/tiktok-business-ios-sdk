@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
     TikTokAppEventsFlushReasonTimer,
     TikTokAppEventsFlushReasonEventThreshold,
     TikTokAppEventsFlushReasonEagerlyFlushingEvent,
-    TikTokAppEventsFlushReasonAppEnteredBackground,
+    TikTokAppEventsFlushReasonAppBecameActive,
 };
 
 @interface TikTokAppEventUtility : NSObject
