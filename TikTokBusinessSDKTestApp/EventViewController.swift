@@ -109,8 +109,17 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as! FormViewController
-        vc.titleName = self.titleForForm
+        if(segue.identifier == "segueToForm") {
+            let vc = segue.destination as! FormViewController
+            vc.titleName = self.titleForForm
+        } else if (segue.identifier == "segueToMetrics") {
+            let vc = segue.destination as! MetricsViewController
+//            vc.titleName = "Metrics Dashboard"
+        }
+    }
+    
+    @IBAction func metricsButtonClicked(_ sender: Any) {
+        performSegue(withIdentifier: "segueToMetrics", sender: self)
     }
     
     @IBAction func eventPosted(_ sender: Any) {
