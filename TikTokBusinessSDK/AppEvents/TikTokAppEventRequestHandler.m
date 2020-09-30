@@ -100,7 +100,11 @@
         // handle basic connectivity issues
         if(error) {
             NSLog(@"error: %@", error);
-            [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+            @synchronized(self) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                });
+            }
             return;
         }
         
@@ -110,7 +114,11 @@
             
             if (statusCode != 200) {
                 NSLog(@"HTTP error status code: %lu", statusCode);
-                [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                @synchronized(self) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                    });
+                }
                 return;
             }
             
@@ -138,7 +146,11 @@
                 NSLog(@"code error: %@, message: %@", code, message);
                 // if error code is retryable, persist app events to disk
                 if(![nonretryableErrorCodeSet containsObject:code]) {
-                    [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                    @synchronized(self) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                        });
+                    }
                 }
                 return;
             }
