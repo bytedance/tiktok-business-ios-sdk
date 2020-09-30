@@ -8,8 +8,9 @@
 
 import UIKit
 import TikTokBusinessSDK
+import StoreKit
 
-class EventViewController: UIViewController {
+class EventViewController: UIViewController, SKPaymentTransactionObserver {
     
     @IBOutlet weak var eventTextField: UITextField!
     @IBOutlet weak var finalPayloadTextField: UITextView!
@@ -61,6 +62,8 @@ class EventViewController: UIViewController {
     var eventTitle = ""
     var tiktok: Any?
     
+    let productId = "btd.TikTokBusinessSDKTestApp.ConsumablePurchaseExample"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Initializing TikTok SDK
@@ -81,6 +84,8 @@ class EventViewController: UIViewController {
         if(eventTitle.count > 0){
             eventTextField.text = eventTitle
         }
+        
+        SKPaymentQueue.default().add(self)
         // Do any additional setup after loading the view.
     }
     
@@ -129,10 +134,19 @@ class EventViewController: UIViewController {
         
     }
     
-    @IBAction func clearPayload(_ sender: Any) {
-        finalPayloadTextField.text = "{\n\n}"
-        print("Payload cleared")
+    @IBAction func purchaseItem(_ sender: Any) {
+        print("Purchased item!")
+        
+        if SKPaymentQueue.canMakePayments() {
+            let paymentRequest = SKMutablePayment()
+            paymentRequest.productIdentifier = productId
+            SKPaymentQueue.default().add(paymentRequest)
+        } else {
+            print("User unable to make payments!")
+        }
+        
     }
+    
     
     @IBAction func generateRandomEvents(_ sender: Any) {
         let count = Int(numberOfEventsField.text ?? "") ?? 0
@@ -193,16 +207,16 @@ class EventViewController: UIViewController {
         return text
     }
     
-    /*
-
-     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
+            if transaction.transactionState == .purchased {
+                print("This gets triggered")
+                print(transaction.payment.productIdentifier)
+            } else if transaction.transactionState == .failed {
+                print("Transaction failed!")
+            }
+        }
     }
-    */
 
 }
 
