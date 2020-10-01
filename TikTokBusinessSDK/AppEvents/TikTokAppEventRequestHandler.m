@@ -103,6 +103,7 @@
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
                 });
             }
             return;
@@ -117,6 +118,7 @@
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
                     });
                 }
                 return;
@@ -149,6 +151,7 @@
                     @synchronized(self) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
                         });
                     }
                 }
