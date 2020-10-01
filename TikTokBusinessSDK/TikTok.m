@@ -76,7 +76,6 @@ static dispatch_once_t onceToken = 0;
         // Fallback on earlier versions
     }
     
-    
     return self;
 }
 
