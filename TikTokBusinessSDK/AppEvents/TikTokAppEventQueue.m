@@ -11,7 +11,7 @@
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventUtility.h"
 #import "TikTokAppEventRequestHandler.h"
-#import "TikTokDeviceInfo.h"
+#import "TikTok.h"
 #import "TikTokConfig.h"
 #import "TikTokAppEventRequestHandler.h"
 
@@ -93,8 +93,7 @@
     NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
     
     if(eventsToBeFlushed.count > 0){
-        TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
-        if(deviceInfo.trackingEnabled) {
+        if([[TikTok getInstance] isTrackingEnabled]) {
             // chunk eventsToBeFlushed into subarrays of EVENT_BATCH_REQUEST_THRESHOLD length or less and send requests for each
             NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
             NSUInteger eventsRemaining = eventsToBeFlushed.count;
