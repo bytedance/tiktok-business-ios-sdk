@@ -34,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) TikTokAppEventRequestHandler *requestHandler;
 
-
 - (id)init;
 
 - (id)initWithConfig: (TikTokConfig * _Nullable)config;

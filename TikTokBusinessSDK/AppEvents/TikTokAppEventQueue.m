@@ -41,7 +41,6 @@
         [weakSelf flush:TikTokAppEventsFlushReasonTimer];
     }];
     
-    self.timeInSecondsUntilFlush = FLUSH_PERIOD_IN_SECONDS;
     self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
         
         NSDate *fireDate = [self.flushTimer fireDate];

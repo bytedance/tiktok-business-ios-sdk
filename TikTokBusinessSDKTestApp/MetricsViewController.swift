@@ -82,6 +82,7 @@ class MetricsViewController: UIViewController {
         numberOfEventsInMemory.text = String(TikTok.getInMemoryEventCount());
         remainingNumberOfEventsUntilFlush.text = String(TikTok.getRemainingEventsUntilFlushThreshold());
     }
+    
     @objc func onInDiskEventQueueUpdate(_ notification:Notification) {
         numberOfEventsInDisk.text = String(TikTok.getInDiskEventCount());
     }
@@ -96,7 +97,6 @@ class MetricsViewController: UIViewController {
             numberOfEventsDumped.text = String(eventsDumped)
           }
         }
-        
     }
     
     @IBAction func numberOfEventsChanged(_ sender: Any) {
@@ -105,6 +105,7 @@ class MetricsViewController: UIViewController {
             randomEvents.setTitle("Generate \(numberOfEventsField.text ?? "") Random events", for: .normal)
         }
     }
+    
     @IBAction func generateRandomEvents(_ sender: Any) {
         let count = Int(numberOfEventsField.text ?? "") ?? 0
         if(numberOfEventsField.text!.count <= 0 || numberOfEventsField.text == "0") {return}
