@@ -23,9 +23,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSTimer *flushTimer;
 
+@property (nonatomic, strong) NSTimer *logTimer;
+
+@property (nonatomic) int timeInSecondsUntilFlush;
+
+@property (nonatomic) int remainingEventsUntilFlushThreshold;
+
 @property (nonatomic, strong, nullable) TikTokConfig *config;
 
 @property (nonatomic, strong, nullable) TikTokAppEventRequestHandler *requestHandler;
+
 
 - (id)init;
 

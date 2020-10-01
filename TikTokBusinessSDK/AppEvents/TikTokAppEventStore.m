@@ -14,28 +14,33 @@
 
 // Optimization to skip check if we know there are no persisted events
 static BOOL canSkipDiskCheck = NO;
+// Total number of events dumped as a result of exceeding max number of events in disk
+static long numberOfEventsDumped = 0;
 
 @implementation TikTokAppEventStore
 
+
 + (void)clearPersistedAppEvents {
-    // TODO: Implement logging
     [[NSFileManager defaultManager] removeItemAtPath:[[self class] getFilePath]
                                                error:NULL];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
     canSkipDiskCheck = YES;
 }
 
 + (void)persistAppEvents:(NSArray *)queue {
-    // TODO: Implement logging
     if (!queue.count) {
         return;
     }
     NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
-    
+    [[self class] clearPersistedAppEvents];
     [existingEvents addObjectsFromArray:queue];
     
     // if number of events to store is greater than MAX_NUMBER_EVENTS_IN_DISK, store the later events with length of MAX_NUMBER_EVENTS_IN_DISK
     if(existingEvents.count > MAX_NUMBER_EVENTS_IN_DISK) {
         long difference = existingEvents.count - MAX_NUMBER_EVENTS_IN_DISK;
+        numberOfEventsDumped += difference;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"eventsDumped" object:nil userInfo:@{@"numberOfEventsDumped":@(numberOfEventsDumped)}];
         NSArray *existingEventsSliced = [existingEvents subarrayWithRange:NSMakeRange(difference, MAX_NUMBER_EVENTS_IN_DISK)];
         // converts back to NSMutableArray type
         existingEvents = [existingEventsSliced mutableCopy];
@@ -53,7 +58,6 @@ static BOOL canSkipDiskCheck = NO;
         [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
 #pragma clang diagnostic pop
     }
-    
     canSkipDiskCheck = NO;
 }
 
@@ -74,11 +78,8 @@ static BOOL canSkipDiskCheck = NO;
             [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
 #pragma clang diagnostic pop
         }
-        
-        // TODO: Implement logging
-        
-        [[self class] clearPersistedAppEvents];
     }
+
     return events;
 }
 

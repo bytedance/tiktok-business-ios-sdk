@@ -43,6 +43,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @interface TikTok : NSObject
 
 @property (nonatomic, strong) TikTokLogger *logger;
+@property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
@@ -56,6 +57,11 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 + (void)setRetentionLoggingEnabled: (BOOL)enabled;
 + (void)setPaymentLoggingEnabled: (BOOL)enabled;
 + (BOOL)isEnabled;
++ (TikTokAppEventQueue *)getQueue;
++ (long)getInMemoryEventCount;
++ (long)getInDiskEventCount;
++ (long)getTimeInSecondsUntilFlush;
++ (long)getRemainingEventsUntilFlushThreshold;
 //+ (void)appWillOpenUrl:(nonnull NSURL *)url;
 //+ (void)setDeviceToken:(nonnull NSData *)deviceToken;
 //+ (void)setPushToken:(nonnull NSString *)pushToken;
