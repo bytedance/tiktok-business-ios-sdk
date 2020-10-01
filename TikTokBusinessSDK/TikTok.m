@@ -22,7 +22,7 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @interface TikTok()
 
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
-@property (nonatomic) BOOL trackingEnabled;
+//@property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL automaticLoggingEnabled;
 @property (nonatomic) BOOL installLoggingEnabled;
 @property (nonatomic) BOOL launchLoggingEnabled;
@@ -62,6 +62,21 @@ static dispatch_once_t onceToken = 0;
     self.launchLoggingEnabled = YES;
     self.retentionLoggingEnabled = YES;
     self.paymentLoggingEnabled = YES;
+    self.trackingEnabled = YES;
+    
+    if (@available(iOS 14, *)) {
+        if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+            self.userTrackingEnabled = YES;
+            [self.logger info:@"Tracking is enabled"];
+        } else {
+            self.userTrackingEnabled = NO;
+            [self.logger info:@"Tracking is disabled"];
+        }
+    } else {
+        self.userTrackingEnabled = YES; // verify
+        // Fallback on earlier versions
+    }
+    
     
     
     return self;
@@ -94,6 +109,13 @@ static dispatch_once_t onceToken = 0;
 {
     @synchronized (self) {
         [[TikTok getInstance] setTrackingEnabled:enabled];
+    }
+}
+
++ (void)setUserTrackingEnabled:(BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTok getInstance] setUserTrackingEnabled:enabled];
     }
 }
 
@@ -132,12 +154,12 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (BOOL) isEnabled
-{
-    @synchronized (self) {
-        return [[TikTok getInstance] isEnabled];
-    }
-}
+//+ (BOOL) isEnabled
+//{
+//    @synchronized (self) {
+//        return [[TikTok getInstance] isEnabled];
+//    }
+//}
 
 + (NSString *)idfa {
     @synchronized (self) {
@@ -166,6 +188,20 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (BOOL)isTrackingEnabled
+{
+    @synchronized (self) {
+        return [[TikTok getInstance] isTrackingEnabled];
+    }
+}
+
++ (BOOL)isUserTrackingEnabled
+{
+    @synchronized (self) {
+        return [[TikTok getInstance] isUserTrackingEnabled];
+    }
+}
+
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion
 {
     @synchronized (self) {
@@ -190,7 +226,7 @@ static dispatch_once_t onceToken = 0;
     NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
     NSDate *currentLaunch = [NSDate date];
     
-//    NSLog(@"Current date is: %@", currentLaunch);
+        
     if(self.trackingEnabled){
         if(self.automaticLoggingEnabled) {
             if (launchedBefore && self.launchLoggingEnabled) {
@@ -223,7 +259,11 @@ static dispatch_once_t onceToken = 0;
      
         // Remove this later, based on where modal needs to be called to start tracking
         // This will be needed to be called before we can call a function to get IDFA
-        [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
+        if(!tiktokConfig.isSuppressed) {
+            [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
+        }
+    } else {
+        [self.logger info:@"Tracking has not been enabled by the developer!"];
     }
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -289,6 +329,26 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
+- (void)setTrackingEnabled:(BOOL)trackingEnabled
+{
+    _trackingEnabled = trackingEnabled;
+}
+
+- (void)setUserTrackingEnabled:(BOOL)userTrackingEnabled
+{
+    _userTrackingEnabled = userTrackingEnabled;
+}
+
+- (BOOL)isTrackingEnabled
+{
+    return self.trackingEnabled;
+}
+
+- (BOOL)isUserTrackingEnabled
+{
+    return self.userTrackingEnabled;
+}
+
 //- (void)setEnabled:(BOOL)enabled
 //{
 //    self.enabled = enabled;
@@ -327,10 +387,10 @@ static dispatch_once_t onceToken = 0;
             completion(status);
             if (@available(iOS 14, *)) {
                 if(status == ATTrackingManagerAuthorizationStatusAuthorized) {
-                    self.trackingEnabled = YES;
+                    self.userTrackingEnabled = YES;
                     [self.logger info:@"Tracking is enabled"];
                 } else {
-                    self.trackingEnabled = NO;
+                    self.userTrackingEnabled = NO;
                     [self.logger info:@"Tracking is disabled"];
                 }
             } else {

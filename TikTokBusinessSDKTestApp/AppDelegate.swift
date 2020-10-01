@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let config = TikTokConfig.init(appToken: "<YOUR APP TOKEN>", andAppSecret: "<YOUR APP SECRET>");
+        let config = TikTokConfig.init(appToken: "<YOUR APP TOKEN>", suppressAppTrackingDialog: false);
 //        TikTokConfig.disableTracking()
 //        TikTokConfig.disableAutomaticLogging()
 //        TikTokConfig.disableInstallLogging()
@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        TikTokConfig.disableRetentionLogging()
 //        TikTokConfig.disablePaymentLogging()
         TikTok.appDidLaunch(config);
+        print("Developer Tracking is", TikTok.isTrackingEnabled() ? "enabled" : "disabled")
+        print("User Tracking is", TikTok.isUserTrackingEnabled() ? "enabled": "disabled")
         return true
     }
 

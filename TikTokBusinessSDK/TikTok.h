@@ -43,6 +43,8 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @interface TikTok : NSObject
 
 @property (nonatomic, strong) TikTokLogger *logger;
+@property (nonatomic) BOOL trackingEnabled;
+@property (nonatomic) BOOL userTrackingEnabled;
 
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
@@ -50,12 +52,15 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //+ (void)trackSubsessionStart;
 //+ (void)trackSubsessionEnd;
 + (void)setTrackingEnabled: (BOOL)enabled;
+//+ (void)setUserTrackingEnabled: (BOOL)enabled;
 + (void)setAutomaticLoggingEnabled: (BOOL)enabled;
 + (void)setInstallLoggingEnabled: (BOOL)enabled;
 + (void)setLaunchLoggingEnabled: (BOOL)enabled;
 + (void)setRetentionLoggingEnabled: (BOOL)enabled;
 + (void)setPaymentLoggingEnabled: (BOOL)enabled;
-+ (BOOL)isEnabled;
+//+ (BOOL)isEnabled;
++ (BOOL)isTrackingEnabled;
++ (BOOL)isUserTrackingEnabled;
 //+ (void)appWillOpenUrl:(nonnull NSURL *)url;
 //+ (void)setDeviceToken:(nonnull NSData *)deviceToken;
 //+ (void)setPushToken:(nonnull NSString *)pushToken;
