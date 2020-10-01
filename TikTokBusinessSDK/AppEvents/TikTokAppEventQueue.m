@@ -52,7 +52,7 @@
     }];
     
     self.config = config;
-    
+        
     self.requestHandler = [[TikTokAppEventRequestHandler alloc] init];
     
     [self calculateAndSetRemainingEventThreshold];
@@ -71,10 +71,10 @@
 
 - (void)flush:(TikTokAppEventsFlushReason)flushReason {
     @synchronized (self) {
-        NSLog(@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count);
+        [[[TikTok getInstance] logger] info:@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count];
         NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
         [TikTokAppEventStore clearPersistedAppEvents];
-        NSLog(@"Number events from disk: %lu", eventsFromDisk.count);
+        [[[TikTok getInstance] logger] info:@"Number events from disk: %lu", eventsFromDisk.count];
         NSMutableArray *eventsToBeFlushed = [NSMutableArray arrayWithArray:eventsFromDisk];
         NSArray *copiedEventQueue = [self.eventQueue copy];
         [eventsToBeFlushed addObjectsFromArray:copiedEventQueue];
@@ -90,7 +90,7 @@
 
 - (void)flushOnMainQueue:(NSMutableArray *)eventsToBeFlushed
                forReason:(TikTokAppEventsFlushReason)flushReason {
-    NSLog(@"Total number events to be flushed: %lu", eventsToBeFlushed.count);
+    [[[TikTok getInstance] logger] info:@"Total number events to be flushed: %lu", eventsToBeFlushed.count];
     
     if(eventsToBeFlushed.count > 0){
         if([[TikTok getInstance] isTrackingEnabled]) {
@@ -115,7 +115,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
         }
     }
-    NSLog(@"End flush, current queue count: %lu", self.eventQueue.count);
+    [[[TikTok getInstance] logger] info:@"End flush, current queue count: %lu", self.eventQueue.count];
 }
 
 - (void)calculateAndSetRemainingEventThreshold {

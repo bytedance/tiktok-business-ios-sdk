@@ -11,6 +11,7 @@
 #import "TikTokAppEventStore.h"
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
+#import "TikTok.h"
 
 @implementation TikTokAppEventRequestHandler
 
@@ -76,8 +77,8 @@
     
     // TODO: Remove logs below once convert to prod API
     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    NSLog(@"Access token: %@", config.appToken);
-    NSLog(@"postDataJSON: %@", postDataJSONString);
+    [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
+    [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
@@ -99,7 +100,7 @@
         
         // handle basic connectivity issues
         if(error) {
-            NSLog(@"error: %@", error);
+            [[[TikTok getInstance] logger] error:@"error in connection", error];
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -114,7 +115,7 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                NSLog(@"HTTP error status code: %lu", statusCode);
+                [[[TikTok getInstance] logger] error:@"HTTP error status code: %lu", statusCode];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -161,8 +162,7 @@
         }
         
         NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        NSLog(@"Request response: %@", requestResponse);
-        
+        [[[TikTok getInstance] logger] info:@"Request response: %@", requestResponse];
     }] resume];
 }
 

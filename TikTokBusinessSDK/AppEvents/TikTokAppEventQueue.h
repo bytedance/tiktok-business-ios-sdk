@@ -10,6 +10,7 @@
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventUtility.h"
 #import "TikTokConfig.h"
+#import "TikTokLogger.h"
 #import "TikTokAppEventRequestHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
