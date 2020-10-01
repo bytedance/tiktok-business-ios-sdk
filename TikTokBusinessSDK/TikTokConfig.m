@@ -18,9 +18,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret
++ (TikTokConfig *)configWithAppToken:(NSString *)appToken suppressAppTrackingDialog:(BOOL)isSuppressed
 {
-    return [[TikTokConfig alloc] initWithAppToken:appToken andAppSecret:appSecret];
+    return [[TikTokConfig alloc] initWithAppToken:appToken suppressAppTrackingDialog:isSuppressed];
 }
 
 + (void)disableTracking
@@ -90,14 +90,15 @@
     [[TikTok getInstance] setPaymentLoggingEnabled:NO];
 }
 
-- (id)initWithAppToken:(NSString *)appToken andAppSecret:(NSString *)appSecret
+- (id)initWithAppToken:(NSString *)appToken suppressAppTrackingDialog:(BOOL)isSuppressed
 {
     self = [super init];
     
     if(self == nil) return nil;
     
     _appToken = appToken;
-    _secretId = appSecret;
+    _isSuppressed = isSuppressed;
+//    _secretId = appSecret;
 
     self.logger = [[TikTok alloc] init].logger;
     [self.logger info: @"TikTokConfig was valid!"];

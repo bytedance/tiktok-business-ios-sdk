@@ -19,7 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (nonatomic, copy, readonly, nonnull) NSString *appToken;
-@property (nonatomic, copy, readonly, nullable) NSString *secretId;
+@property (nonatomic, readonly) BOOL isSuppressed;
+//@property (nonatomic, copy, readonly, nullable) NSString *secretId;
 //@property (nonatomic, copy, readonly, nonnull) NSString *environment;
 //@property (nonatomic, copy, readonly, nullable) NSString *appSecret;
 
@@ -30,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL launchLoggingEnabled;
 @property (nonatomic, assign) BOOL retentionLoggingEnabled;
 @property (nonatomic, assign) BOOL paymentLoggingEnabled;
-
-
 
 //@property (nonatomic, assign) BOOL eventBufferingEnabled;
 
@@ -53,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 //- (void)deactivateSKAdNetworkHandling;
 
 + (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
-                                 andAppSecret: (nonnull NSString *)appSecret;
+                    suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 + (void)disableTracking;
 - (void)disableTracking;
@@ -74,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disablePaymentLogging;
 
 - (nullable id)initWithAppToken:(nonnull NSString *)appToken
-                   andAppSecret: (nonnull NSString *)appSecret;
+                suppressAppTrackingDialog: (BOOL)isSuppressed;
 //+ (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
 //                               environment:(nonnull NSString *)environment
 //                     allowSuppressLogLevel:(BOOL)allowSuppressLogLevel;

@@ -113,7 +113,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
             let vc = segue.destination as! FormViewController
             vc.titleName = self.titleForForm
         } else if (segue.identifier == "segueToMetrics") {
-            let vc = segue.destination as! MetricsViewController
+            _ = segue.destination as! MetricsViewController
 //            vc.titleName = "Metrics Dashboard"
         }
     }
@@ -139,7 +139,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").deviceVendorId);
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").localeInfo);
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").userAgent);
-        print(TikTokDeviceInfo.init(sdkPrefix: "").ipInfo);
+//        print(TikTokDeviceInfo.init(sdkPrefix: "").ipInfo);
         
     }
     
