@@ -75,17 +75,17 @@
                                                          error:&error];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
     
-    // TODO: Remove logs below once convert to prod API
-    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
-    [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
+    // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
+    // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+    // [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
+    // [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
     [request setURL:[NSURL URLWithString:@"http://10.231.18.38:9496/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    // TODO: get access token from TikTok SDK initialization
+    // TODO: use config.appToken for Access Token once convert to prod API
     [request setValue:@"abcdabcdabcdabcd00509731ca2343bbecb2b846" forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     // TODO: Remove 'x-use-boe' and 'x-tt-env' once release in prod

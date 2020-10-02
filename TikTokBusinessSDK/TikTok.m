@@ -308,7 +308,6 @@ static dispatch_once_t onceToken = 0;
 - (void)trackEvent:(TikTokAppEvent *)appEvent
 {
     [self.queue addEvent:appEvent];
-    [self.logger info:@"Queue count: %lu", self.queue.eventQueue.count];
 }
 
 - (void)trackPurchase:(TikTokAppEvent *)appEvent

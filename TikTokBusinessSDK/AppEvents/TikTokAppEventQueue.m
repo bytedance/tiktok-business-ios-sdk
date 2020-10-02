@@ -120,9 +120,9 @@
 - (void)calculateAndSetRemainingEventThreshold {
     
     if(self.eventQueue.count == 0) {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD;
+        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD + 1;
     } else {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count - 1;
+        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count;
     }
     
 }
