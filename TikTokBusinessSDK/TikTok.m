@@ -21,7 +21,6 @@ NSString * const TikTokEnvironmentProduction = @"production";
 
 @interface TikTok()
 
-@property (nonatomic, strong) TikTokAppEventQueue *queue;
 //@property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL automaticLoggingEnabled;
 @property (nonatomic) BOOL installLoggingEnabled;
@@ -76,8 +75,6 @@ static dispatch_once_t onceToken = 0;
         self.userTrackingEnabled = YES; // verify
         // Fallback on earlier versions
     }
-    
-    
     
     return self;
 }
@@ -209,6 +206,42 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (TikTokAppEventQueue *)getQueue
+{
+    @synchronized (self) {
+        return [[TikTok getInstance] queue];
+    }
+}
+
++ (long)getInMemoryEventCount
+{
+    @synchronized (self) {
+        return [[[TikTok getInstance] queue] eventQueue].count;
+    }
+}
+
++ (long)getInDiskEventCount
+{
+    @synchronized (self) {
+        return [TikTokAppEventStore retrievePersistedAppEvents].count;
+    }
+}
+
++ (long)getTimeInSecondsUntilFlush
+{
+    @synchronized (self) {
+        return [[[TikTok getInstance] queue] timeInSecondsUntilFlush];
+    }
+}
+
++ (long)getRemainingEventsUntilFlushThreshold
+{
+    @synchronized (self) {
+        return [[[TikTok getInstance] queue] remainingEventsUntilFlushThreshold];
+    }
+}
+
+
 - (void)appDidLaunch:(TikTokConfig *)tiktokConfig
 {
     if(self.queue != nil){
@@ -269,8 +302,6 @@ static dispatch_once_t onceToken = 0;
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    
     
 }
 
