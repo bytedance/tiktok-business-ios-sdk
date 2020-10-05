@@ -55,20 +55,28 @@
     self.requestHandler = [[TikTokAppEventRequestHandler alloc] init];
     
     [self calculateAndSetRemainingEventThreshold];
-        
+
     return self;
 }
 
 - (void)addEvent:(TikTokAppEvent *)event {
+    if([[TikTok getInstance] isRemoteSwitchOn] == NO) {
+        [[[TikTok getInstance] logger] info:@"Remote switch is off, no event added"];
+        return;
+    }
     [self.eventQueue addObject:event];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"inMemoryEventQueueUpdated" object:nil];
     if(self.eventQueue.count > EVENT_NUMBER_THRESHOLD) {
         [self flush:TikTokAppEventsFlushReasonEventThreshold];
     }
     [self calculateAndSetRemainingEventThreshold];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"inMemoryEventQueueUpdated" object:nil];
 }
 
 - (void)flush:(TikTokAppEventsFlushReason)flushReason {
+    if([[TikTok getInstance] isRemoteSwitchOn] == NO) {
+        [[[TikTok getInstance] logger] info:@"Remote switch is off, no flush logic invoked"];
+        return;
+    }
     @synchronized (self) {
         [[[TikTok getInstance] logger] info:@"Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count];
         NSArray *eventsFromDisk = [TikTokAppEventStore retrievePersistedAppEvents];
@@ -119,11 +127,7 @@
 
 - (void)calculateAndSetRemainingEventThreshold {
     
-    if(self.eventQueue.count == 0) {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD + 1;
-    } else {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count;
-    }
+    self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count + 1;
     
 }
 

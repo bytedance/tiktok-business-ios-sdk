@@ -24,6 +24,68 @@
     return self;
 }
 
+- (void) getRemoteSwitchWithCompletionHandler: (void (^) (BOOL isRemoteSwitchOn)) completionHandler
+{
+    // TODO: Update parameters and url to actual endpoint for remote switch
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
+    [request setHTTPMethod:@"GET"];
+
+    if(self.session == nil) {
+        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    }
+    [[self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        BOOL isSwitchOn = nil;
+        // handle basic connectivity issues
+        if(error) {
+            [[[TikTok getInstance] logger] error:@"error in connection", error];
+            // leave switch to on if error on request
+            isSwitchOn = YES;
+            completionHandler(isSwitchOn);
+            return;
+        }
+
+        // handle HTTP errors
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+
+            if (statusCode != 200) {
+                [[[TikTok getInstance] logger] error:@"HTTP error status code: %lu", statusCode];
+                // leave switch to on if error on request
+                isSwitchOn = YES;
+                completionHandler(isSwitchOn);
+                return;
+            }
+
+        }
+
+        NSError *dataError = nil;
+        id dataDictionary = [NSJSONSerialization
+                             JSONObjectWithData:data
+                             options:0
+                             error:&dataError];
+
+        if([dataDictionary isKindOfClass:[NSDictionary class]]) {
+            NSNumber *code = [dataDictionary objectForKey:@"code"];
+            // code != 0 indicates error from API call
+            if([code intValue] != 0) {
+                NSString *message = [dataDictionary objectForKey:@"message"];
+                [[[TikTok getInstance] logger] error:@"code error: %@, message: %@", code, message];
+                // leave switch to on if error on request
+                isSwitchOn = YES;
+                completionHandler(isSwitchOn);
+                return;
+            }
+        }
+
+        // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+        // [[[TikTok getInstance] logger] info:@"Request response from check remote switch: %@", requestResponse];
+        
+        // TODO: Update isSwitchOn based on TiktokBusinessSdkConfig.enableSdk from response
+        isSwitchOn = YES;
+        completionHandler(isSwitchOn);
+    }] resume];
+}
 - (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config {
     
@@ -146,7 +208,7 @@
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
-                NSLog(@"code error: %@, message: %@", code, message);
+                [[[TikTok getInstance] logger] error:@"code error: %@, message: %@", code, message];
                 // if error code is retryable, persist app events to disk
                 if(![nonretryableErrorCodeSet containsObject:code]) {
                     @synchronized(self) {

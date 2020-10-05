@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (atomic, strong, nullable) NSURLSession *session;
 
+- (void)getRemoteSwitchWithCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completion;
+
 - (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config;
 

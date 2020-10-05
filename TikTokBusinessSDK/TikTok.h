@@ -45,6 +45,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @property (nonatomic, strong) TikTokLogger *logger;
 @property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL userTrackingEnabled;
+@property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
