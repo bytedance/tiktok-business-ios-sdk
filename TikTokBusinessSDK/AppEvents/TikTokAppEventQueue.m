@@ -91,7 +91,7 @@
                forReason:(TikTokAppEventsFlushReason)flushReason {
     [[[TikTok getInstance] logger] info:@"Total number events to be flushed: %lu", eventsToBeFlushed.count];
     
-    if(eventsToBeFlushed.count > 0){
+    if(eventsToBeFlushed.count > 0) {
         if([[TikTok getInstance] isTrackingEnabled]) {
             // chunk eventsToBeFlushed into subarrays of EVENT_BATCH_REQUEST_THRESHOLD length or less and send requests for each
             NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
@@ -120,9 +120,9 @@
 - (void)calculateAndSetRemainingEventThreshold {
     
     if(self.eventQueue.count == 0) {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD;
+        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD + 1;
     } else {
-        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count - 1;
+        self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count;
     }
     
 }

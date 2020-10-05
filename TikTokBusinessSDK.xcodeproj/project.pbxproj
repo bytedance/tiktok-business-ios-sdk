@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A0DDB892527B07E00512D3B /* TikTokAppEventQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0DDB882527B07E00512D3B /* TikTokAppEventQueueTests.m */; };
+		0A0DDB9F2527C39700512D3B /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0DDB912527C39600512D3B /* libOCMock.a */; };
 		0A165DA2251E7877005889BD /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
 		0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */; };
 		0A1A065025095429001463B8 /* TikTokAppEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A1A064E25095428001463B8 /* TikTokAppEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -81,6 +83,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A0DDB882527B07E00512D3B /* TikTokAppEventQueueTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventQueueTests.m; sourceTree = "<group>"; };
+		0A0DDB912527C39600512D3B /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
+		0A0DDB932527C39700512D3B /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
+		0A0DDB942527C39700512D3B /* OCMMacroState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
+		0A0DDB952527C39700512D3B /* OCMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
+		0A0DDB962527C39700512D3B /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
+		0A0DDB972527C39700512D3B /* OCMVerifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMVerifier.h; sourceTree = "<group>"; };
+		0A0DDB982527C39700512D3B /* OCMFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMFunctions.h; sourceTree = "<group>"; };
+		0A0DDB992527C39700512D3B /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
+		0A0DDB9A2527C39700512D3B /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
+		0A0DDB9B2527C39700512D3B /* OCMQuantifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMQuantifier.h; sourceTree = "<group>"; };
+		0A0DDB9C2527C39700512D3B /* OCMLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
+		0A0DDB9D2527C39700512D3B /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
+		0A0DDB9E2527C39700512D3B /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
 		0A165D9D251E7877005889BD /* TikTokBusinessSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TikTokBusinessSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A165DA1251E7877005889BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventStoreTests.m; sourceTree = "<group>"; };
@@ -132,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A165DA2251E7877005889BD /* TikTokBusinessSDK.framework in Frameworks */,
+				0A0DDB9F2527C39700512D3B /* libOCMock.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +172,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A0DDB902527C39600512D3B /* iOS library */ = {
+			isa = PBXGroup;
+			children = (
+				0A0DDB912527C39600512D3B /* libOCMock.a */,
+				0A0DDB922527C39700512D3B /* OCMock */,
+			);
+			path = "iOS library";
+			sourceTree = "<group>";
+		};
+		0A0DDB922527C39700512D3B /* OCMock */ = {
+			isa = PBXGroup;
+			children = (
+				0A0DDB932527C39700512D3B /* OCMockObject.h */,
+				0A0DDB942527C39700512D3B /* OCMMacroState.h */,
+				0A0DDB952527C39700512D3B /* OCMock.h */,
+				0A0DDB962527C39700512D3B /* NSNotificationCenter+OCMAdditions.h */,
+				0A0DDB972527C39700512D3B /* OCMVerifier.h */,
+				0A0DDB982527C39700512D3B /* OCMFunctions.h */,
+				0A0DDB992527C39700512D3B /* OCMStubRecorder.h */,
+				0A0DDB9A2527C39700512D3B /* OCMRecorder.h */,
+				0A0DDB9B2527C39700512D3B /* OCMQuantifier.h */,
+				0A0DDB9C2527C39700512D3B /* OCMLocation.h */,
+				0A0DDB9D2527C39700512D3B /* OCMConstraint.h */,
+				0A0DDB9E2527C39700512D3B /* OCMArg.h */,
+			);
+			path = OCMock;
+			sourceTree = "<group>";
+		};
 		0A165D9E251E7877005889BD /* TikTokBusinessSDKTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */,
+				0A0DDB882527B07E00512D3B /* TikTokAppEventQueueTests.m */,
 			);
 			path = AppEvents;
 			sourceTree = "<group>";
@@ -195,6 +241,7 @@
 				8B23DF8C2502BA73008351FA /* TikTokBusinessSDK */,
 				8BB88F1C250A96CA00EC9D74 /* TikTokBusinessSDKTestApp */,
 				0A165D9E251E7877005889BD /* TikTokBusinessSDKTests */,
+				0A0DDB902527C39600512D3B /* iOS library */,
 				8B23DFAD2502BA9F008351FA /* Frameworks */,
 				8B23DF8B2502BA73008351FA /* Products */,
 			);
@@ -423,6 +470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A0DDB892527B07E00512D3B /* TikTokAppEventQueueTests.m in Sources */,
 				0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -499,12 +547,26 @@
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS\\ library",
+				);
 				INFOPLIST_FILE = TikTokBusinessSDKTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS\\ library",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.testc.TikTokBusinessSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -517,12 +579,26 @@
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS\\ library",
+				);
 				INFOPLIST_FILE = TikTokBusinessSDKTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/iOS\\ library",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.testc.TikTokBusinessSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
