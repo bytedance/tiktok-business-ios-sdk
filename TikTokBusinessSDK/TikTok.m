@@ -241,7 +241,6 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-
 - (void)appDidLaunch:(TikTokConfig *)tiktokConfig
 {
     if(self.queue != nil){
@@ -253,55 +252,62 @@ static dispatch_once_t onceToken = 0;
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     [self.logger info: @"TikTok Event Queue has been initialized!"];
     [self.logger info:@"TikTok SDK Initialized Successfully!"];
-
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
-    NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
-    NSDate *currentLaunch = [NSDate date];
     
-        
-    if(self.trackingEnabled){
-        if(self.automaticLoggingEnabled) {
-            if (launchedBefore && self.launchLoggingEnabled) {
-                [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
+        [self.queue.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
+            self.isRemoteSwitchOn = isRemoteSwitchOn;
+            if(self.isRemoteSwitchOn) {
+                [[[TikTok getInstance] logger] info:@"Remote switch is on"];
             } else {
-                if(!launchedBefore && self.installLoggingEnabled) {
-                    [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
-                }
-                [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
-                [defaults synchronize];
+                [[[TikTok getInstance] logger] info:@"Remote switch is off"];
             }
             
-            if(lastLaunched && self.retentionLoggingEnabled) {
-                NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
-                int numberOfDays = secondsBetween / 86400;
-                if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
-                    [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
+            NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
+            NSDate *currentLaunch = [NSDate date];
+            
+            if(self.trackingEnabled){
+                if(self.automaticLoggingEnabled) {
+                    if (launchedBefore && self.launchLoggingEnabled) {
+                        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
+                    } else {
+                        if(!launchedBefore && self.installLoggingEnabled) {
+                            [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
+                        }
+                        [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
+                        [defaults synchronize];
+                    }
+                    
+                    if(lastLaunched && self.retentionLoggingEnabled) {
+                        NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
+                        int numberOfDays = secondsBetween / 86400;
+                        if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
+                            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+                        }
+                    } else {
+                        [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
+                        [defaults synchronize];
+                    }
+                    
+                    if(self.paymentLoggingEnabled){
+                        // TODO: this needs to be checked on the test app!
+                        // [TikTokPaymentObserver startObservingTransactions];
+                    }
+                }
+             
+                // Remove this later, based on where modal needs to be called to start tracking
+                // This will be needed to be called before we can call a function to get IDFA
+                if(!tiktokConfig.isSuppressed) {
+                    [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
                 }
             } else {
-                [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
-                [defaults synchronize];
+                [self.logger info:@"Tracking has not been enabled by the developer!"];
             }
             
-            if(self.paymentLoggingEnabled){
-                // TODO: this needs to be checked on the test app!
-//                [TikTokPaymentObserver startObservingTransactions];
-            }
-        }
-
-     
-        // Remove this later, based on where modal needs to be called to start tracking
-        // This will be needed to be called before we can call a function to get IDFA
-        if(!tiktokConfig.isSuppressed) {
-            [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
-        }
-    } else {
-        [self.logger info:@"Tracking has not been enabled by the developer!"];
-    }
-    
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+            NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+            [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+            [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        }];
     
 }
 

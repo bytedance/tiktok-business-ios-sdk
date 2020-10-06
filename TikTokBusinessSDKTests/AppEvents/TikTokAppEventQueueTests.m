@@ -29,6 +29,12 @@
 
 - (void)setUp {
     [super setUp];
+    TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" suppressAppTrackingDialog:NO];
+    [TikTok appDidLaunch:config];
+    TikTok *tiktok = [TikTok getInstance];
+    id partialMock = OCMPartialMock(tiktok);
+    OCMStub([partialMock isRemoteSwitchOn]).andReturn(YES);
+    
     self.queue = [[TikTokAppEventQueue alloc] init];
     XCTAssertTrue(self.queue.eventQueue.count == 0, @"Queue should be empty");
 }
@@ -67,4 +73,3 @@
 }
 
 @end
-
