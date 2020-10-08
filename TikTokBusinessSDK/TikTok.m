@@ -292,6 +292,9 @@ static dispatch_once_t onceToken = 0;
                     if(self.paymentLoggingEnabled){
                         // TODO: this needs to be checked on the test app!
                         // [TikTokPaymentObserver startObservingTransactions];
+                        NSLog(@"Control reaches this part!");
+                        [TikTokPaymentObserver startObservingTransactions];
+                        
                     }
                 }
              

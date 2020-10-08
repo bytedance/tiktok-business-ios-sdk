@@ -138,9 +138,9 @@
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
-    // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    // [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
-    // [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
+     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+     [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
+     [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"

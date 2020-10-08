@@ -61,7 +61,7 @@ class MetricsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Queue Metrics"
         if((numberOfEventsField.text?.count)! > 0){
             randomEvents.setTitle("Generate " + "Random events", for: .normal)
         }

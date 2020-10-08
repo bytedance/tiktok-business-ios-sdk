@@ -62,7 +62,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
     var eventTitle = ""
     var tiktok: Any?
     
-    let productId = "btd.TikTokBusinessSDKTestApp.ConsumablePurchaseExample"
+    let productId = "btd.TikTokBusinessSDKTestApp.ConsumableExampleThree"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,6 +115,8 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         } else if (segue.identifier == "segueToMetrics") {
             _ = segue.destination as! MetricsViewController
 //            vc.titleName = "Metrics Dashboard"
+        } else if(segue.identifier == "segueToPurchase") {
+            _ = segue.destination as! PurchaseViewController
         }
     }
     
@@ -221,8 +223,10 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
             if transaction.transactionState == .purchased {
                 print("This gets triggered")
                 print(transaction.payment.productIdentifier)
+                queue.finishTransaction(transaction);
             } else if transaction.transactionState == .failed {
                 print("Transaction failed!")
+                queue.finishTransaction(transaction);
             }
         }
     }
