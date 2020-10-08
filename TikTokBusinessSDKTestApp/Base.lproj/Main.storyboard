@@ -14,7 +14,7 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="EventViewController" customModule="TikTokBusinessSDKTestApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rgh-PX-GCO">
@@ -117,7 +117,7 @@
             <objects>
                 <viewController id="zLJ-Xz-Ugo" customClass="FormViewController" customModule="TikTokBusinessSDKTestApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cQH-gZ-dF0">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="gr3-eV-v5A"/>
                         <color key="backgroundColor" systemColor="systemOrangeColor"/>
@@ -154,7 +154,7 @@
         <scene sceneID="S5e-bb-Aco">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="piv-5z-cfg" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Event" id="WgU-Ju-4Js"/>
+                    <tabBarItem key="tabBarItem" title="Event" image="paperplane.fill" catalog="system" selectedImage="paperplane.fill" id="WgU-Ju-4Js"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yH5-vo-VkF">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -173,7 +173,7 @@
         <scene sceneID="NQE-fu-qnH">
             <objects>
                 <navigationController id="FMa-Ie-X2b" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Purchase" id="lkp-OG-34X"/>
+                    <tabBarItem key="tabBarItem" title="Purchase" image="wallet.pass.fill" catalog="system" selectedImage="wallet.pass.fill" id="lkp-OG-34X"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ehj-OY-QGs">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -190,7 +190,7 @@
         <scene sceneID="4xM-GE-mPh">
             <objects>
                 <navigationController id="Ne6-56-5AA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Queue Metrics" id="l6G-n2-AbW"/>
+                    <tabBarItem key="tabBarItem" title="Queue Metrics" image="line.horizontal.3.decrease.circle.fill" catalog="system" selectedImage="line.horizontal.3.decrease.circle.fill" id="l6G-n2-AbW"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7jk-5n-vYs">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -291,14 +291,14 @@
             <objects>
                 <viewController id="507-Wg-4bh" customClass="MetricsViewController" customModule="TikTokBusinessSDKTestApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hVa-S2-6XL">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="enter number of events" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-Vx-VMk">
-                                <rect key="frame" x="115" y="431" width="185" height="34"/>
+                                <rect key="frame" x="46" y="431" width="323" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <action selector="numberOfEventsChanged:" destination="507-Wg-4bh" eventType="editingDidEnd" id="Gh6-Kc-cy6"/>
@@ -313,9 +313,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JAw-rv-GWI">
-                                <rect key="frame" x="114" y="480" width="187" height="31"/>
+                                <rect key="frame" x="46" y="480" width="323" height="61"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Generate Random Events">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -410,14 +411,17 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cnc-er-im7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="707" y="899"/>
+            <point key="canvasLocation" x="704.34782608695662" y="898.66071428571422"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ocb-7f-deN"/>
-        <segue reference="0ra-nx-Sto"/>
+        <segue reference="Fde-eA-bTE"/>
+        <segue reference="z05-FH-R9w"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="line.horizontal.3.decrease.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="paperplane.fill" catalog="system" width="128" height="118"/>
+        <image name="wallet.pass.fill" catalog="system" width="115" height="128"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

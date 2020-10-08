@@ -19,16 +19,6 @@ class PurchaseViewController: UIViewController, SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         
         for transaction in transactions {
-            if transaction.transactionState == .purchased {
-                print("Transaction successful!")
-//                print(transaction.payment.productIdentifier)
-                queue.finishTransaction(transaction);
-            } else if transaction.transactionState == .failed {
-                print("Transaction failed!")
-            } else if transaction.transactionState == .restored {
-                print(transaction.transactionIdentifier as Any)
-                print("Transaction restored")
-            }
             if transaction.transactionState != .purchasing {
                 queue.finishTransaction(transaction);
             }

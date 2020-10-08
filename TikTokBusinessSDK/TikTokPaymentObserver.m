@@ -71,7 +71,6 @@ static NSMutableArray *g_pendingRequestors;
         if(!_observingTransactions) {
             [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
             _observingTransactions = YES;
-            NSLog(@"Started observing transaction queue...");
         }
     }
 }
@@ -93,7 +92,6 @@ static NSMutableArray *g_pendingRequestors;
           case SKPaymentTransactionStatePurchased:
           case SKPaymentTransactionStateFailed:
           case SKPaymentTransactionStateRestored:
-                NSLog(@"Transaction is being handled...");
             [self handleTransaction:transaction];
             break;
           case SKPaymentTransactionStateDeferred:
@@ -170,7 +168,6 @@ static NSMutableArray *g_pendingRequestors;
         [g_pendingRequestors addObject:self];
     }
     [self.productRequest start];
-    NSLog(@"Product is being resolved...");
 }
 
 
@@ -217,20 +214,21 @@ static NSMutableArray *g_pendingRequestors;
         @"num_items": @(payment.quantity),
         @"transaction_date": transactionDate ?: @""
     }];
-    
+
     if(product){
+
         [eventParameters addEntriesFromDictionary:@{
-            @"currency": [product.priceLocale objectForKey:NSLocaleCurrencyCode],
-            @"num_items": @(payment.quantity),
-            @"product_name": product.localizedTitle,
-            @"name_description": product.localizedDescription,
+            @"currency": [product.priceLocale objectForKey:NSLocaleCurrencyCode] ? : @"",
+            @"num_items": @(payment.quantity) ? : @"",
+            @"product_name": product.localizedTitle ? : @"",
+            @"name_description": product.localizedDescription ? : @"",
         }];
-        
+
         if(transactionId){
             [eventParameters setObject:transactionId forKey:@"order_id"];
         }
     }
-    
+
     if (@available(iOS 11.2, *)) {
         if([self isSubscription:product]) {
             [eventParameters setObject:[self durationOfSubscriptionPeriod:product.subscriptionPeriod] forKey:@"subscription_period"];
@@ -244,13 +242,15 @@ static NSMutableArray *g_pendingRequestors;
                 } else {
                     [eventParameters setObject:@"0" forKey:@"has_free_trial"];
                 }
+                [eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:@"trial_period"];
+                [eventParameters setObject:discount.price forKey:@"trial_price"];
             }
-            [eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:@"trial_period"];
-            [eventParameters setObject:discount.price forKey:@"trial_price"];
+
         } else {
             [eventParameters setObject:@"inapp" forKey:@"in_app_purchase_type"];
         }
     }
+
     return eventParameters;
 }
 
@@ -434,7 +434,6 @@ static NSMutableArray *g_pendingRequestors;
     }
     
     // TODO: Track Event here but not sure what the event parameters will be just as above
-    NSLog(@"Logging Implicing Transaction Event...");
     [self logImplicitTransactionEvent:eventName valueToSum:totalAmount parameters:[self getEventParametersOfProduct:product withTransaction:transaction]];
 }
 
@@ -455,7 +454,6 @@ static NSMutableArray *g_pendingRequestors;
     
     NSError *error = nil;
     TikTokAppEvent *purchaseEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withParameters:[NSJSONSerialization dataWithJSONObject:eventParameters options:NSJSONWritingPrettyPrinted error:&error]];
-    NSLog(@"Tracking purchase!");
     [[TikTok getInstance] trackPurchase:purchaseEvent];
 }
 

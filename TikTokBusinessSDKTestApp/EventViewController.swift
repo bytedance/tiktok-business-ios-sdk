@@ -221,11 +221,8 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             if transaction.transactionState == .purchased {
-                print("This gets triggered")
-                print(transaction.payment.productIdentifier)
                 queue.finishTransaction(transaction);
             } else if transaction.transactionState == .failed {
-                print("Transaction failed!")
                 queue.finishTransaction(transaction);
             }
         }
