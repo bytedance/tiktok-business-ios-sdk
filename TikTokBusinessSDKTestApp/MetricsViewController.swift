@@ -56,8 +56,7 @@ class MetricsViewController: UIViewController {
             "UNLOCK_ACHIEVEMENT": ["description", "achievement_type"]
     ]
     
-    
-    var payload = "{\n\n}"
+    var payload = NSMutableDictionary()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,20 +113,12 @@ class MetricsViewController: UIViewController {
             if(randomEvent == "LAUNCH_APP" || randomEvent == "INSTALL_APP") {
                 num -= 1
             }
-            self.payload = "{\n"
-            self.payload += "\t\"event_name\": \""
-            self.payload += randomEvent!
-            self.payload += "\",\n"
+            self.payload.setValue(randomEvent, forKey: "event_name")
             let fields = eventToField[randomEvent!]
             for fieldIndex in 0 ..< fields!.count {
-                self.payload += "\t\""
-                self.payload += fields![fieldIndex]
-                self.payload += "\": \""
-                self.payload += randomText(from: 5, to: 20)
-                self.payload += "\",\n"
+                self.payload.setValue(randomText(from: 5, to: 20), forKey: fields![fieldIndex])
             }
-            self.payload = self.payload + "}"
-            let event = TikTokAppEvent.init(eventName: randomEvent!, withParameters: self.payload.data(using: .utf8)!)
+            let event = TikTokAppEvent.init(eventName: randomEvent!, withParameters: self.payload as! [AnyHashable : Any])
             TikTok.trackEvent(event)
         }
     }

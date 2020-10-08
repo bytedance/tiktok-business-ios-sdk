@@ -452,8 +452,7 @@ static NSMutableArray *g_pendingRequestors;
     [eventParameters setObject:@"1" forKey:@"automatic_logged_purchase"];
     [eventParameters setObject:[[NSNumber numberWithDouble:valueToSum] stringValue] forKey:@"amount"];
     
-    NSError *error = nil;
-    TikTokAppEvent *purchaseEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withParameters:[NSJSONSerialization dataWithJSONObject:eventParameters options:NSJSONWritingPrettyPrinted error:&error]];
+    TikTokAppEvent *purchaseEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withParameters:eventParameters];
     [[TikTok getInstance] trackPurchase:purchaseEvent];
 }
 

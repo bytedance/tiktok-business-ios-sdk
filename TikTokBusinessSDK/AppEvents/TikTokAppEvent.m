@@ -17,20 +17,16 @@
 
 - (id)initWithEventName:(NSString *)eventName
 {
-    self = [super init];
     if (self == nil) {
         return nil;
     }
     
-    self.eventName = eventName;
-    self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
-    self.parameters = @{};
+    return [self initWithEventName:eventName withParameters:@{}];
     
-    return self;
 }
 
 - (id)initWithEventName:(NSString *)eventName
-         withParameters: (NSData *)jsonObject
+         withParameters: (NSDictionary *)parameters
 {
     self = [super init];
     if (self == nil) {
@@ -39,24 +35,8 @@
     
     self.eventName = eventName;
     self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
-    
-    NSError *error = nil;
-    id object = [NSJSONSerialization
-                 JSONObjectWithData:jsonObject
-                 options:0
-                 error:&error];
-    
-    if(error) {
-        NSLog(@"JSON is malformed");
-        self.parameters = @{};
-    }
-    
-    if([object isKindOfClass:[NSDictionary class]]) {
-        self.parameters = object;
-    } else {
-        NSLog(@"Passed in object does not convert to NSDictionary");
-        self.parameters = @{};
-    }
+    self.parameters = parameters;
+   
     return self;
 }
 
