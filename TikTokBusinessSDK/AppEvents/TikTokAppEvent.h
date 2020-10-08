@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithEventName: (NSString *)eventName;
 
 - (instancetype)initWithEventName: (NSString *)eventName
-                   withParameters: (NSData *)jsonObject;
+                   withParameters: (NSDictionary *)parameters;
 
 @end
 
