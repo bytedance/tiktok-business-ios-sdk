@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A0DDB892527B07E00512D3B /* TikTokAppEventQueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0DDB882527B07E00512D3B /* TikTokAppEventQueueTests.m */; };
 		0A0DDB9F2527C39700512D3B /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0DDB912527C39600512D3B /* libOCMock.a */; };
+		0A0DDBB7252F948600512D3B /* TikTokAppEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0DDBB6252F948600512D3B /* TikTokAppEventTests.m */; };
 		0A165DA2251E7877005889BD /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
 		0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */; };
 		0A1A065025095429001463B8 /* TikTokAppEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A1A064E25095428001463B8 /* TikTokAppEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -98,6 +99,7 @@
 		0A0DDB9C2527C39700512D3B /* OCMLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
 		0A0DDB9D2527C39700512D3B /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
 		0A0DDB9E2527C39700512D3B /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
+		0A0DDBB6252F948600512D3B /* TikTokAppEventTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventTests.m; sourceTree = "<group>"; };
 		0A165D9D251E7877005889BD /* TikTokBusinessSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TikTokBusinessSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A165DA1251E7877005889BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventStoreTests.m; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 			children = (
 				0A165DB6251E8E37005889BD /* TikTokAppEventStoreTests.m */,
 				0A0DDB882527B07E00512D3B /* TikTokAppEventQueueTests.m */,
+				0A0DDBB6252F948600512D3B /* TikTokAppEventTests.m */,
 			);
 			path = AppEvents;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 			files = (
 				0A0DDB892527B07E00512D3B /* TikTokAppEventQueueTests.m in Sources */,
 				0A165DB7251E8E37005889BD /* TikTokAppEventStoreTests.m in Sources */,
+				0A0DDBB7252F948600512D3B /* TikTokAppEventTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
