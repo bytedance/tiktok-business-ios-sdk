@@ -96,6 +96,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 - (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent:(nullable TikTokAppEvent *)appEvent;
+- (void)trackPurchase:(nullable TikTokAppEvent *)appEvent;
 //- (void)setEnabled:(BOOL)enabled;
 //- (void)setAutomaticLoggingEnabled: (BOOL)enabled;
 //- (void)setInstallLoggingEnabled: (BOOL)enabled;

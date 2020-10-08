@@ -49,6 +49,7 @@
 		8BB88F30250A96D400EC9D74 /* TikTokBusinessSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F34250A986600EC9D74 /* FormViewController.swift */; };
 		8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F36250A9A4100EC9D74 /* EventViewController.swift */; };
+		8BEA4661252E96F800E12E0E /* PurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEA4660252E96F800E12E0E /* PurchaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +141,7 @@
 		8BB88F2B250A96CB00EC9D74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8BB88F34250A986600EC9D74 /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		8BB88F36250A9A4100EC9D74 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		8BEA4660252E96F800E12E0E /* PurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +309,7 @@
 				8BB88F36250A9A4100EC9D74 /* EventViewController.swift */,
 				8BB88F34250A986600EC9D74 /* FormViewController.swift */,
 				8B6D9C052525333C00829F88 /* MetricsViewController.swift */,
+				8BEA4660252E96F800E12E0E /* PurchaseViewController.swift */,
 				8BB88F23250A96CA00EC9D74 /* Main.storyboard */,
 				8BB88F26250A96CB00EC9D74 /* Assets.xcassets */,
 				8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */,
@@ -501,6 +504,7 @@
 				8B6D9C062525333C00829F88 /* MetricsViewController.swift in Sources */,
 				8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */,
 				8BB88F22250A96CA00EC9D74 /* ViewController.swift in Sources */,
+				8BEA4661252E96F800E12E0E /* PurchaseViewController.swift in Sources */,
 				8BB88F1E250A96CA00EC9D74 /* AppDelegate.swift in Sources */,
 				8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */,
 				8BB88F20250A96CA00EC9D74 /* SceneDelegate.swift in Sources */,
