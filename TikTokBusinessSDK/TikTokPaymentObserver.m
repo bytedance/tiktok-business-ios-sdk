@@ -71,6 +71,7 @@ static NSMutableArray *g_pendingRequestors;
         if(!_observingTransactions) {
             [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
             _observingTransactions = YES;
+            NSLog(@"Starting Transactions Tracking...");
         }
     }
 }
@@ -81,6 +82,7 @@ static NSMutableArray *g_pendingRequestors;
         if(_observingTransactions) {
             [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
             _observingTransactions = NO;
+            NSLog(@"Stopping Transaction Tracking...");
         }
     }
 }

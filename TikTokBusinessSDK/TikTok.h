@@ -42,12 +42,13 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 
 @interface TikTok : NSObject
 
-@property (nonatomic, strong) TikTokLogger *logger;
+@property (nonatomic, weak) id<TikTokLogger> logger;
 @property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 
+//+ (id<TikTokLogger>)getLogger;
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
 + (void)trackPurchase: (nullable TikTokAppEvent *)appEvent;
@@ -92,17 +93,17 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //+ (void)trackSubscription:(nonnull ADJSubscription *)subscription;
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 + (nullable id)getInstance;
-
+//- (id<TikTokLogger>)getLogger;
 - (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent:(nullable TikTokAppEvent *)appEvent;
 - (void)trackPurchase:(nullable TikTokAppEvent *)appEvent;
 //- (void)setEnabled:(BOOL)enabled;
-//- (void)setAutomaticLoggingEnabled: (BOOL)enabled;
-//- (void)setInstallLoggingEnabled: (BOOL)enabled;
-//- (void)setLaunchLoggingEnabled: (BOOL)enabled;
-//- (void)setRetentionLoggingEnabled: (BOOL)enabled;
-//- (void)setPaymentLoggingEnabled: (BOOL)enabled;
+- (void)setAutomaticLoggingEnabled: (BOOL)enabled;
+- (void)setInstallLoggingEnabled: (BOOL)enabled;
+- (void)setLaunchLoggingEnabled: (BOOL)enabled;
+- (void)setRetentionLoggingEnabled: (BOOL)enabled;
+- (void)setPaymentLoggingEnabled: (BOOL)enabled;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
 - (BOOL)appIsInactive;
