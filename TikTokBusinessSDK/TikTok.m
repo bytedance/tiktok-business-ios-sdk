@@ -6,6 +6,7 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 #import "TikTok.h"
+#import "TikTokLogger.h"
 #import "TikTokConfig.h"
 #import "UIDevice+TikTokAdditions.h"
 #import "AppEvents/TikTokAppEvent.h"
@@ -15,9 +16,11 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <AppTrackingTransparency/ATTrackingManager.h>
 #import <TikTokPaymentObserver.h>
+#import "TikTokFactory.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
+//static id<TikTokLogger> tiktokLogger = nil;
 
 @interface TikTok()
 
@@ -54,14 +57,13 @@ static dispatch_once_t onceToken = 0;
     }
     
     self.queue = nil;
-    self.logger = [[TikTokLogger alloc] init];
+    self.logger = [TikTokFactory getLogger];
     self.trackingEnabled = YES;
     self.automaticLoggingEnabled = YES;
     self.installLoggingEnabled = YES;
     self.launchLoggingEnabled = YES;
     self.retentionLoggingEnabled = YES;
     self.paymentLoggingEnabled = YES;
-    self.trackingEnabled = YES;
     
     if (@available(iOS 14, *)) {
         if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
@@ -248,6 +250,13 @@ static dispatch_once_t onceToken = 0;
         return;
     }
     
+    self.trackingEnabled = tiktokConfig.trackingEnabled;
+    self.automaticLoggingEnabled = tiktokConfig.automaticLoggingEnabled;
+    self.installLoggingEnabled = tiktokConfig.installLoggingEnabled;
+    self.launchLoggingEnabled = tiktokConfig.launchLoggingEnabled;
+    self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
+    self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
+    
     
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     [self.logger info: @"TikTok Event Queue has been initialized!"];
@@ -370,12 +379,71 @@ static dispatch_once_t onceToken = 0;
 - (void)setTrackingEnabled:(BOOL)trackingEnabled
 {
     _trackingEnabled = trackingEnabled;
+    _automaticLoggingEnabled = trackingEnabled;
+    _installLoggingEnabled = trackingEnabled;
+    _launchLoggingEnabled = trackingEnabled;
+    _retentionLoggingEnabled = trackingEnabled;
+    _paymentLoggingEnabled = trackingEnabled;
+    if(trackingEnabled){
+        [TikTokPaymentObserver startObservingTransactions];
+    } else {
+        [TikTokPaymentObserver stopObservingTransactions];
+    }
 }
 
 - (void)setUserTrackingEnabled:(BOOL)userTrackingEnabled
 {
     _userTrackingEnabled = userTrackingEnabled;
 }
+
+- (void)setAutomaticLoggingEnabled:(BOOL)enabled
+{
+    _automaticLoggingEnabled = enabled;
+    _installLoggingEnabled = enabled;
+    _launchLoggingEnabled = enabled;
+    _retentionLoggingEnabled = enabled;
+    _paymentLoggingEnabled = enabled;
+    if(enabled){
+        [TikTokPaymentObserver startObservingTransactions];
+    } else {
+        [TikTokPaymentObserver stopObservingTransactions];
+    }
+}
+
+- (void)setInstallLoggingEnabled:(BOOL)enabled
+{
+    if (self.automaticLoggingEnabled) {
+        _installLoggingEnabled = enabled;
+    }
+}
+
+- (void)setLaunchLoggingEnabled:(BOOL)enabled
+{
+    if (self.automaticLoggingEnabled) {
+        _launchLoggingEnabled = enabled;
+    }
+}
+
+- (void)setRetentionLoggingEnabled:(BOOL)enabled
+{
+    if (self.automaticLoggingEnabled) {
+        _retentionLoggingEnabled = enabled;
+    }
+}
+
+- (void)setPaymentLoggingEnabled:(BOOL)enabled
+{
+    if (self.automaticLoggingEnabled == YES) {
+        if(!enabled && _paymentLoggingEnabled){
+            [TikTokPaymentObserver stopObservingTransactions];
+            _paymentLoggingEnabled = enabled;
+        } else if (enabled && !_paymentLoggingEnabled) {
+            [TikTokPaymentObserver startObservingTransactions];
+            _paymentLoggingEnabled = YES;
+        }
+    }
+}
+
 
 - (BOOL)isTrackingEnabled
 {
@@ -391,31 +459,8 @@ static dispatch_once_t onceToken = 0;
 //{
 //    self.enabled = enabled;
 //}
+//
 
-//- (void)setAutomaticLoggingEnabled:(BOOL)enabled
-//{
-//    self.automaticLoggingEnabled = enabled;
-//}
-//
-//- (void)setInstallLoggingEnabled:(BOOL)enabled
-//{
-//    self.installLoggingEnabled = enabled;
-//}
-//
-//- (void)setLaunchLoggingEnabled:(BOOL)enabled
-//{
-//    self.launchLoggingEnabled = enabled;
-//}
-//
-//- (void)setRetentionLoggingEnabled:(BOOL)enabled
-//{
-//    self.retentionLoggingEnabled = enabled;
-//}
-//
-//- (void)setPaymentLoggingEnabled:(BOOL)enabled
-//{
-//    self.paymentLoggingEnabled = enabled;
-//}
 
 - (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {

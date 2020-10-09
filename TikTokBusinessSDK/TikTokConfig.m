@@ -9,6 +9,7 @@
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTok.h"
+#import "TikTokFactory.h"
 
 @interface TikTokConfig()
 
@@ -23,71 +24,83 @@
     return [[TikTokConfig alloc] initWithAppToken:appToken suppressAppTrackingDialog:isSuppressed];
 }
 
-+ (void)disableTracking
-{
-    [[TikTok getInstance] setTrackingEnabled:NO];
+//+ (void)disableTracking
+//{
+//    [[TikTok getInstance] setTrackingEnabled:NO];
 //    [[[TikTokLogger alloc] init] info:@"Tracking has been disabled"];
-}
+//}
 
 - (void)disableTracking
 {
-    [self.logger info:@"Tracking has been disabled!"];
-    [[TikTok getInstance] setTrackingEnabled:NO];
+    self.trackingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Tracking: NO"];
+//    [self.logger info:@"Tracking has been disabled!"];
+//    [[TikTok getInstance] setTrackingEnabled:NO];
 }
 
-+ (void)disableAutomaticLogging
-{
-    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
-}
+//+ (void)disableAutomaticLogging
+//{
+//    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
+//}
 
 - (void)disableAutomaticLogging
 {
-    [self.logger info:@"Tracking has been disabled!"];
-    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
+    self.automaticLoggingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Auto Tracking: NO"];
+//    [self.logger info:@"Tracking has been disabled!"];
+//    [[TikTok getInstance] setAutomaticLoggingEnabled:NO];
 }
-
-+ (void)disableInstallLogging
-{
-    [[TikTok getInstance] setInstallLoggingEnabled:NO];
-}
+//
+//+ (void)disableInstallLogging
+//{
+//    [[TikTok getInstance] setInstallLoggingEnabled:NO];
+//}
 
 - (void)disableInstallLogging
 {
-    [self.logger info:@"Tracking has been disabled!"];
-    [[TikTok getInstance] setInstallLoggingEnabled:NO];
+    self.installLoggingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Install Tracking: NO"];
+//    [self.logger info:@"Tracking has been disabled!"];
+//    [[TikTok getInstance] setInstallLoggingEnabled:NO];
 }
 
-+ (void)disableLaunchLogging
-{
-    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
-}
+//+ (void)disableLaunchLogging
+//{
+//    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
+//}
 
 - (void)disableLaunchLogging
 {
-    [self.logger info:@"Tracking has been disabled!"];
-    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
+    self.launchLoggingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Launch Tracking: NO"];
+//    [self.logger info:@"Tracking has been disabled!"];
+//    [[TikTok getInstance] setLaunchLoggingEnabled:NO];
 }
-
-+ (void)disableRetentionLogging
-{
-    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
-}
+//
+//+ (void)disableRetentionLogging
+//{
+//    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
+//}
 
 - (void)disableRetentionLogging
 {
-    [self.logger info:@"Tracking has been disabled!"];
-    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
+    self.retentionLoggingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Retention Tracking: NO"];
+//    [self.logger info:@"Tracking has been disabled!"];
+//    [[TikTok getInstance] setRetentionLoggingEnabled:NO];
 }
 
-+ (void)disablePaymentLogging
-{
-    [[TikTok getInstance] setPaymentLoggingEnabled:NO];
-}
+//+ (void)disablePaymentLogging
+//{
+//    [self disablePaymentLogging];
+//}
 
 - (void)disablePaymentLogging
 {
-    [self.logger info:@"Payment Logging has been disabled!"];
-    [[TikTok getInstance] setPaymentLoggingEnabled:NO];
+    self.paymentLoggingEnabled = NO;
+    [self.logger info:@"[TikTokConfig] Payment Tracking: NO"];
+//    [self.logger info:@"Payment Logging has been disabled!"];
+//    [[TikTok getInstance] setPaymentLoggingEnabled:NO];
 }
 
 - (id)initWithAppToken:(NSString *)appToken suppressAppTrackingDialog:(BOOL)isSuppressed
@@ -98,10 +111,14 @@
     
     _appToken = appToken;
     _isSuppressed = isSuppressed;
-//    _secretId = appSecret;
-
-    self.logger = [[TikTok alloc] init].logger;
-    [self.logger info: @"TikTokConfig was valid!"];
+    _trackingEnabled = YES;
+    _automaticLoggingEnabled = YES;
+    _installLoggingEnabled = YES;
+    _launchLoggingEnabled = YES;
+    _retentionLoggingEnabled = YES;
+    _paymentLoggingEnabled = YES;
+    
+    self.logger = [TikTokFactory getLogger];
     return self;
 }
 //
