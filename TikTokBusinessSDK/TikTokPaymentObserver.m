@@ -9,6 +9,7 @@
 #import "TikTokPaymentObserver.h"
 #import "TikTok.h"
 #import "TikTokLogger.h"
+#import "TikTokFactory.h"
 #import <StoreKit/StoreKit.h>
 #import <StoreKit/SKPaymentQueue.h>
 #import <StoreKit/SKPaymentTransaction.h>
@@ -25,6 +26,9 @@ static NSMutableArray *g_pendingRequestors;
 @end
 
 @interface TikTokPaymentObserver () <SKPaymentTransactionObserver>
+
+@property (nonatomic, weak) id<TikTokLogger> logger;
+
 @end
 
 @implementation TikTokPaymentObserver
@@ -61,6 +65,7 @@ static NSMutableArray *g_pendingRequestors;
   self = [super init];
   if (self) {
     _observingTransactions = NO;
+      self.logger = [TikTokFactory getLogger];
   }
   return self;
 }
@@ -71,7 +76,7 @@ static NSMutableArray *g_pendingRequestors;
         if(!_observingTransactions) {
             [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
             _observingTransactions = YES;
-            NSLog(@"Starting Transactions Tracking...");
+            [self.logger info:@"Starting Transaction Tracking..."];
         }
     }
 }
@@ -82,7 +87,7 @@ static NSMutableArray *g_pendingRequestors;
         if(_observingTransactions) {
             [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
             _observingTransactions = NO;
-            NSLog(@"Stopping Transaction Tracking...");
+            [self.logger info:@"Stopping Transaction Tracking..."];
         }
     }
 }
@@ -344,6 +349,7 @@ static NSMutableArray *g_pendingRequestors;
     NSArray *products = response.products;
     NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
     if (products.count + invalidProductIdentifiers.count != 1) {
+//        [self.logger info:@""]
         [[[TikTok getInstance] logger] info:@"TikTokPaymentObserver: Expect to resolve one product per request"];
     }
     SKProduct *product = nil;
