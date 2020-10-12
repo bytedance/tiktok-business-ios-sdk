@@ -35,7 +35,12 @@
     id partialMock = OCMPartialMock(tiktok);
     OCMStub([partialMock isRemoteSwitchOn]).andReturn(YES);
     
-    self.queue = [[TikTokAppEventQueue alloc] init];
+    TikTokAppEventQueue *queue = [[TikTokAppEventQueue alloc] initWithConfig:config];
+    self.queue = OCMPartialMock(queue);
+    
+    TikTokAppEventRequestHandler *requestHandler = OCMClassMock([TikTokAppEventRequestHandler class]);
+    self.queue.requestHandler = requestHandler;
+    
     XCTAssertTrue(self.queue.eventQueue.count == 0, @"Queue should be empty");
 }
 
@@ -45,31 +50,35 @@
 
 - (void)testAddEvent {
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
-
+    
+    for (int i = 0; i < 100; i++)
+    {
+        [self.queue addEvent:event];
+    }
+    
+    XCTAssertTrue(self.queue.eventQueue.count == 100, @"Queue should have length of 100");
+    
     [self.queue addEvent:event];
-    [self.queue addEvent:event];
-    XCTAssertTrue(self.queue.eventQueue.count == 2, @"Queue should have length of 2");
+    
+    // expect events to flush after 101 events added to queue
+    OCMVerify([self.queue flush:TikTokAppEventsFlushReasonEventThreshold]);
 }
 
 - (void)testFlushOnMainQueue {
 
-    // mock request handler to see if sendPOSTRequest will be invoked
-    TikTokAppEventRequestHandler *requestHandler = OCMClassMock([TikTokAppEventRequestHandler class]);
-    self.queue.requestHandler = requestHandler;
-
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
-    
+
     // expect sendPOSTRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
-    
+    OCMVerify(never(), [self.queue.requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
+
     // add an event to queue
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
     [self.queue addEvent:event];
-    
+
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
-    
+
     // now expect sendPOSTRequest to be called, since queue has an event
-    OCMVerify([requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify([self.queue.requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
 }
 
 @end
