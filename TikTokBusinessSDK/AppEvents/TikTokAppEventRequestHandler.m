@@ -12,6 +12,14 @@
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
 #import "TikTok.h"
+#import "TikTokLogger.h"
+#import "TikTokFactory.h"
+
+@interface TikTokAppEventRequestHandler()
+
+@property (nonatomic, weak) id<TikTokLogger> logger;
+
+@end
 
 @implementation TikTokAppEventRequestHandler
 
@@ -20,6 +28,8 @@
     if (self == nil) {
         return nil;
     }
+    
+    self.logger = [TikTokFactory getLogger];
     
     return self;
 }
@@ -30,7 +40,10 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
     [request setHTTPMethod:@"GET"];
-
+    
+    if(self.logger == nil) {
+        self.logger = [TikTokFactory getLogger];
+    }
     if(self.session == nil) {
         self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     }
@@ -38,7 +51,7 @@
         BOOL isSwitchOn = nil;
         // handle basic connectivity issues
         if(error) {
-            [[[TikTok getInstance] logger] error:@"error in connection", error];
+            [self.logger error:@"[TikTokAppEventRequestHandler] error in connection", error];
             // leave switch to on if error on request
             isSwitchOn = YES;
             completionHandler(isSwitchOn);
@@ -50,7 +63,7 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
 
             if (statusCode != 200) {
-                [[[TikTok getInstance] logger] error:@"HTTP error status code: %lu", statusCode];
+                [self.logger error:@"[TikTokAppEventRequestHandler] HTTP error status code: %lu", statusCode];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
                 completionHandler(isSwitchOn);
@@ -70,7 +83,7 @@
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
-                [[[TikTok getInstance] logger] error:@"code error: %@, message: %@", code, message];
+                [self.logger error:@"[TikTokAppEventRequestHandler] code error: %@, message: %@", code, message];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
                 completionHandler(isSwitchOn);
@@ -79,7 +92,7 @@
         }
 
         // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        // [[[TikTok getInstance] logger] info:@"Request response from check remote switch: %@", requestResponse];
+        // [self.logger info:@"[TikTokAppEventRequestHandler] Request response from check remote switch: %@", requestResponse];
         
         // TODO: Update isSwitchOn based on TiktokBusinessSdkConfig.enableSdk from response
         isSwitchOn = YES;
@@ -100,6 +113,11 @@
         };
         [batch addObject:eventDict];
     }
+    
+    if(self.logger == nil) {
+        self.logger = [TikTokFactory getLogger];
+    }
+    
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
@@ -139,12 +157,12 @@
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
 //     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-//     [[[TikTok getInstance] logger] info:@"Access token: %@", config.appToken];
-//     [[[TikTok getInstance] logger] info:@"postDataJSON: %@", postDataJSONString];
+//     [self.logger info:@"[TikTokAppEventRequestHandler] Access token: %@", config.appToken];
+//     [self.logger info:@"[TikTokAppEventRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     // TODO: Update URL to "https://ads.tiktok.com/open_api/2/app/batch/"
-    [request setURL:[NSURL URLWithString:@"http://10.231.18.38:9496/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"http://10.231.18.90:9351/open_api/2/app/batch/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     // TODO: use config.appToken for Access Token once convert to prod API
@@ -162,7 +180,7 @@
         
         // handle basic connectivity issues
         if(error) {
-            [[[TikTok getInstance] logger] error:@"error in connection", error];
+            [self.logger error:@"[TikTokAppEventRequestHandler] error in connection", error];
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -177,7 +195,7 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                [[[TikTok getInstance] logger] error:@"HTTP error status code: %lu", statusCode];
+                [self.logger error:@"[TikTokAppEventRequestHandler] HTTP error status code: %lu", statusCode];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -208,7 +226,7 @@
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
-                [[[TikTok getInstance] logger] error:@"code error: %@, message: %@", code, message];
+                [self.logger error:@"[TikTokAppEventRequestHandler] code error: %@, message: %@", code, message];
                 // if error code is retryable, persist app events to disk
                 if(![nonretryableErrorCodeSet containsObject:code]) {
                     @synchronized(self) {
@@ -224,7 +242,7 @@
         }
         
         NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        [[[TikTok getInstance] logger] info:@"Request response: %@", requestResponse];
+        [self.logger info:@"[TikTokAppEventRequestHandler] Request response: %@", requestResponse];
     }] resume];
 }
 
