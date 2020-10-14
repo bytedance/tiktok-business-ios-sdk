@@ -10,7 +10,7 @@
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventQueue.h"
 
-#define MAX_NUMBER_EVENTS_IN_DISK 10000
+#define DISK_LIMIT 500
 
 // Optimization to skip check if we know there are no persisted events
 static BOOL canSkipDiskCheck = NO;
@@ -36,12 +36,12 @@ static long numberOfEventsDumped = 0;
     [[self class] clearPersistedAppEvents];
     [existingEvents addObjectsFromArray:queue];
     
-    // if number of events to store is greater than MAX_NUMBER_EVENTS_IN_DISK, store the later events with length of MAX_NUMBER_EVENTS_IN_DISK
-    if(existingEvents.count > MAX_NUMBER_EVENTS_IN_DISK) {
-        long difference = existingEvents.count - MAX_NUMBER_EVENTS_IN_DISK;
+    // if number of events to store is greater than DISK_LIMIT, store the later events with length of DISK_LIMIT
+    if(existingEvents.count > DISK_LIMIT) {
+        long difference = existingEvents.count - DISK_LIMIT;
         numberOfEventsDumped += difference;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"eventsDumped" object:nil userInfo:@{@"numberOfEventsDumped":@(numberOfEventsDumped)}];
-        NSArray *existingEventsSliced = [existingEvents subarrayWithRange:NSMakeRange(difference, MAX_NUMBER_EVENTS_IN_DISK)];
+        NSArray *existingEventsSliced = [existingEvents subarrayWithRange:NSMakeRange(difference, DISK_LIMIT)];
         // converts back to NSMutableArray type
         existingEvents = [existingEventsSliced mutableCopy];
     }
