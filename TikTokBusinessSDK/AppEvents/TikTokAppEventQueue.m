@@ -17,8 +17,8 @@
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 
-#define EVENT_NUMBER_THRESHOLD 100
-#define EVENT_BATCH_REQUEST_THRESHOLD 1000
+#define FLUSH_LIMIT 100
+#define API_LIMIT 50
 #define FLUSH_PERIOD_IN_SECONDS 15
 
 @interface TikTokAppEventQueue()
@@ -75,7 +75,7 @@
         return;
     }
     [self.eventQueue addObject:event];
-    if(self.eventQueue.count > EVENT_NUMBER_THRESHOLD) {
+    if(self.eventQueue.count > FLUSH_LIMIT) {
         [self flush:TikTokAppEventsFlushReasonEventThreshold];
     }
     [self calculateAndSetRemainingEventThreshold];
@@ -111,13 +111,13 @@
     
     if(eventsToBeFlushed.count > 0) {
         if([[TikTok getInstance] isTrackingEnabled]) {
-            // chunk eventsToBeFlushed into subarrays of EVENT_BATCH_REQUEST_THRESHOLD length or less and send requests for each
+            // chunk eventsToBeFlushed into subarrays of API_LIMIT length or less and send requests for each
             NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
             NSUInteger eventsRemaining = eventsToBeFlushed.count;
             int minIndex = 0;
             
             while(eventsRemaining > 0) {
-                NSRange range = NSMakeRange(minIndex, MIN(EVENT_BATCH_REQUEST_THRESHOLD, eventsRemaining));
+                NSRange range = NSMakeRange(minIndex, MIN(API_LIMIT, eventsRemaining));
                 NSArray *eventChunk = [eventsToBeFlushed subarrayWithRange:range];
                 [eventChunks addObject:eventChunk];
                 eventsRemaining -= range.length;
@@ -137,7 +137,7 @@
 
 - (void)calculateAndSetRemainingEventThreshold {
     
-    self.remainingEventsUntilFlushThreshold = EVENT_NUMBER_THRESHOLD - (int)self.eventQueue.count + 1;
+    self.remainingEventsUntilFlushThreshold = FLUSH_LIMIT - (int)self.eventQueue.count + 1;
     
 }
 
