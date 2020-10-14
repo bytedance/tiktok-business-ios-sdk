@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let config = TikTokConfig.init(appToken: "<YOUR APP TOKEN>", suppressAppTrackingDialog: false);
+        let config = TikTokConfig.init(appToken: "c2424295d21b7f32573ad5ec2a1cbb3ca92e09be", suppressAppTrackingDialog: false);
         config?.disableTracking()
         TikTok.appDidLaunch(config);
         TikTok.setTrackingEnabled(true);
