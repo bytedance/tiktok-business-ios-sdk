@@ -257,18 +257,13 @@ static dispatch_once_t onceToken = 0;
     self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
     self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
     
-    
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
-    [self.logger info: @"TikTok Event Queue has been initialized!"];
-    [self.logger info:@"TikTok SDK Initialized Successfully!"];
     
-        [self.queue.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
-            self.isRemoteSwitchOn = isRemoteSwitchOn;
-            if(self.isRemoteSwitchOn) {
-                [[[TikTok getInstance] logger] info:@"Remote switch is on"];
-            } else {
-                [[[TikTok getInstance] logger] info:@"Remote switch is off"];
-            }
+    [self.queue.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
+        self.isRemoteSwitchOn = isRemoteSwitchOn;
+        if(self.isRemoteSwitchOn) {
+            [self.logger info:@"Remote switch is on"];
+            [self.logger info:@"TikTok SDK Initialized Successfully!"];
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
@@ -305,7 +300,7 @@ static dispatch_once_t onceToken = 0;
                         
                     }
                 }
-             
+                
                 // Remove this later, based on where modal needs to be called to start tracking
                 // This will be needed to be called before we can call a function to get IDFA
                 if(!tiktokConfig.isSuppressed) {
@@ -318,8 +313,14 @@ static dispatch_once_t onceToken = 0;
             NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
             [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
             [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        }];
-    
+        } else {
+            [self.logger info:@"Remote switch is off"];
+            [self.queue.flushTimer invalidate];
+            [self.queue.logTimer invalidate];
+            self.queue.timeInSecondsUntilFlush = 0;
+        }
+    }];
+
 }
 
 - (void)trackEvent:(TikTokAppEvent *)appEvent
