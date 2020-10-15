@@ -9,6 +9,7 @@
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTokAppEventQueue.h"
+#import "TikTokRequestHandler.h"
 //#import "TikTokAttribution.h"
 //#import "TikTokSubscription.h"
 
@@ -47,6 +48,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
+@property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 
 //+ (id<TikTokLogger>)getLogger;
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
@@ -93,6 +95,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //+ (void)trackSubscription:(nonnull ADJSubscription *)subscription;
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 + (nullable id)getInstance;
++ (void)resetInstance;
 //- (id<TikTokLogger>)getLogger;
 - (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;

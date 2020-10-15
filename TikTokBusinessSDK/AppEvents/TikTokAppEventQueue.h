@@ -11,7 +11,6 @@
 #import "TikTokAppEventUtility.h"
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
-#import "TikTokAppEventRequestHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) TikTokConfig *config;
 
-@property (nonatomic, strong, nullable) TikTokAppEventRequestHandler *requestHandler;
 
 - (id)init;
 

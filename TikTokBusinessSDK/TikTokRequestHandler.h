@@ -1,5 +1,5 @@
 //
-//  TikTokAppEventRequestHandler.h
+//  TikTokRequestHandler.h
 //  TikTokBusinessSDK
 //
 //  Created by Christopher Yang on 9/17/20.
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TikTokAppEventRequestHandler : NSObject
+@interface TikTokRequestHandler : NSObject
 
 @property (atomic, strong, nullable) NSURLSession *session;
 

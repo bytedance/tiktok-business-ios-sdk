@@ -10,10 +10,8 @@
 #import "TikTokAppEventQueue.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventUtility.h"
-#import "TikTokAppEventRequestHandler.h"
 #import "TikTok.h"
 #import "TikTokConfig.h"
-#import "TikTokAppEventRequestHandler.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 
@@ -59,8 +57,6 @@
     }];
     
     self.config = config;
-        
-    self.requestHandler = [[TikTokAppEventRequestHandler alloc] init];
     
     self.logger = [TikTokFactory getLogger];
     
@@ -125,7 +121,7 @@
             }
             
             for (NSArray *eventChunk in eventChunks) {
-                [self.requestHandler sendPOSTRequest:eventChunk withConfig:self.config];
+                [[[TikTok getInstance] requestHandler] sendPOSTRequest:eventChunk withConfig:self.config];
             }
         } else {
             [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
