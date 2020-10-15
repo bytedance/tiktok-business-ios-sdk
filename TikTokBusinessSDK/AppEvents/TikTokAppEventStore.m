@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TikTok.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventQueue.h"
+#import "TikTokErrorHandler.h"
 
 #define DISK_LIMIT 500
 
@@ -32,54 +34,74 @@ static long numberOfEventsDumped = 0;
     if (!queue.count) {
         return;
     }
-    NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
-    [[self class] clearPersistedAppEvents];
-    [existingEvents addObjectsFromArray:queue];
-    
-    // if number of events to store is greater than DISK_LIMIT, store the later events with length of DISK_LIMIT
-    if(existingEvents.count > DISK_LIMIT) {
-        long difference = existingEvents.count - DISK_LIMIT;
-        numberOfEventsDumped += difference;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"eventsDumped" object:nil userInfo:@{@"numberOfEventsDumped":@(numberOfEventsDumped)}];
-        NSArray *existingEventsSliced = [existingEvents subarrayWithRange:NSMakeRange(difference, DISK_LIMIT)];
-        // converts back to NSMutableArray type
-        existingEvents = [existingEventsSliced mutableCopy];
-    }
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
-        NSError *errorArchiving = nil;
-        // archivedDataWithRootObject:requiringSecureCoding: available iOS 11.0+
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:existingEvents requiringSecureCoding:NO error:&errorArchiving];
-        [data writeToFile:[[self class] getFilePath] atomically:YES];
-    } else {
-        // archiveRootObject used for iOS versions below 11.0
+    @try {
+        BOOL result;
+        NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEvents]];
+        [[self class] clearPersistedAppEvents];
+        [existingEvents addObjectsFromArray:queue];
+        
+        // if number of events to store is greater than DISK_LIMIT, store the later events with length of DISK_LIMIT
+        if(existingEvents.count > DISK_LIMIT) {
+            long difference = existingEvents.count - DISK_LIMIT;
+            numberOfEventsDumped += difference;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"eventsDumped" object:nil userInfo:@{@"numberOfEventsDumped":@(numberOfEventsDumped)}];
+            NSArray *existingEventsSliced = [existingEvents subarrayWithRange:NSMakeRange(difference, DISK_LIMIT)];
+            // converts back to NSMutableArray type
+            existingEvents = [existingEventsSliced mutableCopy];
+        }
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
+            NSError *errorArchiving = nil;
+            // archivedDataWithRootObject:requiringSecureCoding: available iOS 11.0+
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:existingEvents requiringSecureCoding:NO error:&errorArchiving];
+            if (data && errorArchiving == nil) {
+                NSError *errorWriting = nil;
+                result = [data writeToFile:[[self class] getFilePath] options:NSDataWritingAtomic error:&errorWriting];
+                result = result && (errorWriting == nil);
+            } else {
+                result = NO;
+            }
+        } else {
+            // archiveRootObject used for iOS versions below 11.0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
+            result = [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
 #pragma clang diagnostic pop
+        }
+        
+        if(result == YES) {
+            canSkipDiskCheck = NO;
+        } else {
+            [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to persist to disk"];
+        }
+    } @catch (NSException *exception) {
+        [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to persist to disk" exception:exception];
     }
-    canSkipDiskCheck = NO;
 }
 
 + (NSArray *)retrievePersistedAppEvents {
     NSMutableArray *events = [NSMutableArray array];
     if (!canSkipDiskCheck) {
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
-            NSData *data = [NSData dataWithContentsOfFile:[[self class] getFilePath]];
-            NSError *errorUnarchiving = nil;
-            // initForReadingFromData:error: available iOS 11.0+
-            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&errorUnarchiving];
-            [unarchiver setRequiresSecureCoding:NO];
-            [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
-        } else {
-            // unarchiveObjectWithFile used for iOS versions below 11.0
+        @try {
+            if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0")) {
+                NSData *data = [NSData dataWithContentsOfFile:[[self class] getFilePath]];
+                NSError *errorUnarchiving = nil;
+                // initForReadingFromData:error: available iOS 11.0+
+                NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&errorUnarchiving];
+                [unarchiver setRequiresSecureCoding:NO];
+                [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
+            } else {
+                // unarchiveObjectWithFile used for iOS versions below 11.0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
+                [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
 #pragma clang diagnostic pop
+            }
+        } @catch (NSException *exception) {
+            [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to read from disk" exception:exception];
         }
     }
-
+    
     return events;
 }
 
