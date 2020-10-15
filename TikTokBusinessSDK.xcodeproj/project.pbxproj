@@ -20,10 +20,10 @@
 		0A1A06592509551F001463B8 /* TikTokAppEventStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A06572509551F001463B8 /* TikTokAppEventStore.m */; };
 		0A29066E250B232B00CF3B73 /* TikTokAppEventUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A29066C250B232B00CF3B73 /* TikTokAppEventUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A29066F250B232B00CF3B73 /* TikTokAppEventUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A29066D250B232B00CF3B73 /* TikTokAppEventUtility.m */; };
-		0A5E15B825141CFB00120131 /* TikTokAppEventRequestHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A5E15B625141CFA00120131 /* TikTokAppEventRequestHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A5E15B925141CFB00120131 /* TikTokAppEventRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E15B725141CFA00120131 /* TikTokAppEventRequestHandler.m */; };
-		0ADCF53B2538CF1C00D7B57C /* TikTokErrorHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ADCF5392538CF1C00D7B57C /* TikTokErrorHandler.h */; };
+		0ADCF53B2538CF1C00D7B57C /* TikTokErrorHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ADCF5392538CF1C00D7B57C /* TikTokErrorHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0ADCF53C2538CF1C00D7B57C /* TikTokErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADCF53A2538CF1C00D7B57C /* TikTokErrorHandler.m */; };
+		0ADCF5412538D16900D7B57C /* TikTokRequestHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ADCF53F2538D16900D7B57C /* TikTokRequestHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0ADCF5422538D16900D7B57C /* TikTokRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */; };
 		8B1811DB251EABF800CBBE2E /* TikTokPaymentObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */; };
 		8B1811DC251EABF800CBBE2E /* TikTokPaymentObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */; };
 		8B23DF8F2502BA73008351FA /* TikTokBusinessSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -115,10 +115,10 @@
 		0A1A06572509551F001463B8 /* TikTokAppEventStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventStore.m; sourceTree = "<group>"; };
 		0A29066C250B232B00CF3B73 /* TikTokAppEventUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokAppEventUtility.h; sourceTree = "<group>"; };
 		0A29066D250B232B00CF3B73 /* TikTokAppEventUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventUtility.m; sourceTree = "<group>"; };
-		0A5E15B625141CFA00120131 /* TikTokAppEventRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokAppEventRequestHandler.h; sourceTree = "<group>"; };
-		0A5E15B725141CFA00120131 /* TikTokAppEventRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokAppEventRequestHandler.m; sourceTree = "<group>"; };
 		0ADCF5392538CF1C00D7B57C /* TikTokErrorHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokErrorHandler.h; sourceTree = "<group>"; };
 		0ADCF53A2538CF1C00D7B57C /* TikTokErrorHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokErrorHandler.m; sourceTree = "<group>"; };
+		0ADCF53F2538D16900D7B57C /* TikTokRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokRequestHandler.h; sourceTree = "<group>"; };
+		0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokRequestHandler.m; sourceTree = "<group>"; };
 		8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokPaymentObserver.h; sourceTree = "<group>"; };
 		8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokPaymentObserver.m; sourceTree = "<group>"; };
 		8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TikTokBusinessSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -242,8 +242,6 @@
 				0A1A06572509551F001463B8 /* TikTokAppEventStore.m */,
 				0A29066C250B232B00CF3B73 /* TikTokAppEventUtility.h */,
 				0A29066D250B232B00CF3B73 /* TikTokAppEventUtility.m */,
-				0A5E15B625141CFA00120131 /* TikTokAppEventRequestHandler.h */,
-				0A5E15B725141CFA00120131 /* TikTokAppEventRequestHandler.m */,
 			);
 			path = AppEvents;
 			sourceTree = "<group>";
@@ -291,6 +289,8 @@
 				8B93D3032530668600EDAAA1 /* TikTokFactory.m */,
 				0ADCF5392538CF1C00D7B57C /* TikTokErrorHandler.h */,
 				0ADCF53A2538CF1C00D7B57C /* TikTokErrorHandler.m */,
+				0ADCF53F2538D16900D7B57C /* TikTokRequestHandler.h */,
+				0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */,
 			);
 			path = TikTokBusinessSDK;
 			sourceTree = "<group>";
@@ -340,7 +340,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A5E15B825141CFB00120131 /* TikTokAppEventRequestHandler.h in Headers */,
 				8B89A23A251A64E700B61811 /* UIDevice+TikTokAdditions.h in Headers */,
 				0ADCF53B2538CF1C00D7B57C /* TikTokErrorHandler.h in Headers */,
 				8B23DFBF25080872008351FA /* TikTok.h in Headers */,
@@ -349,6 +348,7 @@
 				8B93D3042530668600EDAAA1 /* TikTokFactory.h in Headers */,
 				8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */,
 				0A29066E250B232B00CF3B73 /* TikTokAppEventUtility.h in Headers */,
+				0ADCF5412538D16900D7B57C /* TikTokRequestHandler.h in Headers */,
 				0A1A065425095483001463B8 /* TikTokAppEventQueue.h in Headers */,
 				8B89A246251A7A3700B61811 /* NSString+TikTokAdditions.h in Headers */,
 				0A1A065025095429001463B8 /* TikTokAppEvent.h in Headers */,
@@ -502,7 +502,7 @@
 			files = (
 				8B23DFC025080872008351FA /* TikTok.m in Sources */,
 				8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */,
-				0A5E15B925141CFB00120131 /* TikTokAppEventRequestHandler.m in Sources */,
+				0ADCF5422538D16900D7B57C /* TikTokRequestHandler.m in Sources */,
 				8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */,
 				8B89A247251A7A3700B61811 /* NSString+TikTokAdditions.m in Sources */,
 				8B1811DC251EABF800CBBE2E /* TikTokPaymentObserver.m in Sources */,

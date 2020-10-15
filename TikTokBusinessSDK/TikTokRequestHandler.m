@@ -1,5 +1,5 @@
 //
-//  TikTokAppEventRequestHandler.m
+//  TikTokRequestHandler.m
 //  TikTokBusinessSDK
 //
 //  Created by Christopher Yang on 9/17/20.
@@ -7,7 +7,7 @@
 //
 
 #import "TikTokAppEvent.h"
-#import "TikTokAppEventRequestHandler.h"
+#import "TikTokRequestHandler.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
@@ -15,13 +15,13 @@
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 
-@interface TikTokAppEventRequestHandler()
+@interface TikTokRequestHandler()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
 
 @end
 
-@implementation TikTokAppEventRequestHandler
+@implementation TikTokRequestHandler
 
 - (id)init:(TikTokConfig *)config
 {
@@ -51,7 +51,7 @@
         BOOL isSwitchOn = nil;
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokAppEventRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
             // leave switch to on if error on request
             isSwitchOn = YES;
             completionHandler(isSwitchOn);
@@ -63,7 +63,7 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                [self.logger error:@"[TikTokAppEventRequestHandler] HTTP error status code: %lu", statusCode];
+                [self.logger error:@"[TikTokRequestHandler] HTTP error status code: %lu", statusCode];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
                 completionHandler(isSwitchOn);
@@ -83,7 +83,7 @@
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
-                [self.logger error:@"[TikTokAppEventRequestHandler] code error: %@, message: %@", code, message];
+                [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
                 completionHandler(isSwitchOn);
@@ -92,7 +92,7 @@
         }
         
         // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        // [self.logger info:@"[TikTokAppEventRequestHandler] Request response from check remote switch: %@", requestResponse];
+        // [self.logger info:@"[TikTokRequestHandler] Request response from check remote switch: %@", requestResponse];
         
         // TODO: Update isSwitchOn based on TiktokBusinessSdkConfig.enableSdk from response
         isSwitchOn = YES;
@@ -157,8 +157,8 @@
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
     // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    // [self.logger info:@"[TikTokAppEventRequestHandler] Access token: %@", config.appToken];
-    // [self.logger info:@"[TikTokAppEventRequestHandler] postDataJSON: %@", postDataJSONString];
+    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", config.appToken];
+    // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/2/app/batch/"]];
@@ -175,7 +175,7 @@
         
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokAppEventRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -190,7 +190,7 @@
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                [self.logger error:@"[TikTokAppEventRequestHandler] HTTP error status code: %lu", statusCode];
+                [self.logger error:@"[TikTokRequestHandler] HTTP error status code: %lu", statusCode];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -213,7 +213,7 @@
             // code != 0 indicates error from API call
             if([code intValue] != 0) {
                 NSString *message = [dataDictionary objectForKey:@"message"];
-                [self.logger error:@"[TikTokAppEventRequestHandler] code error: %@, message: %@", code, message];
+                [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
@@ -226,7 +226,7 @@
         }
         
         NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        [self.logger info:@"[TikTokAppEventRequestHandler] Request response: %@", requestResponse];
+        [self.logger info:@"[TikTokRequestHandler] Request response: %@", requestResponse];
     }] resume];
 }
 

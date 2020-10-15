@@ -49,6 +49,13 @@ static dispatch_once_t onceToken = 0;
     return defaultInstance;
 }
 
++ (void)resetInstance
+{
+  if (onceToken) {
+    onceToken = 0;
+  }
+}
+
 - (id)init
 {
     self = [super init];
@@ -57,6 +64,7 @@ static dispatch_once_t onceToken = 0;
     }
     
     self.queue = nil;
+    self.requestHandler = nil;
     self.logger = [TikTokFactory getLogger];
     self.trackingEnabled = YES;
     self.automaticLoggingEnabled = YES;
@@ -257,9 +265,10 @@ static dispatch_once_t onceToken = 0;
     self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
     self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
     
+    self.requestHandler = [[TikTokRequestHandler alloc] init];;
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
-    [self.queue.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
+    [self.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
         self.isRemoteSwitchOn = isRemoteSwitchOn;
         if(self.isRemoteSwitchOn) {
             [self.logger info:@"Remote switch is on"];

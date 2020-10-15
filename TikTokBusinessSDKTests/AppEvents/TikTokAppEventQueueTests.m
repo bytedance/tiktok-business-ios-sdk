@@ -11,7 +11,7 @@
 #import "TikTok.h"
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventQueue.h"
-#import "TikTokAppEventRequestHandler.h"
+#import "TikTokRequestHandler.h"
 
 @interface TikTokAppEventQueue()
 
@@ -21,6 +21,7 @@
 
 @interface TikTokAppEventQueueTests : XCTestCase
 
+@property (nonatomic, strong) TikTok *tiktokMock;
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
 
 @end
@@ -32,20 +33,21 @@
     TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" suppressAppTrackingDialog:NO];
     [TikTok appDidLaunch:config];
     TikTok *tiktok = [TikTok getInstance];
-    id partialMock = OCMPartialMock(tiktok);
-    OCMStub([partialMock isRemoteSwitchOn]).andReturn(YES);
+    self.tiktokMock = OCMPartialMock(tiktok);
+    OCMStub([self.tiktokMock isRemoteSwitchOn]).andReturn(YES);
     
     TikTokAppEventQueue *queue = [[TikTokAppEventQueue alloc] initWithConfig:config];
     self.queue = OCMPartialMock(queue);
     
-    TikTokAppEventRequestHandler *requestHandler = OCMClassMock([TikTokAppEventRequestHandler class]);
-    self.queue.requestHandler = requestHandler;
+    TikTokRequestHandler *requestHandler = OCMClassMock([TikTokRequestHandler class]);
+    OCMStub([self.tiktokMock requestHandler]).andReturn(requestHandler);
     
     XCTAssertTrue(self.queue.eventQueue.count == 0, @"Queue should be empty");
 }
 
 - (void)tearDown {
     [super tearDown];
+    [TikTok resetInstance];
 }
 
 - (void)testAddEvent {
@@ -69,7 +71,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // expect sendPOSTRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [self.queue.requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify(never(), [[self.tiktokMock requestHandler] sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
 
     // add an event to queue
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
@@ -78,7 +80,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // now expect sendPOSTRequest to be called, since queue has an event
-    OCMVerify([self.queue.requestHandler sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify([[self.tiktokMock requestHandler] sendPOSTRequest:[OCMArg any] withConfig:[OCMArg any]]);
 }
 
 @end
