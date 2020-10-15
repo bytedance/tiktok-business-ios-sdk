@@ -161,7 +161,7 @@
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/2/app/batch/"]];
+    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1/app/track/"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
