@@ -17,6 +17,7 @@
 #import <AppTrackingTransparency/ATTrackingManager.h>
 #import <TikTokPaymentObserver.h>
 #import "TikTokFactory.h"
+#import "TikTokErrorHandler.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -258,6 +259,7 @@ static dispatch_once_t onceToken = 0;
         return;
     }
     
+    NSSetUncaughtExceptionHandler(handleUncaughtExceptionPointer);
     self.trackingEnabled = tiktokConfig.trackingEnabled;
     self.automaticLoggingEnabled = tiktokConfig.automaticLoggingEnabled;
     self.installLoggingEnabled = tiktokConfig.installLoggingEnabled;

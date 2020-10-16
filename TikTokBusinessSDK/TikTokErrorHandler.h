@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSUncaughtExceptionHandler *handleUncaughtExceptionPointer;
+
 @interface TikTokErrorHandler : NSObject
 
 + (void)handleErrorWithOrigin:(NSString *)origin
