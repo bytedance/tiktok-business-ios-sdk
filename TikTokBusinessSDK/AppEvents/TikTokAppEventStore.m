@@ -20,8 +20,8 @@ static long numberOfEventsDumped = 0;
 
 @implementation TikTokAppEventStore
 
-
-+ (void)clearPersistedAppEvents {
++ (void)clearPersistedAppEvents
+{
     [[NSFileManager defaultManager] removeItemAtPath:[[self class] getFilePath]
                                                error:NULL];
     
@@ -29,7 +29,8 @@ static long numberOfEventsDumped = 0;
     canSkipDiskCheck = YES;
 }
 
-+ (void)persistAppEvents:(NSArray *)queue {
++ (void)persistAppEvents:(NSArray *)queue
+{
     if (!queue.count) {
         return;
     }
@@ -71,14 +72,15 @@ static long numberOfEventsDumped = 0;
         if(result == YES) {
             canSkipDiskCheck = NO;
         } else {
-            [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to persist to disk"];
+            [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([self class]) message:@"Failed to persist to disk"];
         }
     } @catch (NSException *exception) {
-        [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to persist to disk" exception:exception];
+        [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([self class]) message:@"Failed to persist to disk" exception:exception];
     }
 }
 
-+ (NSArray *)retrievePersistedAppEvents {
++ (NSArray *)retrievePersistedAppEvents
+{
     NSMutableArray *events = [NSMutableArray array];
     if (!canSkipDiskCheck) {
         @try {
@@ -97,7 +99,7 @@ static long numberOfEventsDumped = 0;
 #pragma clang diagnostic pop
             }
         } @catch (NSException *exception) {
-            [TikTokErrorHandler handleErrorWithOrigin: @"TikTokAppEventStore" message:@"Failed to read from disk" exception:exception];
+            [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([self class]) message:@"Failed to read from disk" exception:exception];
         }
     }
     
@@ -106,7 +108,8 @@ static long numberOfEventsDumped = 0;
 
 #pragma mark - Private Helpers
 
-+ (NSString *)getFilePath {
++ (NSString *)getFilePath
+{
     NSSearchPathDirectory directory = NSLibraryDirectory;
     NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, YES);
     NSString *docDirectory = [paths objectAtIndex:0];
