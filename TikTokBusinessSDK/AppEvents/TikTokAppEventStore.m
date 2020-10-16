@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TikTok.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventQueue.h"
 #import "TikTokErrorHandler.h"

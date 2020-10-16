@@ -71,7 +71,7 @@
         return;
     }
     [self.eventQueue addObject:event];
-    if(self.eventQueue.count > FLUSH_LIMIT) {
+    if(self.eventQueue.count >= FLUSH_LIMIT) {
         [self flush:TikTokAppEventsFlushReasonEventThreshold];
     }
     [self calculateAndSetRemainingEventThreshold];
@@ -133,7 +133,7 @@
 
 - (void)calculateAndSetRemainingEventThreshold {
     
-    self.remainingEventsUntilFlushThreshold = FLUSH_LIMIT - (int)self.eventQueue.count + 1;
+    self.remainingEventsUntilFlushThreshold = FLUSH_LIMIT - (int)self.eventQueue.count;
     
 }
 
