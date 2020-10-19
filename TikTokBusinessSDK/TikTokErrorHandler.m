@@ -11,16 +11,22 @@
 
 @implementation TikTokErrorHandler
 
+static void handleUncaughtException(NSException *exception)
+{
+    [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([TikTokErrorHandler class]) message:@"Uncaught Exception" exception:exception];
+}
+
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message
                     exception:(NSException *)exception {
-    [[[TikTok getInstance] logger] error:@"[%@] %@ (%@)", origin, message, exception];
-    // TODO: implement error API call
+    [[[TikTok getInstance] logger] error:@"[%@] %@ (%@) \n %@", origin, message, exception, [exception callStackSymbols]];
 }
 
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message {
     [[[TikTok getInstance] logger] error:@"[%@] %@", origin, message];
-    // TODO: implement error API call
 }
+
+NSUncaughtExceptionHandler *handleUncaughtExceptionPointer = &handleUncaughtException;
+
 @end

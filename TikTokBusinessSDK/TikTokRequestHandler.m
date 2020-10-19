@@ -14,6 +14,7 @@
 #import "TikTok.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
+#import "TikTokTypeUtility.h"
 
 @interface TikTokRequestHandler()
 
@@ -72,11 +73,7 @@
             
         }
         
-        NSError *dataError = nil;
-        id dataDictionary = [NSJSONSerialization
-                             JSONObjectWithData:data
-                             options:0
-                             error:&dataError];
+        id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
@@ -149,10 +146,7 @@
         @"context": context,
     };
     
-    NSError *error = nil;
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:parametersDict
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
+    NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
@@ -202,11 +196,7 @@
             
         }
         
-        NSError *dataError = nil;
-        id dataDictionary = [NSJSONSerialization
-                             JSONObjectWithData:data
-                             options:0
-                             error:&dataError];
+        id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];

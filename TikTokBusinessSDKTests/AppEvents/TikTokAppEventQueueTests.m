@@ -53,16 +53,16 @@
 - (void)testAddEvent {
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
     
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 99; i++)
     {
         [self.queue addEvent:event];
     }
     
-    XCTAssertTrue(self.queue.eventQueue.count == 100, @"Queue should have length of 100");
+    XCTAssertTrue(self.queue.eventQueue.count == 99, @"Queue should have length of 99");
     
     [self.queue addEvent:event];
     
-    // expect events to flush after 101 events added to queue
+    // expect events to flush after 100 events added to queue
     OCMVerify([self.queue flush:TikTokAppEventsFlushReasonEventThreshold]);
 }
 
