@@ -96,25 +96,8 @@
         completionHandler(isSwitchOn);
     }] resume];
 }
-- (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config {
-    
-    // format events into object[]
-    NSMutableArray *batch = [[NSMutableArray alloc] init];
-    for (TikTokAppEvent* event in eventsToBeFlushed) {
-        NSDictionary *eventDict = @{
-            @"type" : @"track",
-            @"event": event.eventName,
-            @"timestamp":event.timestamp,
-            @"properties": event.parameters,
-        };
-        [batch addObject:eventDict];
-    }
-    
-    if(self.logger == nil) {
-        self.logger = [TikTokFactory getLogger];
-    }
-    
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
@@ -138,12 +121,29 @@
         @"userAgent": deviceInfo.userAgent,
     };
     
+    // format events into object[]
+    NSMutableArray *batch = [[NSMutableArray alloc] init];
+    for (TikTokAppEvent* event in eventsToBeFlushed) {
+        NSDictionary *eventDict = @{
+            @"type" : @"track",
+            @"event": event.eventName,
+            @"timestamp":event.timestamp,
+            @"context": context,
+            @"properties": event.parameters,
+        };
+        [batch addObject:eventDict];
+    }
+    
+    if(self.logger == nil) {
+        self.logger = [TikTokFactory getLogger];
+    }
+    
     NSDictionary *parametersDict = @{
         // TODO: Populate appID once change to prod environment
         // @"app_id" : deviceInfo.appId,
         @"app_id" : @"com.shopee.my",
         @"batch": batch,
-        @"context": context,
+        @"event_source": @"APP_EVENTS_SDK",
     };
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];

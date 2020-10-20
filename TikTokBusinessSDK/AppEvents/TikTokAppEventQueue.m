@@ -131,7 +131,7 @@
                 }
                 
                 for (NSArray *eventChunk in eventChunks) {
-                    [[[TikTok getInstance] requestHandler] sendPOSTRequest:eventChunk withConfig:self.config];
+                    [[[TikTok getInstance] requestHandler] sendBatchRequest:eventChunk withConfig:self.config];
                 }
             } else {
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
