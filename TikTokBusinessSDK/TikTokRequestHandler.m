@@ -33,6 +33,8 @@
     }
     
     self.logger = [TikTokFactory getLogger];
+    // default API version
+    self.apiVersion = @"v.1.1";
     
     return self;
 }
@@ -58,7 +60,7 @@
         BOOL isSwitchOn = nil;
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
             // leave switch to on if error on request
             isSwitchOn = YES;
             completionHandler(isSwitchOn);
@@ -92,10 +94,13 @@
                 completionHandler(isSwitchOn);
                 return;
             }
-            [self.logger info:@"code: %@", code];
             NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
             NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
             isSwitchOn = [businessSDKConfig objectForKey:@"enable_sdk"];
+            NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];
+            if(apiVersion != nil) {
+                self.apiVersion = apiVersion;
+            }
         }
         
         // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
@@ -163,7 +168,8 @@
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1/app/track/"]];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;
+    [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
@@ -177,7 +183,7 @@
         
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

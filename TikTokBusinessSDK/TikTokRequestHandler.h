@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TikTokRequestHandler : NSObject
 
 @property (atomic, strong, nullable) NSURLSession *session;
+@property (atomic, strong) NSString *apiVersion;
 
 - (void)getRemoteSwitchWithCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completion;
 
