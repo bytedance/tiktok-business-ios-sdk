@@ -14,10 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TikTokRequestHandler : NSObject
 
 @property (atomic, strong, nullable) NSURLSession *session;
+@property (atomic, strong) NSString *apiVersion;
 
 - (void)getRemoteSwitchWithCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completion;
 
-- (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config;
 
 @end

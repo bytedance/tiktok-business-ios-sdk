@@ -16,6 +16,8 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
+#define SAMPLE_APP_ID @"com.shopee.my"
+
 @interface TikTokRequestHandler()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
@@ -31,15 +33,21 @@
     }
     
     self.logger = [TikTokFactory getLogger];
+    // default API version
+    self.apiVersion = @"v.1.1";
     
     return self;
 }
 
 - (void) getRemoteSwitchWithCompletionHandler: (void (^) (BOOL isRemoteSwitchOn)) completionHandler
 {
-    // TODO: Update parameters and url to actual endpoint for remote switch
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
+    // TODO: Update appId
+    // TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
+    // NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:deviceInfo.appId];
+    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:SAMPLE_APP_ID];
+    [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
@@ -52,7 +60,7 @@
         BOOL isSwitchOn = nil;
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
             // leave switch to on if error on request
             isSwitchOn = YES;
             completionHandler(isSwitchOn);
@@ -86,35 +94,23 @@
                 completionHandler(isSwitchOn);
                 return;
             }
+            NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
+            NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
+            isSwitchOn = [businessSDKConfig objectForKey:@"enable_sdk"];
+            NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];
+            if(apiVersion != nil) {
+                self.apiVersion = apiVersion;
+            }
         }
         
         // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         // [self.logger info:@"[TikTokRequestHandler] Request response from check remote switch: %@", requestResponse];
         
-        // TODO: Update isSwitchOn based on TiktokBusinessSdkConfig.enableSdk from response
-        isSwitchOn = YES;
         completionHandler(isSwitchOn);
     }] resume];
 }
-- (void)sendPOSTRequest:(NSArray *)eventsToBeFlushed
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
              withConfig:(TikTokConfig *)config {
-    
-    // format events into object[]
-    NSMutableArray *batch = [[NSMutableArray alloc] init];
-    for (TikTokAppEvent* event in eventsToBeFlushed) {
-        NSDictionary *eventDict = @{
-            @"type" : @"track",
-            @"event": event.eventName,
-            @"timestamp":event.timestamp,
-            @"properties": event.parameters,
-        };
-        [batch addObject:eventDict];
-    }
-    
-    if(self.logger == nil) {
-        self.logger = [TikTokFactory getLogger];
-    }
-    
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
@@ -138,12 +134,29 @@
         @"userAgent": deviceInfo.userAgent,
     };
     
+    // format events into object[]
+    NSMutableArray *batch = [[NSMutableArray alloc] init];
+    for (TikTokAppEvent* event in eventsToBeFlushed) {
+        NSDictionary *eventDict = @{
+            @"type" : @"track",
+            @"event": event.eventName,
+            @"timestamp":event.timestamp,
+            @"context": context,
+            @"properties": event.parameters,
+        };
+        [batch addObject:eventDict];
+    }
+    
+    if(self.logger == nil) {
+        self.logger = [TikTokFactory getLogger];
+    }
+    
     NSDictionary *parametersDict = @{
         // TODO: Populate appID once change to prod environment
         // @"app_id" : deviceInfo.appId,
-        @"app_id" : @"com.shopee.my",
+        @"app_id" : SAMPLE_APP_ID,
         @"batch": batch,
-        @"context": context,
+        @"event_source": @"APP_EVENTS_SDK",
     };
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
@@ -155,7 +168,8 @@
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/open_api/v1.1/app/track/"]];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;
+    [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
@@ -169,7 +183,7 @@
         
         // handle basic connectivity issues
         if(error) {
-            [self.logger error:@"[TikTokRequestHandler] error in connection", error];
+            [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
             @synchronized(self) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

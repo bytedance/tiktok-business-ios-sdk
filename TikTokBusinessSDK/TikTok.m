@@ -267,7 +267,7 @@ static dispatch_once_t onceToken = 0;
     self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
     self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
     
-    self.requestHandler = [[TikTokRequestHandler alloc] init];;
+    self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
     [self.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
