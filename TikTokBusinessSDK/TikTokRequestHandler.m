@@ -16,6 +16,8 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
+#define SAMPLE_APP_ID @"com.shopee.my"
+
 @interface TikTokRequestHandler()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
@@ -37,9 +39,13 @@
 
 - (void) getRemoteSwitchWithCompletionHandler: (void (^) (BOOL isRemoteSwitchOn)) completionHandler
 {
-    // TODO: Update parameters and url to actual endpoint for remote switch
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://ads.tiktok.com/marketing-partners/api/partner/get"]];
+    // TODO: Update appId
+    // TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
+    // NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:deviceInfo.appId];
+    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:SAMPLE_APP_ID];
+    [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
@@ -86,13 +92,15 @@
                 completionHandler(isSwitchOn);
                 return;
             }
+            [self.logger info:@"code: %@", code];
+            NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
+            NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
+            isSwitchOn = [businessSDKConfig objectForKey:@"enable_sdk"];
         }
         
         // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         // [self.logger info:@"[TikTokRequestHandler] Request response from check remote switch: %@", requestResponse];
         
-        // TODO: Update isSwitchOn based on TiktokBusinessSdkConfig.enableSdk from response
-        isSwitchOn = YES;
         completionHandler(isSwitchOn);
     }] resume];
 }
@@ -141,7 +149,7 @@
     NSDictionary *parametersDict = @{
         // TODO: Populate appID once change to prod environment
         // @"app_id" : deviceInfo.appId,
-        @"app_id" : @"com.shopee.my",
+        @"app_id" : SAMPLE_APP_ID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };
