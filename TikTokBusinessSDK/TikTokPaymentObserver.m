@@ -239,7 +239,7 @@ static NSMutableArray *g_pendingRequestors;
             NSMutableDictionary *productDict = [[NSMutableDictionary alloc] initWithDictionary:@{
                 @"price": [[NSNumber numberWithDouble:product.price.doubleValue] stringValue],
                 @"quantity": @"1",
-                @"content_typ e": product.productIdentifier,
+                @"content_type": product.productIdentifier,
             }];
             if(transactionId){
                 [productDict setObject:transactionId forKey:@"content_id"];
