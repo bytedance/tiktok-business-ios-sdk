@@ -284,10 +284,10 @@ static dispatch_once_t onceToken = 0;
             if(self.trackingEnabled){
                 if(self.automaticLoggingEnabled) {
                     if (launchedBefore && self.launchLoggingEnabled) {
-                        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"]];
+                        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"]];
                     } else {
                         if(!launchedBefore && self.installLoggingEnabled) {
-                            [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"INSTALL_APP"]];
+                            [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"InstallApp"]];
                         }
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
                         [defaults synchronize];
@@ -297,7 +297,7 @@ static dispatch_once_t onceToken = 0;
                         NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
                         int numberOfDays = secondsBetween / 86400;
                         if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
-                            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"RETENTION_2D"]];
+                            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"2DRetention"]];
                         }
                     } else {
                         [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
