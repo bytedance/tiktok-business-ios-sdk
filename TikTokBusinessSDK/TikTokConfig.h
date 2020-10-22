@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disablePaymentLogging;
 
 - (nullable id)initWithAppToken:(nonnull NSString *)appToken
+                          appID:(nonnull NSString *)appID
                 suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 @end

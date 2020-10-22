@@ -30,13 +30,13 @@
 
 - (void)setUp {
     [super setUp];
-    TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" suppressAppTrackingDialog:NO];
+    TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" appID: @"123" suppressAppTrackingDialog:NO];
     [TikTok appDidLaunch:config];
     TikTok *tiktok = [TikTok getInstance];
     self.tiktokMock = OCMPartialMock(tiktok);
     OCMStub([self.tiktokMock isRemoteSwitchOn]).andReturn(YES);
     
-    TikTokAppEventQueue *queue = [[TikTokAppEventQueue alloc] initWithConfig:config];
+    TikTokAppEventQueue *queue = [[TikTokAppEventQueue alloc] init];
     self.queue = OCMPartialMock(queue);
     
     TikTokRequestHandler *requestHandler = OCMClassMock([TikTokRequestHandler class]);
@@ -71,7 +71,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // expect sendBatchRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify(never(), [[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any]]);
 
     // add an event to queue
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
@@ -80,7 +80,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // now expect sendBatchRequest to be called, since queue has an event
-    OCMVerify([[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify([[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any]]);
 }
 
 @end
