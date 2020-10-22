@@ -15,11 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (atomic, strong, nullable) NSURLSession *session;
 @property (atomic, strong) NSString *apiVersion;
+@property (nonatomic, strong, nullable) TikTokConfig *config;
+
+- (id)init;
+
+- (id)initWithConfig: (TikTokConfig * _Nullable)config;
 
 - (void)getRemoteSwitchWithCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completion;
 
-- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
-             withConfig:(TikTokConfig *)config;
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed;
 
 @end
 

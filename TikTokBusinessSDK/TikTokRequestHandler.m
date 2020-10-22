@@ -16,8 +16,6 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
-#define SAMPLE_APP_ID @"com.shopee.my"
-
 @interface TikTokRequestHandler()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
@@ -26,7 +24,14 @@
 
 @implementation TikTokRequestHandler
 
-- (id)init:(TikTokConfig *)config
+- (id)init
+{
+    if (self == nil) return nil;
+    
+    return [self initWithConfig:nil];
+}
+
+- (id)initWithConfig:(TikTokConfig *)config
 {
     if (self == nil) {
         return nil;
@@ -35,6 +40,7 @@
     self.logger = [TikTokFactory getLogger];
     // default API version
     self.apiVersion = @"v.1.1";
+    self.config = config;
     
     return self;
 }
@@ -43,10 +49,7 @@
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    // TODO: Update appId
-    // TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
-    // NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:deviceInfo.appId];
-    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:SAMPLE_APP_ID];
+    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:self.config.appID];
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"GET"];
     
@@ -109,8 +112,7 @@
         completionHandler(isSwitchOn);
     }] resume];
 }
-- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
-             withConfig:(TikTokConfig *)config {
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed {
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
@@ -152,9 +154,7 @@
     }
     
     NSDictionary *parametersDict = @{
-        // TODO: Populate appID once change to prod environment
-        // @"app_id" : deviceInfo.appId,
-        @"app_id" : SAMPLE_APP_ID,
+        @"app_id" : self.config.appID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };
@@ -164,7 +164,7 @@
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
     // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", config.appToken];
+    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", self.config.appToken];
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -172,7 +172,7 @@
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
+    [request setValue:self.config.appToken forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:postData];
     
