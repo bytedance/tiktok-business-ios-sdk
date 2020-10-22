@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TikTokConfig : NSObject
 
 @property (nonatomic, copy, readonly, nonnull) NSString *appToken;
+@property (nonatomic, copy, readonly, nonnull) NSString *appID;
 @property (nonatomic, readonly) BOOL isSuppressed;
 
 @property (nonatomic, assign) TikTokLogLevel logLevel;
@@ -26,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL paymentLoggingEnabled;
 
 + (nullable TikTokConfig *)configWithAppToken:(nonnull NSString *)appToken
+                                        appID:(nonnull NSString *)appID
                     suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 //+ (void)disableTracking;
@@ -47,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disablePaymentLogging;
 
 - (nullable id)initWithAppToken:(nonnull NSString *)appToken
+                          appID:(nonnull NSString *)appID
                 suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 @end
