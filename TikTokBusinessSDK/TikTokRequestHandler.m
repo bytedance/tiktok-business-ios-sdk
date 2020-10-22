@@ -96,7 +96,7 @@
             }
             NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
             NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
-            isSwitchOn = [businessSDKConfig objectForKey:@"enable_sdk"];
+            isSwitchOn = [[businessSDKConfig objectForKey:@"enable_sdk"] boolValue];
             NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];
             if(apiVersion != nil) {
                 self.apiVersion = apiVersion;
