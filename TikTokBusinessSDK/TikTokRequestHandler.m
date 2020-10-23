@@ -133,7 +133,7 @@
         @"device": device,
         @"locale": deviceInfo.localeInfo,
         @"ip": deviceInfo.ipInfo,
-        @"userAgent": deviceInfo.userAgent,
+        @"user_agent": deviceInfo.userAgent,
     };
     
     // format events into object[]
@@ -144,7 +144,7 @@
             @"event": event.eventName,
             @"timestamp":event.timestamp,
             @"context": context,
-            @"properties": event.parameters,
+            @"properties": event.properties,
         };
         [batch addObject:eventDict];
     }

@@ -22,14 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nonnull) NSString *timestamp;
 
 /**
- * @brief Additional parameters in the form of NSDictionary
+ * @brief Additional properties in the form of NSDictionary
  */
-@property (nonatomic) NSDictionary *parameters;
+@property (nonatomic) NSDictionary *properties;
 
 - (instancetype)initWithEventName: (NSString *)eventName;
 
 - (instancetype)initWithEventName: (NSString *)eventName
-                   withParameters: (NSDictionary *)parameters;
+                   withProperties: (NSDictionary *)properties;
 
 @end
 
