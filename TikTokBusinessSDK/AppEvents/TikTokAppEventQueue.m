@@ -32,6 +32,16 @@
 {
     if (self == nil) return nil;
     
+    return [self initWithConfig:nil];
+}
+
+- (id)initWithConfig:(TikTokConfig *)config
+{
+    self = [super init];
+    if (self == nil) {
+        return nil;
+    }
+    
     self.eventQueue = [NSMutableArray array];
     
     __weak TikTokAppEventQueue *weakSelf = self;
@@ -47,11 +57,13 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
     }];
-        
+    
+    self.config = config;
+    
     self.logger = [TikTokFactory getLogger];
     
     [self calculateAndSetRemainingEventThreshold];
-    
+
     return self;
 }
 
@@ -119,7 +131,7 @@
                 }
                 
                 for (NSArray *eventChunk in eventChunks) {
-                    [[[TikTok getInstance] requestHandler] sendBatchRequest:eventChunk];
+                    [[[TikTok getInstance] requestHandler] sendBatchRequest:eventChunk withConfig:self.config];
                 }
             } else {
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

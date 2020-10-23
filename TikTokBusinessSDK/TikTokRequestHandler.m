@@ -24,14 +24,7 @@
 
 @implementation TikTokRequestHandler
 
-- (id)init
-{
-    if (self == nil) return nil;
-    
-    return [self initWithConfig:nil];
-}
-
-- (id)initWithConfig:(TikTokConfig *)config
+- (id)init:(TikTokConfig *)config
 {
     if (self == nil) {
         return nil;
@@ -40,16 +33,16 @@
     self.logger = [TikTokFactory getLogger];
     // default API version
     self.apiVersion = @"v.1.1";
-    self.config = config;
     
     return self;
 }
 
-- (void) getRemoteSwitchWithCompletionHandler: (void (^) (BOOL isRemoteSwitchOn)) completionHandler
+- (void)getRemoteSwitch:(TikTokConfig *)config
+  withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completionHandler
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:self.config.appID];
+    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:config.appID];
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"GET"];
     
@@ -112,7 +105,9 @@
         completionHandler(isSwitchOn);
     }] resume];
 }
-- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed {
+- (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
+              withConfig:(TikTokConfig *)config
+{
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
@@ -154,7 +149,7 @@
     }
     
     NSDictionary *parametersDict = @{
-        @"app_id" : self.config.appID,
+        @"app_id" : config.appID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };
@@ -164,7 +159,7 @@
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
     // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", self.config.appToken];
+    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", config.appToken];
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -172,7 +167,7 @@
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:self.config.appToken forHTTPHeaderField:@"Access-Token"];
+    [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:postData];
     

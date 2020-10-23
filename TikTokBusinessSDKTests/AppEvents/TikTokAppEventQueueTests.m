@@ -71,7 +71,8 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // expect sendBatchRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any]]);
+    OCMVerify(never(), [[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+
 
     // add an event to queue
     TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
@@ -80,7 +81,8 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // now expect sendBatchRequest to be called, since queue has an event
-    OCMVerify([[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any]]);
+    OCMVerify([[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+
 }
 
 @end
