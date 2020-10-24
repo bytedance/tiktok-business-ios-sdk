@@ -52,8 +52,12 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 
 //+ (id<TikTokLogger>)getLogger;
 + (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
-+ (void)trackEvent: (nullable TikTokAppEvent *)appEvent;
-+ (void)trackPurchase: (nullable TikTokAppEvent *)appEvent;
++ (void)trackEvent: (NSString *)eventName;
++ (void)trackEvent: (NSString *)eventName
+    withProperties: (NSDictionary *)properties;
++ (void)trackPurchase: (NSString *)eventName;
++ (void)trackPurchase: (NSString *)eventName
+    withProperties: (NSDictionary *)properties;
 //+ (void)trackSubsessionStart;
 //+ (void)trackSubsessionEnd;
 + (void)setTrackingEnabled: (BOOL)enabled;
@@ -99,8 +103,12 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 //- (id<TikTokLogger>)getLogger;
 - (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
-- (void)trackEvent:(nullable TikTokAppEvent *)appEvent;
-- (void)trackPurchase:(nullable TikTokAppEvent *)appEvent;
+- (void)trackEvent: (NSString *)eventName;
+- (void)trackEvent: (NSString *)eventName
+    withProperties: (NSDictionary *)properties;
+- (void)trackPurchase: (NSString *)eventName;
+- (void)trackPurchase: (NSString *)eventName
+    withProperties: (NSDictionary *)properties;
 //- (void)setEnabled:(BOOL)enabled;
 - (void)setAutomaticLoggingEnabled: (BOOL)enabled;
 - (void)setInstallLoggingEnabled: (BOOL)enabled;

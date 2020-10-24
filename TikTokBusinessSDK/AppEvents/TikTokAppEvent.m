@@ -11,7 +11,7 @@
 
 #define TIKTOKSDK_EVENTNAME_KEY @"eventName"
 #define TIKTOKSDK_TIMESTAMP_KEY @"timestamp"
-#define TIKTOKSDK_PARAMETERS_KEY @"parameters"
+#define TIKTOKSDK_PROPERTIES_KEY @"properties"
 
 @implementation TikTokAppEvent
 
@@ -21,12 +21,12 @@
         return nil;
     }
     
-    return [self initWithEventName:eventName withParameters:@{}];
+    return [self initWithEventName:eventName withProperties:@{}];
     
 }
 
 - (id)initWithEventName:(NSString *)eventName
-         withParameters: (NSDictionary *)parameters
+         withProperties: (NSDictionary *)properties
 {
     self = [super init];
     if (self == nil) {
@@ -35,7 +35,7 @@
     
     self.eventName = eventName;
     self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
-    self.parameters = parameters;
+    self.properties = properties;
    
     return self;
 }
@@ -46,7 +46,7 @@
     if (copy) {
         copy->_eventName = [self.eventName copyWithZone:zone];
         copy->_timestamp = [self.timestamp copyWithZone:zone];
-        copy.parameters = [self.parameters copyWithZone:zone];
+        copy.properties = [self.properties copyWithZone:zone];
     }
     
     return copy;
@@ -59,17 +59,17 @@
 - (void)encodeWithCoder:(nonnull NSCoder *)encoder {
     [encoder encodeObject:self.eventName forKey:TIKTOKSDK_EVENTNAME_KEY];
     [encoder encodeObject:self.timestamp forKey:TIKTOKSDK_TIMESTAMP_KEY];
-    [encoder encodeObject:self.parameters forKey:TIKTOKSDK_PARAMETERS_KEY];
+    [encoder encodeObject:self.properties forKey:TIKTOKSDK_PROPERTIES_KEY];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder {
     NSString *eventName = [decoder decodeObjectOfClass:[NSString class] forKey:TIKTOKSDK_EVENTNAME_KEY];
     NSString *timestamp = [decoder decodeObjectOfClass:[NSString class] forKey:TIKTOKSDK_TIMESTAMP_KEY];
-    NSDictionary *parameters = [decoder decodeObjectOfClass:[NSDictionary class] forKey:TIKTOKSDK_PARAMETERS_KEY];
+    NSDictionary *properties = [decoder decodeObjectOfClass:[NSDictionary class] forKey:TIKTOKSDK_PROPERTIES_KEY];
     if(self = [self initWithEventName:eventName]) {
         self.eventName = eventName;
         self.timestamp = timestamp;
-        self.parameters = parameters;
+        self.properties = properties;
     }
     return self;
 }

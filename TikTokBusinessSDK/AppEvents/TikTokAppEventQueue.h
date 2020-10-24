@@ -29,6 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) int remainingEventsUntilFlushThreshold;
 
+@property (nonatomic, strong, nullable) TikTokConfig *config;
+
+
+- (id)init;
+
+- (id)initWithConfig: (TikTokConfig * _Nullable)config;
+
 /**
  * @brief Add event to queue
  */

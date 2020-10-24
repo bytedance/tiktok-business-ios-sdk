@@ -118,8 +118,7 @@ class MetricsViewController: UIViewController {
             for fieldIndex in 0 ..< fields!.count {
                 self.payload.setValue(randomText(from: 5, to: 20), forKey: fields![fieldIndex])
             }
-            let event = TikTokAppEvent.init(eventName: randomEvent!, withParameters: self.payload as! [AnyHashable : Any])
-            TikTok.trackEvent(event)
+            TikTok.trackEvent(randomEvent!, withProperties: self.payload as! [AnyHashable : Any])
         }
     }
     

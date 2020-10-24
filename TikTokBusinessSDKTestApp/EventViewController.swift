@@ -128,10 +128,9 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         // Ideally, user should not even have exposure to TikTokAppEvent class
         let finalPayloadJSON = finalPayloadTextField.text.data(using: .utf8)!
         let finalPayloadDictionary = try? JSONSerialization.jsonObject(with: finalPayloadJSON, options: [])
-        let event = TikTokAppEvent(eventName:eventTitle, withParameters: finalPayloadDictionary as! [AnyHashable : Any])
         print("Event " + eventTitle + " posted")
-        finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
-        TikTok.trackEvent(event)
+        finalPayloadTextField.text = "{\n\t\"response\": \"SUCCESS\"\n}"
+        TikTok.trackEvent(eventTitle, withProperties: finalPayloadDictionary as! [AnyHashable : Any])
 //        print("Hello");
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appId)
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appName)
@@ -185,8 +184,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
             self.payload = self.payload + "}"
             let payloadJSON = self.payload.data(using: .utf8)!
             let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadJSON, options: [])
-            let event = TikTokAppEvent.init(eventName: randomEvent!, withParameters: payloadDictionary as! [AnyHashable : Any])
-            TikTok.trackEvent(event)
+            TikTok.trackEvent(randomEvent!, withProperties: payloadDictionary as! [AnyHashable : Any])
         }
         finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
 //        finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESSFULLY TRACKED \(numberOfEventsField.text) EVENTS TO TRACK!\"\n}"

@@ -477,8 +477,7 @@ static NSMutableArray *g_pendingRequestors;
 //    [eventParameters setObject:@"1" forKey:@"automatic_logged_purchase"];
     [eventParameters setObject:[[NSNumber numberWithDouble:valueToSum] stringValue] forKey:@"value"];
     
-    TikTokAppEvent *purchaseEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withParameters:eventParameters];
-    [[TikTok getInstance] trackPurchase:purchaseEvent];
+    [[TikTok getInstance] trackPurchase:eventName withProperties:eventParameters];
 }
 
 - (NSData *)fetchDeviceReceipt

@@ -99,17 +99,33 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)trackEvent:(TikTokAppEvent *)appEvent
++ (void)trackEvent:(NSString *)eventName
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackEvent:appEvent];
+        [[TikTok getInstance] trackEvent:eventName];
     }
 }
 
-+ (void)trackPurchase:(TikTokAppEvent *)appEvent
++ (void)trackEvent:(NSString *)eventName
+    withProperties:(NSDictionary *)properties
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackPurchase:appEvent];
+        [[TikTok getInstance] trackEvent:eventName withProperties:properties];
+    }
+}
+
++ (void)trackPurchase:(NSString *)eventName
+{
+    @synchronized (self) {
+        [[TikTok getInstance] trackPurchase:eventName];
+    }
+}
+
++ (void)trackPurchase:(NSString *)eventName
+    withProperties:(NSDictionary *)properties
+{
+    @synchronized (self) {
+        [[TikTok getInstance] trackPurchase:eventName withProperties:properties];
     }
 }
 
@@ -267,10 +283,10 @@ static dispatch_once_t onceToken = 0;
     self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
     self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
     
-    self.requestHandler = [[TikTokRequestHandler alloc] initWithConfig:tiktokConfig];
-    self.queue = [[TikTokAppEventQueue alloc] init];
+    self.requestHandler = [[TikTokRequestHandler alloc] init];
+    self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
-    [self.requestHandler getRemoteSwitchWithCompletionHandler:^(BOOL isRemoteSwitchOn) {
+    [self.requestHandler getRemoteSwitch:tiktokConfig withCompletionHandler:^(BOOL isRemoteSwitchOn) {
         self.isRemoteSwitchOn = isRemoteSwitchOn;
         if(self.isRemoteSwitchOn) {
             [self.logger info:@"Remote switch is on"];
@@ -284,10 +300,10 @@ static dispatch_once_t onceToken = 0;
             if(self.trackingEnabled){
                 if(self.automaticLoggingEnabled) {
                     if (launchedBefore && self.launchLoggingEnabled) {
-                        [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"]];
+                        [self trackEvent:@"LaunchApp"];
                     } else {
                         if(!launchedBefore && self.installLoggingEnabled) {
-                            [self trackEvent: [[TikTokAppEvent alloc] initWithEventName:@"InstallApp"]];
+                            [self trackEvent:@"InstallApp"];
                         }
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
                         [defaults synchronize];
@@ -297,7 +313,7 @@ static dispatch_once_t onceToken = 0;
                         NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
                         int numberOfDays = secondsBetween / 86400;
                         if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
-                            [self trackEvent:[[TikTokAppEvent alloc] initWithEventName:@"2DRetention"]];
+                            [self trackEvent:@"2DRetention"];
                         }
                     } else {
                         [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
@@ -334,16 +350,32 @@ static dispatch_once_t onceToken = 0;
 
 }
 
-- (void)trackEvent:(TikTokAppEvent *)appEvent
+- (void)trackEvent:(NSString *)eventName
 {
+    TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName];
     [self.queue addEvent:appEvent];
 }
 
-- (void)trackPurchase:(TikTokAppEvent *)appEvent
+- (void)trackEvent:(NSString *)eventName
+    withProperties: (NSDictionary *)properties
 {
-    [self trackEvent:appEvent];
+    TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
+    [self.queue addEvent:appEvent];
+}
+
+- (void)trackPurchase:(NSString *)eventName
+{
+    [self trackEvent:eventName];
     [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 }
+
+- (void)trackPurchase:(NSString *)eventName
+       withProperties: (NSDictionary *)properties
+{
+    [self trackEvent:eventName withProperties:properties];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {

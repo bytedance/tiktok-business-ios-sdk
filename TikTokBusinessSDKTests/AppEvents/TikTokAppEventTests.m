@@ -30,21 +30,21 @@
     
     XCTAssertTrue(eventName == event.eventName, @"Event should initialize correctly with event name");
     
-    XCTAssertTrue(event.parameters.count == 0, @"Event should not have any parameters");
+    XCTAssertTrue(event.properties.count == 0, @"Event should not have any properties");
 }
 
-- (void)testInitWithParameters {
+- (void)testInitWithProperties{
     NSString *eventName = @"TEST_EVENT_NAME";
-    NSDictionary *parameters = @{
+    NSDictionary *properties = @{
         @"key_1":@"value_1",
         @"key_2":@"value_2"
     };
     
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:eventName withParameters:parameters];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
     
     XCTAssertTrue(eventName == event.eventName, @"Event should initialize correctly with event name");
     
-    XCTAssertTrue(event.parameters.count == 2, @"Event should have 2 parameters");
+    XCTAssertTrue(event.properties.count == 2, @"Event should have 2 properties");
 }
 
 @end
