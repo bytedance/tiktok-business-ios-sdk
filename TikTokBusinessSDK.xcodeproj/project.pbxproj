@@ -35,6 +35,8 @@
 		8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBA25080821008351FA /* TikTokConfig.m */; };
 		8B23DFBF25080872008351FA /* TikTok.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFBD25080872008351FA /* TikTok.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B23DFC025080872008351FA /* TikTok.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBE25080872008351FA /* TikTok.m */; };
+		8B64FDEC2548BA82004AFC49 /* TikTokUserAgentCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64FDEA2548BA82004AFC49 /* TikTokUserAgentCollector.h */; };
+		8B64FDED2548BA82004AFC49 /* TikTokUserAgentCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */; };
 		8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216C251D7D630041E73B /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8B6D9C062525333C00829F88 /* MetricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6D9C052525333C00829F88 /* MetricsViewController.swift */; };
@@ -134,6 +136,8 @@
 		8B23DFBA25080821008351FA /* TikTokConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokConfig.m; sourceTree = "<group>"; };
 		8B23DFBD25080872008351FA /* TikTok.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTok.h; sourceTree = "<group>"; };
 		8B23DFBE25080872008351FA /* TikTok.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTok.m; sourceTree = "<group>"; };
+		8B64FDEA2548BA82004AFC49 /* TikTokUserAgentCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TikTokUserAgentCollector.h; sourceTree = "<group>"; };
+		8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TikTokUserAgentCollector.m; sourceTree = "<group>"; };
 		8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		8B6A216C251D7D630041E73B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		8B6D9C052525333C00829F88 /* MetricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsViewController.swift; sourceTree = "<group>"; };
@@ -291,6 +295,8 @@
 				8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */,
 				8B93D3022530668600EDAAA1 /* TikTokFactory.h */,
 				8B93D3032530668600EDAAA1 /* TikTokFactory.m */,
+				8B64FDEA2548BA82004AFC49 /* TikTokUserAgentCollector.h */,
+				8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */,
 				0ADCF5392538CF1C00D7B57C /* TikTokErrorHandler.h */,
 				0ADCF53A2538CF1C00D7B57C /* TikTokErrorHandler.m */,
 				0ADCF53F2538D16900D7B57C /* TikTokRequestHandler.h */,
@@ -355,6 +361,7 @@
 				8B93D3042530668600EDAAA1 /* TikTokFactory.h in Headers */,
 				8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */,
 				0A29066E250B232B00CF3B73 /* TikTokAppEventUtility.h in Headers */,
+				8B64FDEC2548BA82004AFC49 /* TikTokUserAgentCollector.h in Headers */,
 				0ADCF5412538D16900D7B57C /* TikTokRequestHandler.h in Headers */,
 				0A1A065425095483001463B8 /* TikTokAppEventQueue.h in Headers */,
 				8B89A246251A7A3700B61811 /* NSString+TikTokAdditions.h in Headers */,
@@ -507,6 +514,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B64FDED2548BA82004AFC49 /* TikTokUserAgentCollector.m in Sources */,
 				8B23DFC025080872008351FA /* TikTok.m in Sources */,
 				8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */,
 				0ADCF5422538D16900D7B57C /* TikTokRequestHandler.m in Sources */,
