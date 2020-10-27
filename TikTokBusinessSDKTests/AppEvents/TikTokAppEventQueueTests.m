@@ -30,7 +30,7 @@
 
 - (void)setUp {
     [super setUp];
-    TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" appID: @"123" suppressAppTrackingDialog:NO];
+    TikTokConfig *config = [[TikTokConfig alloc] initWithAccessToken:@"ACCESS_TOKEN" appID: @"123" suppressAppTrackingDialog:NO];
     [TikTok appDidLaunch:config];
     TikTok *tiktok = [TikTok getInstance];
     self.tiktokMock = OCMPartialMock(tiktok);
