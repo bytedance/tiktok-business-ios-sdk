@@ -18,6 +18,7 @@
 #import <TikTokPaymentObserver.h>
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
+#import "TikTokUserAgentCollector.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -31,6 +32,7 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @property (nonatomic) BOOL launchLoggingEnabled;
 @property (nonatomic) BOOL retentionLoggingEnabled;
 @property (nonatomic) BOOL paymentLoggingEnabled;
+@property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
 
 @end
 
@@ -64,6 +66,7 @@ static dispatch_once_t onceToken = 0;
         return nil;
     }
     
+    self.isolationQueue = dispatch_queue_create([@"tiktokIsolationQueue" UTF8String], DISPATCH_QUEUE_SERIAL);
     self.queue = nil;
     self.requestHandler = nil;
     self.logger = [TikTokFactory getLogger];
@@ -86,7 +89,7 @@ static dispatch_once_t onceToken = 0;
         self.userTrackingEnabled = YES; // verify
         // Fallback on earlier versions
     }
-    
+    [self loadUserAgent];
     return self;
 }
 
@@ -563,6 +566,17 @@ static dispatch_once_t onceToken = 0;
 //    self.enabled = enabled;
 //}
 //
+
+- (void)loadUserAgent {
+    dispatch_async(self.isolationQueue, ^(){
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        [[TikTokUserAgentCollector singleton] loadUserAgentWithCompletion:^(NSString * _Nullable userAgent) {
+            dispatch_semaphore_signal(semaphore);
+        }];
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    });
+}
+
 
 
 - (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion

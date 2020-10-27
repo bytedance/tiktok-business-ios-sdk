@@ -11,6 +11,14 @@
 #import <AdSupport/ASIdentifierManager.h>
 #import "UIDevice+TikTokAdditions.h"
 #import "NSString+TikTokAdditions.h"
+#import "TikTokUserAgentCollector.h"
+
+@interface TikTokDeviceInfo()
+
+@property (nonatomic, strong, readwrite) WKWebView *webView;
+
+@end
+
 @implementation TikTokDeviceInfo
 
 + (TikTokDeviceInfo *)deviceInfoWithSdkPrefix:(NSString *)sdkPrefix
@@ -38,7 +46,7 @@
     self.deviceVendorId = device.tiktokVendorId;
     self.localeInfo = [NSString stringWithFormat:@"%@-%@", [locale objectForKey:NSLocaleLanguageCode], [locale objectForKey:NSLocaleCountryCode]];
     self.ipInfo = device.tiktokDeviceIp;
-    self.userAgent = getUAString();
+//    self.userAgent = getUAString();
     self.trackingEnabled = device.tiktokTrackingEnabled;
     self.deviceType = device.tiktokDeviceType;
     self.deviceName = device.tiktokDeviceName;
@@ -47,6 +55,31 @@
     return self;
     
 }
+
+- (NSString *)getUserAgent
+{
+    return [TikTokUserAgentCollector singleton].userAgent;
+}
+
+- (void)collectUserAgentWithCompletion:(void (^)(NSString *userAgent))completion {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.webView) {
+            self.webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+        }
+        
+        [self.webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+            if(completion){
+                if(response) {
+                    self.webView = nil;
+                    completion(response);
+                } else {
+                    [self collectUserAgentWithCompletion:completion];
+                }
+            }
+        }];
+    });
+}
+
 
 static NSString * getIDFA(void) {
     ASIdentifierManager *sharedASIdentifierManager = [ASIdentifierManager sharedManager];
@@ -93,7 +126,7 @@ static NSString* appNameAndVersion()
     return [NSString stringWithFormat:@"%@/%@", appName, appVersion];
 }
 
-static NSString* getUAString ()
+- (NSString*)fallbackUserAgent
 {
     return [NSString stringWithFormat:@"%@ %@ %@ %@ %@", appNameAndVersion(), deviceName(), deviceVersion(), CFNetworkVersion(), DarwinVersion()];
 }
