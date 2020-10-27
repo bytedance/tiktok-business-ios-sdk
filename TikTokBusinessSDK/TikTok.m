@@ -19,6 +19,7 @@
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
 #import "TikTokUserAgentCollector.h"
+#import "TikTokSKAdNetworkSupport.h"
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
@@ -90,6 +91,7 @@ static dispatch_once_t onceToken = 0;
         // Fallback on earlier versions
     }
     [self loadUserAgent];
+    [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
     return self;
 }
 
@@ -200,6 +202,12 @@ static dispatch_once_t onceToken = 0;
         return [[TikTok getInstance] idfa];
     }
 }
+
+- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval
+{
+    [TikTokSKAdNetworkSupport sharedInstance].maxTimeSinceInstall = maxTimeInterval;
+}
+
 
 + (BOOL)appInForeground
 {

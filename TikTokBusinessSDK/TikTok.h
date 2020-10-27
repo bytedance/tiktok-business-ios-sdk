@@ -117,6 +117,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 - (void)setLaunchLoggingEnabled: (BOOL)enabled;
 - (void)setRetentionLoggingEnabled: (BOOL)enabled;
 - (void)setPaymentLoggingEnabled: (BOOL)enabled;
+- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
