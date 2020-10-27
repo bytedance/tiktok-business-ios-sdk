@@ -51,7 +51,7 @@
 }
 
 - (void)testAddEvent {
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
     
     for (int i = 0; i < 99; i++)
     {
@@ -75,7 +75,7 @@
 
 
     // add an event to queue
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
     [self.queue addEvent:event];
 
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
