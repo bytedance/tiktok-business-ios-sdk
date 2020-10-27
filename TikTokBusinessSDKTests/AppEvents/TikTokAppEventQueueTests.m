@@ -30,7 +30,7 @@
 
 - (void)setUp {
     [super setUp];
-    TikTokConfig *config = [[TikTokConfig alloc] initWithAppToken:@"App Token" appID: @"123" suppressAppTrackingDialog:NO];
+    TikTokConfig *config = [[TikTokConfig alloc] initWithAccessToken:@"ACCESS_TOKEN" appID: @"123" suppressAppTrackingDialog:NO];
     [TikTok appDidLaunch:config];
     TikTok *tiktok = [TikTok getInstance];
     self.tiktokMock = OCMPartialMock(tiktok);
@@ -51,7 +51,7 @@
 }
 
 - (void)testAddEvent {
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
     
     for (int i = 0; i < 99; i++)
     {
@@ -75,7 +75,7 @@
 
 
     // add an event to queue
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LAUNCH_APP"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
     [self.queue addEvent:event];
 
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];

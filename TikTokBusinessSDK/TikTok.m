@@ -178,6 +178,13 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)updateAccessToken:(nonnull NSString *)accessToken
+{
+    @synchronized (self) {
+        [[TikTok getInstance] updateAccessToken:accessToken];
+    }
+}
+
 //+ (BOOL) isEnabled
 //{
 //    @synchronized (self) {
@@ -282,6 +289,7 @@ static dispatch_once_t onceToken = 0;
     self.launchLoggingEnabled = tiktokConfig.launchLoggingEnabled;
     self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
     self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
+    self.accessToken = tiktokConfig.accessToken;
     
     self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
@@ -535,6 +543,10 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
+- (void)updateAccessToken:(nonnull NSString *)accessToken
+{
+    self.accessToken = accessToken;
+}
 
 - (BOOL)isTrackingEnabled
 {

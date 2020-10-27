@@ -159,7 +159,7 @@
     
     // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
     // NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", config.appToken];
+    // [self.logger info:@"[TikTokRequestHandler] Access token: %@", [[TikTok getInstance] accessToken]];
     // [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -167,7 +167,7 @@
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:config.appToken forHTTPHeaderField:@"Access-Token"];
+    [request setValue:[[TikTok getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:postData];
     

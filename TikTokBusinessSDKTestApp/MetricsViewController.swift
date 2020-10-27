@@ -19,41 +19,41 @@ class MetricsViewController: UIViewController {
     @IBOutlet weak var secondsUntilFlush: UILabel!
     @IBOutlet weak var remainingNumberOfEventsUntilFlush: UILabel!
     
-    let events = ["CUSTOM_EVENT", "LAUNCH_APP", "INSTALL_APP", "RETENTION_2D", "ADD_PAYMENT_INFO", "ADD_TO_CART", "ADD_TO_WISHLIST", "CHECKOUT", "COMPLETE_TUTORIAL", "VIEW_CONTENT", "CREATE_GROUP", "CREATE_ROLE", "GENERATE_LEAD", "IN_APP_AD_CLICK", "IN_APP_AD_IMPR", "JOIN_GROUP", "ACHIEVE_LEVEL", "LOAN_APPLICATION", "LOAN_APPROVAL", "LOAN_DISBURSAL", "LOGIN", "PURCHASE", "RATE", "REGISTRATION", "SEARCH", "SPEND_CREDITS", "START_TRIAL", "SUBSCRIBE", "SHARE", "CONTACT", "UNLOCK_ACHIEVEMENT"]
+    let events = ["CustomEvent", "LaunchApp", "InstallApp", "2DRetention", "AddPaymentInfo", "AddToCart", "AddToWishList", "Checkout", "CompleteTutorial", "ViewContent", "CreateGroup", "CreateRole", "GenerateLead", "InAppAdClick", "InAppAdImpr", "JoinGroup", "AchieveLevel", "LoanApplication", "LoanApproval", "LoanDisbursal", "Login", "Purchase", "Rate", "Registration", "Search", "SpendCredits", "StartTrial", "Subscribe", "Share", "Contact", "UnlockAchievement"]
     
     var eventToField =
         [
-            "CUSTOM_EVENT": [],
-            "LAUNCH_APP": [],
-            "INSTALL_APP": [],
-            "RETENTION_2D": [],
-            "ADD_PAYMENT_INFO": ["app_id", "idfa", "attribution"],
-            "ADD_TO_CART": ["content_type", "sku_id", "description", "currency", "value"],
-            "ADD_TO_WISHLIST": ["page_type", "content_id", "description", "currency", "value"],
-            "CHECKOUT": ["description", "sku_id", "number_of_items", "payment_unavailable", "currency", "value", "game_item_type", "game_item_id", "room_type", "currency", "value", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights"],
-            "COMPLETE_TUTORIAL": [],
-            "VIEW_CONTENT": ["page_type", "sku_id", "description", "currency", "value", "search_string", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger"],
-            "CREATE_GROUP": ["group_name", "group_logo", "group_description", "group_type", "group_id"],
-            "CREATE_ROLE": ["role_type"],
-            "GENERATE_LEAD": [],
-            "IN_APP_AD_CLICK": ["ad_type"],
-            "IN_APP_AD_IMPR": ["ad_type"],
-            "JOIN_GROUP": ["level_numer"],
-            "ACHIEVE_LEVEL": ["level_number", "score"],
-            "LOAN_APPLICATION": ["loan_type", "application_id"],
-            "LOAN_APPROVAL": ["value"],
-            "LOAN_DISBURSAL": ["value"],
-            "LOGIN": [],
-            "PURCHASE": ["page_type", "sku_id", "description", "number_of_items", "coupon_used", "currency", "value", "group_type", "game_item_id", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger", "service_type", "service_id"],
-            "RATE": ["page_type", "sku_id", "content", "rating_value", "max_rating_value", "rate"],
-            "REGISTRATION": ["registration_method"],
-            "SEARCH": ["search_string", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "origination_city", "destination_city", "departure_date", "return_date", "class", "number_of_passenger"],
-            "SPEND_CREDITS": ["game_item_type", "game_item_id", "level_number"],
-            "START_TRIAL": ["order_id", "currency"],
-            "SUBSCRIBE": ["order_id", "currency"],
-            "SHARE": ["content_type", "content_id", "share_destination"],
-            "CONTACT": [],
-            "UNLOCK_ACHIEVEMENT": ["description", "achievement_type"]
+            "CustomEvent": [],
+            "LaunchApp": [],
+            "InstallApp": [],
+            "2DRetention": [],
+            "AddPaymentInfo": ["app_id", "idfa", "attribution"],
+            "AddToCart": ["content_type", "sku_id", "description", "currency", "value"],
+            "AddToWishList": ["page_type", "content_id", "description", "currency", "value"],
+            "Checkout": ["description", "sku_id", "number_of_items", "payment_unavailable", "currency", "value", "game_item_type", "game_item_id", "room_type", "currency", "value", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights"],
+            "CompleteTutorial": [],
+            "ViewContent": ["page_type", "sku_id", "description", "currency", "value", "Search_string", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger"],
+            "CreateGroup": ["group_name", "group_logo", "group_description", "group_type", "group_id"],
+            "CreateRole": ["role_type"],
+            "GenerateLead": [],
+            "InAppAdClick": ["ad_type"],
+            "InAppAdImpr": ["ad_type"],
+            "JoinGroup": ["level_numer"],
+            "AchieveLevel": ["level_number", "score"],
+            "LoanApplication": ["loan_type", "application_id"],
+            "LoanApproval": ["value"],
+            "LoanDisbursal": ["value"],
+            "Login": [],
+            "Purchase": ["page_type", "sku_id", "description", "number_of_items", "coupon_used", "currency", "value", "group_type", "game_item_id", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger", "service_type", "service_id"],
+            "Rate": ["page_type", "sku_id", "content", "rating_value", "max_rating_value", "rate"],
+            "Registration": ["registration_method"],
+            "Search": ["search_string", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "origination_city", "destination_city", "departure_date", "return_date", "class", "number_of_passenger"],
+            "SpendCredits": ["game_item_type", "game_item_id", "level_number"],
+            "StartTrial": ["order_id", "currency"],
+            "Subscribe": ["order_id", "currency"],
+            "Share": ["content_type", "content_id", "share_destination"],
+            "Contact": [],
+            "UnlockAchievement": ["description", "achievement_type"]
     ]
     
     var payload = NSMutableDictionary()
@@ -110,7 +110,7 @@ class MetricsViewController: UIViewController {
         if(numberOfEventsField.text!.count <= 0 || numberOfEventsField.text == "0") {return}
         for var num in 0...count - 1 {
             let randomEvent = self.events.randomElement();
-            if(randomEvent == "LAUNCH_APP" || randomEvent == "INSTALL_APP") {
+            if(randomEvent == "LaunchApp" || randomEvent == "InstallApp") {
                 num -= 1
             }
             self.payload.setValue(randomEvent, forKey: "event_name")
