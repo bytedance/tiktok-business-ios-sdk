@@ -294,30 +294,50 @@ static dispatch_once_t onceToken = 0;
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
-            NSDate *lastLaunched = (NSDate *)[defaults objectForKey:@"tiktokLastLaunchedDate"];
-            NSDate *currentLaunch = [NSDate date];
+            BOOL logged2DRetention = [defaults boolForKey:@"tiktokLogged2DRetention"];
+            // Setting this variable to limit recomputations for 2DRetention past second day
+            BOOL past2DLimit = [defaults boolForKey:@"tiktokPast2DLimit"];
+            NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
             
             if(self.trackingEnabled){
                 if(self.automaticLoggingEnabled) {
-                    if (launchedBefore && self.launchLoggingEnabled) {
-                        [self trackEvent:@"LaunchApp"];
-                    } else {
-                        if(!launchedBefore && self.installLoggingEnabled) {
-                            [self trackEvent:@"InstallApp"];
-                        }
+                    
+                    // Enabled: Tracking, Auto Logging, Install Logging
+                    // Launched Before: False
+                    if(!launchedBefore && self.installLoggingEnabled) {
+                        [self trackEvent:@"InstallApp"];
+                        NSDate *currentLaunch = [NSDate date];
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
+                        [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
                         [defaults synchronize];
                     }
                     
-                    if(lastLaunched && self.retentionLoggingEnabled) {
-                        NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:lastLaunched];
-                        int numberOfDays = secondsBetween / 86400;
-                        if ((numberOfDays <= 2) && (numberOfDays >= 1)) {
-                            [self trackEvent:@"2DRetention"];
+                    // Enabled: Tracking, Auto Logging, Launch Logging
+                    // Launched Before: True
+                    if (launchedBefore && self.launchLoggingEnabled) {
+                        [self trackEvent:@"LaunchApp"];
+                    }
+                    
+  
+                    // Enabled: Tracking, Auto Logging, 2DRetention Logging
+                    // Install Date: Available
+                    // 2D Limit has not been passed
+                    if(installDate && self.retentionLoggingEnabled) {
+                        if(!past2DLimit){
+                            NSDate *currentLaunch = [NSDate date];
+                            NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
+                            int numberOfDays = secondsBetween / 86400;
+                            if ((numberOfDays <= 2) && (numberOfDays >= 1) && !logged2DRetention) {
+                                [self trackEvent:@"2DRetention"];
+                                [defaults setBool:YES forKey:@"tiktokLogged2DRetention"];
+                                [defaults synchronize];
+                            }
+                            
+                            if (numberOfDays > 2){
+                                [defaults setBool:YES forKey:@"tiktokPast2DLimit"];
+                                [defaults synchronize];
+                            }
                         }
-                    } else {
-                        [defaults setObject:currentLaunch forKey:@"tiktokLastLaunchedDate"];
-                        [defaults synchronize];
                     }
                     
                     if(self.paymentLoggingEnabled){
@@ -385,6 +405,33 @@ static dispatch_once_t onceToken = 0;
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
+    // Enabled: Tracking, Auto Logging, 2DRetention Logging
+    // Install Date: Available
+    // 2D Limit has not been passed
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL logged2DRetention = [defaults boolForKey:@"tiktokLogged2DRetention"];
+    // Setting this variable to limit recomputations for 2DRetention past second day
+    BOOL past2DLimit = [defaults boolForKey:@"tiktokPast2DLimit"];
+    NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
+    
+    if(self.trackingEnabled && self.automaticLoggingEnabled && installDate && self.retentionLoggingEnabled && !past2DLimit) {
+        if(!past2DLimit){
+            NSDate *currentLaunch = [NSDate date];
+            NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
+            int numberOfDays = secondsBetween / 86400;
+            if ((numberOfDays <= 2) && (numberOfDays >= 1) && !logged2DRetention) {
+                [self trackEvent:@"2DRetention"];
+                [defaults setBool:YES forKey:@"tiktokLogged2DRetention"];
+                [defaults synchronize];
+            }
+            
+            if (numberOfDays > 2){
+                [defaults setBool:YES forKey:@"tiktokPast2DLimit"];
+                [defaults synchronize];
+            }
+        }
+    }
     [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
 }
 
