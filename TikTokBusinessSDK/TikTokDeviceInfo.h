@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *deviceVendorId;
 @property (nonatomic, copy) NSString *localeInfo;
 @property (nonatomic, copy) NSString *ipInfo;
-@property (nonatomic, copy) NSString *userAgent;
 @property (nonatomic, assign) BOOL trackingEnabled;
 @property (nonatomic, copy) NSString *clientSdk;
 @property (nonatomic, copy) NSString *deviceType;
@@ -34,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)initWithSdkPrefix:(NSString *)sdkPrefix;
 + (TikTokDeviceInfo *)deviceInfoWithSdkPrefix:(NSString *)sdkPrefix;
+- (NSString *)getUserAgent;
+- (NSString *)fallbackUserAgent;
 
 @end
 
