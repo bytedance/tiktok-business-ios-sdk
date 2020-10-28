@@ -201,7 +201,7 @@ static NSMutableArray *g_pendingRequestors;
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct: (SKProduct *)product withTransaction: (SKPaymentTransaction *)transaction
 {
     NSString *transactionId = nil;
-    NSString *transactionDate = nil;
+//    NSString *transactionDate = nil;
     
     switch (transaction.transactionState) {
         case SKPaymentTransactionStatePurchasing:
@@ -235,7 +235,7 @@ static NSMutableArray *g_pendingRequestors;
 
         NSMutableArray *contents = [[NSMutableArray alloc] init];
 
-        for (NSUInteger idx; idx < payment.quantity; idx++) {
+        for (NSUInteger idx = 0; idx < payment.quantity; idx++) {
             NSMutableDictionary *productDict = [[NSMutableDictionary alloc] initWithDictionary:@{
                 @"price": [[NSNumber numberWithDouble:product.price.doubleValue] stringValue],
                 @"quantity": @"1",

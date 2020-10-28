@@ -344,9 +344,10 @@ static dispatch_once_t onceToken = 0;
                     if(installDate && self.retentionLoggingEnabled) {
                         if(!past2DLimit){
                             NSDate *currentLaunch = [NSDate date];
+                            NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
                             NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
                             int numberOfDays = secondsBetween / 86400;
-                            if ((numberOfDays <= 2) && (numberOfDays >= 1) && !logged2DRetention) {
+                            if ([[NSCalendar currentCalendar] isDate:oneDayAgo inSameDayAsDate:installDate] && !logged2DRetention) {
                                 [self trackEvent:@"2DRetention"];
                                 [defaults setBool:YES forKey:@"tiktokLogged2DRetention"];
                                 [defaults synchronize];
@@ -437,11 +438,13 @@ static dispatch_once_t onceToken = 0;
     if(self.trackingEnabled && self.automaticLoggingEnabled && installDate && self.retentionLoggingEnabled && !past2DLimit) {
         if(!past2DLimit){
             NSDate *currentLaunch = [NSDate date];
+            NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
             NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
             int numberOfDays = secondsBetween / 86400;
-            if ((numberOfDays <= 2) && (numberOfDays >= 1) && !logged2DRetention) {
+            if ([[NSCalendar currentCalendar] isDate:oneDayAgo inSameDayAsDate:installDate] && !logged2DRetention) {
                 [self trackEvent:@"2DRetention"];
                 [defaults setBool:YES forKey:@"tiktokLogged2DRetention"];
+                [defaults setBool:YES forKey:@"tiktokPast2DLimit"];
                 [defaults synchronize];
             }
             
@@ -451,6 +454,7 @@ static dispatch_once_t onceToken = 0;
             }
         }
     }
+    
     [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
 }
 

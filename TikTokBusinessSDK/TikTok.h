@@ -6,7 +6,7 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#import "TikTokConfig.h"
+#import  "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTokAppEventQueue.h"
 #import "TikTokRequestHandler.h"
