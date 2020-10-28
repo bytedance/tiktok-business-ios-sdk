@@ -16,9 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong, nullable) NSURLSession *session;
 @property (atomic, strong) NSString *apiVersion;
 
+/**
+ * @brief Method to obtain remote switch with completion handler
+ */
 - (void)getRemoteSwitch:(TikTokConfig *)config
         withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completionHandler;
 
+/**
+ * @brief Method to interact with '/batch' endpoint
+ */
 - (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
               withConfig:(TikTokConfig *)config;
 

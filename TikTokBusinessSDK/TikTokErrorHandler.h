@@ -14,10 +14,15 @@ extern NSUncaughtExceptionHandler *handleUncaughtExceptionPointer;
 
 @interface TikTokErrorHandler : NSObject
 
+/**
+ * @brief Error handling with exception
+ */
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message
                     exception:(NSException *)exception;
-
+/**
+ * @brief Error handling without exception
+ */
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message;
 
