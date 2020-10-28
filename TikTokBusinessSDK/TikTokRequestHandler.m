@@ -98,10 +98,7 @@
                 self.apiVersion = apiVersion;
             }
         }
-        
-        // NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        // [self.logger info:@"[TikTokRequestHandler] Request response from check remote switch: %@", requestResponse];
-        
+                
         completionHandler(isSwitchOn);
     }] resume];
 }
@@ -156,11 +153,6 @@
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
-    
-    // TODO: Logs below to view JSON passed to request. Remove once convert to prod API
-//     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
-//     [self.logger info:@"[TikTokRequestHandler] Access token: %@", [[TikTok getInstance] accessToken]];
-//     [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;

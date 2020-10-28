@@ -10,7 +10,8 @@
 
 @implementation TikTokAppEventUtility
 
-+ (NSString *)getCurrentTimestampInISO8601 {
++ (NSString *)getCurrentTimestampInISO8601
+{
     NSTimeZone *timeZone = [NSTimeZone defaultTimeZone];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeZone:timeZone];

@@ -40,7 +40,8 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (id)copyWithZone:(NSZone *)zone
+{
     TikTokAppEvent *copy = [[[self class] allocWithZone:zone] init];
     
     if (copy) {
@@ -52,17 +53,20 @@
     return copy;
 }
 
-+ (BOOL)supportsSecureCoding {
++ (BOOL)supportsSecureCoding
+{
     return YES;
 }
 
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {
+- (void)encodeWithCoder:(nonnull NSCoder *)encoder
+{
     [encoder encodeObject:self.eventName forKey:TIKTOKSDK_EVENTNAME_KEY];
     [encoder encodeObject:self.timestamp forKey:TIKTOKSDK_TIMESTAMP_KEY];
     [encoder encodeObject:self.properties forKey:TIKTOKSDK_PROPERTIES_KEY];
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder {
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
+{
     NSString *eventName = [decoder decodeObjectOfClass:[NSString class] forKey:TIKTOKSDK_EVENTNAME_KEY];
     NSString *timestamp = [decoder decodeObjectOfClass:[NSString class] forKey:TIKTOKSDK_TIMESTAMP_KEY];
     NSDictionary *properties = [decoder decodeObjectOfClass:[NSDictionary class] forKey:TIKTOKSDK_PROPERTIES_KEY];

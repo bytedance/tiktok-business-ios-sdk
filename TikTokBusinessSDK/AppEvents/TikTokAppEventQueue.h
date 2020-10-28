@@ -21,14 +21,29 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) NSMutableArray *eventQueue;
 
+/**
+ * @brief Timer for flush
+ */
 @property (nonatomic, strong) NSTimer *flushTimer;
 
+/**
+ * @brief Timer for logging
+ */
 @property (nonatomic, strong) NSTimer *logTimer;
 
+/**
+ * @brief Time in seconds until flush
+ */
 @property (nonatomic) int timeInSecondsUntilFlush;
 
+/**
+ * @brief Remaining events until flush
+ */
 @property (nonatomic) int remainingEventsUntilFlushThreshold;
 
+/**
+ * @brief Configuration from SDK initialization
+ */
 @property (nonatomic, strong, nullable) TikTokConfig *config;
 
 

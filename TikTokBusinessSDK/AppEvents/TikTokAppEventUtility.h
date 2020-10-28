@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Enum for flush reasoning
+ */
 typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
 {
     TikTokAppEventsFlushReasonTimer,
@@ -20,6 +23,9 @@ typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
 
 @interface TikTokAppEventUtility : NSObject
 
+/**
+ * @brief Method to obtain timestamp in ISO8601
+ */
 + (NSString *)getCurrentTimestampInISO8601;
 
 @end
