@@ -97,10 +97,10 @@ static dispatch_once_t onceToken = 0;
 
 #pragma mark - Public static methods
 
-+ (void)appDidLaunch:(TikTokConfig *)tiktokConfig
++ (void)initializeSdk:(TikTokConfig *)tiktokConfig
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] appDidLaunch: tiktokConfig];
+        [[TikTokBusiness getInstance] initializeSdk: tiktokConfig];
     }
 }
 
@@ -286,7 +286,7 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)appDidLaunch:(TikTokConfig *)tiktokConfig
+- (void)initializeSdk:(TikTokConfig *)tiktokConfig
 {
     if(self.queue != nil){
         [self.logger warn:@"TikTok SDK has been initialized already!"];

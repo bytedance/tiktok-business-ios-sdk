@@ -52,7 +52,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @property (nonatomic) NSString *accessToken;
 
 //+ (id<TikTokLogger>)getLogger;
-+ (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
++ (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (NSString *)eventName;
 + (void)trackEvent: (NSString *)eventName
     withProperties: (NSDictionary *)properties;
@@ -103,7 +103,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 + (nullable id)getInstance;
 + (void)resetInstance;
 //- (id<TikTokLogger>)getLogger;
-- (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
+- (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName
