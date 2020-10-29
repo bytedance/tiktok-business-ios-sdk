@@ -68,6 +68,10 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         super.viewDidLoad()
         // Initializing TikTok SDK
 //        tiktok = delegate.;
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        
         title = "Event"
         eventPickerView.dataSource = self
         eventPickerView.delegate = self
