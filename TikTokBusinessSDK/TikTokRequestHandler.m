@@ -16,6 +16,8 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
+#define SDK_VERSION @"iOS1.0.0"
+
 @interface TikTokRequestHandler()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
@@ -42,8 +44,9 @@
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [@"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=" stringByAppendingString:config.appID];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appID, @"&sdk_version=", SDK_VERSION];
     [request setURL:[NSURL URLWithString:url]];
+    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
@@ -98,7 +101,7 @@
                 self.apiVersion = apiVersion;
             }
         }
-                
+
         completionHandler(isSwitchOn);
     }] resume];
 }
@@ -149,6 +152,7 @@
         @"app_id" : config.appID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
+        @"sdk_version": SDK_VERSION,
     };
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
