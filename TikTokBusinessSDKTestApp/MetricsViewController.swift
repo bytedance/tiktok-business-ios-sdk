@@ -61,6 +61,12 @@ class MetricsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Queue Metrics"
+        
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        
+        
         if((numberOfEventsField.text?.count)! > 0){
             randomEvents.setTitle("Generate " + "Random events", for: .normal)
         }
