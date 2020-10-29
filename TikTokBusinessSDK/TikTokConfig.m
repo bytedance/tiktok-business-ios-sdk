@@ -8,7 +8,7 @@
 
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokFactory.h"
 
 @interface TikTokConfig()

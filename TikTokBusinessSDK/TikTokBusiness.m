@@ -1,11 +1,11 @@
 //
-//  TikTok.m
+//  TikTokBusiness.m
 //  TikTokBusinessSDK
 //
 //  Created by Aditya Khandelwal on 9/8/20.
 //  Copyright © 2020 bytedance. All rights reserved.
 //
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokLogger.h"
 #import "TikTokConfig.h"
 #import "UIDevice+TikTokAdditions.h"
@@ -25,7 +25,7 @@ NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
 //static id<TikTokLogger> tiktokLogger = nil;
 
-@interface TikTok()
+@interface TikTokBusiness()
 
 //@property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL automaticLoggingEnabled;
@@ -38,11 +38,11 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @end
 
 
-@implementation TikTok: NSObject
+@implementation TikTokBusiness: NSObject
 
 #pragma mark - Object Lifecycle Methods
 
-static TikTok * defaultInstance = nil;
+static TikTokBusiness * defaultInstance = nil;
 static dispatch_once_t onceToken = 0;
 
 + (id)getInstance
@@ -100,14 +100,14 @@ static dispatch_once_t onceToken = 0;
 + (void)appDidLaunch:(TikTokConfig *)tiktokConfig
 {
     @synchronized (self) {
-        [[TikTok getInstance] appDidLaunch: tiktokConfig];
+        [[TikTokBusiness getInstance] appDidLaunch: tiktokConfig];
     }
 }
 
 + (void)trackEvent:(NSString *)eventName
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackEvent:eventName];
+        [[TikTokBusiness getInstance] trackEvent:eventName];
     }
 }
 
@@ -115,14 +115,14 @@ static dispatch_once_t onceToken = 0;
     withProperties:(NSDictionary *)properties
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackEvent:eventName withProperties:properties];
+        [[TikTokBusiness getInstance] trackEvent:eventName withProperties:properties];
     }
 }
 
 + (void)trackPurchase:(NSString *)eventName
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackPurchase:eventName];
+        [[TikTokBusiness getInstance] trackPurchase:eventName];
     }
 }
 
@@ -130,63 +130,63 @@ static dispatch_once_t onceToken = 0;
     withProperties:(NSDictionary *)properties
 {
     @synchronized (self) {
-        [[TikTok getInstance] trackPurchase:eventName withProperties:properties];
+        [[TikTokBusiness getInstance] trackPurchase:eventName withProperties:properties];
     }
 }
 
 + (void)setTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setTrackingEnabled:enabled];
+        [[TikTokBusiness getInstance] setTrackingEnabled:enabled];
     }
 }
 
 + (void)setUserTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setUserTrackingEnabled:enabled];
+        [[TikTokBusiness getInstance] setUserTrackingEnabled:enabled];
     }
 }
 
 + (void)setAutomaticLoggingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setAutomaticLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setAutomaticLoggingEnabled:enabled];
     }
 }
 
 + (void)setInstallLoggingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setInstallLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setInstallLoggingEnabled:enabled];
     }
 }
 
 + (void)setLaunchLoggingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setLaunchLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setLaunchLoggingEnabled:enabled];
     }
 }
 
 + (void)setRetentionLoggingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setRetentionLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setRetentionLoggingEnabled:enabled];
     }
 }
 
 + (void)setPaymentLoggingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTok getInstance] setPaymentLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setPaymentLoggingEnabled:enabled];
     }
 }
 
 + (void)updateAccessToken:(nonnull NSString *)accessToken
 {
     @synchronized (self) {
-        [[TikTok getInstance] updateAccessToken:accessToken];
+        [[TikTokBusiness getInstance] updateAccessToken:accessToken];
     }
 }
 
@@ -199,7 +199,7 @@ static dispatch_once_t onceToken = 0;
 
 + (NSString *)idfa {
     @synchronized (self) {
-        return [[TikTok getInstance] idfa];
+        return [[TikTokBusiness getInstance] idfa];
     }
 }
 
@@ -212,56 +212,56 @@ static dispatch_once_t onceToken = 0;
 + (BOOL)appInForeground
 {
     @synchronized (self) {
-        return [[TikTok getInstance] appInForeground];
+        return [[TikTokBusiness getInstance] appInForeground];
     }
 }
 
 + (BOOL)appInBackground
 {
     @synchronized (self) {
-        return [[TikTok getInstance] appInBackground];
+        return [[TikTokBusiness getInstance] appInBackground];
     }
 }
 
 + (BOOL)appIsInactive
 {
     @synchronized (self) {
-        return [[TikTok getInstance] appIsInactive];
+        return [[TikTokBusiness getInstance] appIsInactive];
     }
 }
 
 + (BOOL)isTrackingEnabled
 {
     @synchronized (self) {
-        return [[TikTok getInstance] isTrackingEnabled];
+        return [[TikTokBusiness getInstance] isTrackingEnabled];
     }
 }
 
 + (BOOL)isUserTrackingEnabled
 {
     @synchronized (self) {
-        return [[TikTok getInstance] isUserTrackingEnabled];
+        return [[TikTokBusiness getInstance] isUserTrackingEnabled];
     }
 }
 
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion
 {
     @synchronized (self) {
-        [[TikTok getInstance] requestTrackingAuthorizationWithCompletionHandler:completion];
+        [[TikTokBusiness getInstance] requestTrackingAuthorizationWithCompletionHandler:completion];
     }
 }
 
 + (TikTokAppEventQueue *)getQueue
 {
     @synchronized (self) {
-        return [[TikTok getInstance] queue];
+        return [[TikTokBusiness getInstance] queue];
     }
 }
 
 + (long)getInMemoryEventCount
 {
     @synchronized (self) {
-        return [[[TikTok getInstance] queue] eventQueue].count;
+        return [[[TikTokBusiness getInstance] queue] eventQueue].count;
     }
 }
 
@@ -275,14 +275,14 @@ static dispatch_once_t onceToken = 0;
 + (long)getTimeInSecondsUntilFlush
 {
     @synchronized (self) {
-        return [[[TikTok getInstance] queue] timeInSecondsUntilFlush];
+        return [[[TikTokBusiness getInstance] queue] timeInSecondsUntilFlush];
     }
 }
 
 + (long)getRemainingEventsUntilFlushThreshold
 {
     @synchronized (self) {
-        return [[[TikTok getInstance] queue] remainingEventsUntilFlushThreshold];
+        return [[[TikTokBusiness getInstance] queue] remainingEventsUntilFlushThreshold];
     }
 }
 

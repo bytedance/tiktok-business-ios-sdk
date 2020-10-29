@@ -10,7 +10,7 @@
 #import "TikTokAppEventQueue.h"
 #import "TikTokAppEventStore.h"
 #import "TikTokAppEventUtility.h"
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
@@ -69,7 +69,7 @@
 
 - (void)addEvent:(TikTokAppEvent *)event
 {
-    if([[TikTok getInstance] isRemoteSwitchOn] == NO) {
+    if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
         [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no event added"];
         return;
     }
@@ -83,7 +83,7 @@
 
 - (void)flush:(TikTokAppEventsFlushReason)flushReason
 {
-    if([[TikTok getInstance] isRemoteSwitchOn] == NO) {
+    if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
         [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
         return;
     }
@@ -116,7 +116,7 @@
     @try {
         [self.logger info:@"[TikTokAppEventQueue] Total number events to be flushed: %lu", eventsToBeFlushed.count];
         if(eventsToBeFlushed.count > 0) {
-            if([[TikTok getInstance] isTrackingEnabled]) {
+            if([[TikTokBusiness getInstance] isTrackingEnabled]) {
                 // chunk eventsToBeFlushed into subarrays of API_LIMIT length or less and send requests for each
                 NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
                 NSUInteger eventsRemaining = eventsToBeFlushed.count;
@@ -131,7 +131,7 @@
                 }
                 
                 for (NSArray *eventChunk in eventChunks) {
-                    [[[TikTok getInstance] requestHandler] sendBatchRequest:eventChunk withConfig:self.config];
+                    [[[TikTokBusiness getInstance] requestHandler] sendBatchRequest:eventChunk withConfig:self.config];
                 }
             } else {
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

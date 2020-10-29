@@ -71,11 +71,11 @@ class MetricsViewController: UIViewController {
             randomEvents.setTitle("Generate " + "Random events", for: .normal)
         }
 
-        numberOfEventsInMemory.text = String(TikTok.getInMemoryEventCount());
-        numberOfEventsInDisk.text = String(TikTok.getInDiskEventCount());
+        numberOfEventsInMemory.text = String(TikTokBusiness.getInMemoryEventCount());
+        numberOfEventsInDisk.text = String(TikTokBusiness.getInDiskEventCount());
         numberOfEventsDumped.text = String(0);
-        secondsUntilFlush.text = String(TikTok.getTimeInSecondsUntilFlush())
-        remainingNumberOfEventsUntilFlush.text = String(TikTok.getRemainingEventsUntilFlushThreshold())
+        secondsUntilFlush.text = String(TikTokBusiness.getTimeInSecondsUntilFlush())
+        remainingNumberOfEventsUntilFlush.text = String(TikTokBusiness.getRemainingEventsUntilFlushThreshold())
 
         NotificationCenter.default.addObserver(self, selector: #selector(onInMemoryEventQueueUpdate(_:)), name: NSNotification.Name(rawValue: "inMemoryEventQueueUpdated"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onInDiskEventQueueUpdate(_:)), name: NSNotification.Name(rawValue: "inDiskEventQueueUpdated"), object: nil)
@@ -84,16 +84,16 @@ class MetricsViewController: UIViewController {
     }
     
     @objc func onInMemoryEventQueueUpdate(_ notification:Notification) {
-        numberOfEventsInMemory.text = String(TikTok.getInMemoryEventCount());
-        remainingNumberOfEventsUntilFlush.text = String(TikTok.getRemainingEventsUntilFlushThreshold());
+        numberOfEventsInMemory.text = String(TikTokBusiness.getInMemoryEventCount());
+        remainingNumberOfEventsUntilFlush.text = String(TikTokBusiness.getRemainingEventsUntilFlushThreshold());
     }
     
     @objc func onInDiskEventQueueUpdate(_ notification:Notification) {
-        numberOfEventsInDisk.text = String(TikTok.getInDiskEventCount());
+        numberOfEventsInDisk.text = String(TikTokBusiness.getInDiskEventCount());
     }
     
     @objc func onTimeLeft(_ notification:Notification) {
-        secondsUntilFlush.text = String(TikTok.getTimeInSecondsUntilFlush());
+        secondsUntilFlush.text = String(TikTokBusiness.getTimeInSecondsUntilFlush());
     }
     
     @objc func onEventsDumped(_ notification:Notification) {
@@ -124,7 +124,7 @@ class MetricsViewController: UIViewController {
             for fieldIndex in 0 ..< fields!.count {
                 self.payload.setValue(randomText(from: 5, to: 20), forKey: fields![fieldIndex])
             }
-            TikTok.trackEvent(randomEvent!, withProperties: self.payload as! [AnyHashable : Any])
+            TikTokBusiness.trackEvent(randomEvent!, withProperties: self.payload as! [AnyHashable : Any])
         }
     }
     

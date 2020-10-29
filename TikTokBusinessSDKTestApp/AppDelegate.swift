@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         let config = TikTokConfig.init(accessToken: "d5db46888d3884b1b91b1b77542b16514e788f6f", appID: "com.shopee.my", suppressAppTrackingDialog: false);
 //        config?.disableTracking()
-        TikTok.appDidLaunch(config);
+        TikTokBusiness.appDidLaunch(config);
 //        TikTok.setTrackingEnabled(true);
         return true
     }
