@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventQueue.h"
 #import "TikTokRequestHandler.h"
@@ -21,7 +21,7 @@
 
 @interface TikTokAppEventQueueTests : XCTestCase
 
-@property (nonatomic, strong) TikTok *tiktokMock;
+@property (nonatomic, strong) TikTokBusiness *tiktokBusiness;
 @property (nonatomic, strong) TikTokAppEventQueue *queue;
 
 @end
@@ -31,23 +31,23 @@
 - (void)setUp {
     [super setUp];
     TikTokConfig *config = [[TikTokConfig alloc] initWithAccessToken:@"ACCESS_TOKEN" appID: @"123" suppressAppTrackingDialog:NO];
-    [TikTok appDidLaunch:config];
-    TikTok *tiktok = [TikTok getInstance];
-    self.tiktokMock = OCMPartialMock(tiktok);
-    OCMStub([self.tiktokMock isRemoteSwitchOn]).andReturn(YES);
+    [TikTokBusiness initializeSdk:config];
+    TikTokBusiness *tiktokBusiness = [TikTokBusiness getInstance];
+    self.tiktokBusiness = OCMPartialMock(tiktokBusiness);
+    OCMStub([self.tiktokBusiness isRemoteSwitchOn]).andReturn(YES);
     
     TikTokAppEventQueue *queue = [[TikTokAppEventQueue alloc] init];
     self.queue = OCMPartialMock(queue);
     
     TikTokRequestHandler *requestHandler = OCMClassMock([TikTokRequestHandler class]);
-    OCMStub([self.tiktokMock requestHandler]).andReturn(requestHandler);
+    OCMStub([self.tiktokBusiness requestHandler]).andReturn(requestHandler);
     
     XCTAssertTrue(self.queue.eventQueue.count == 0, @"Queue should be empty");
 }
 
 - (void)tearDown {
     [super tearDown];
-    [TikTok resetInstance];
+    [TikTokBusiness resetInstance];
 }
 
 - (void)testAddEvent {
@@ -71,7 +71,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // expect sendBatchRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify(never(), [[self.tiktokBusiness requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
 
 
     // add an event to queue
@@ -81,7 +81,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // now expect sendBatchRequest to be called, since queue has an event
-    OCMVerify([[self.tiktokMock requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify([[self.tiktokBusiness requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
 
 }
 

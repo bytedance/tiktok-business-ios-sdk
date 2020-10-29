@@ -7,7 +7,7 @@
 //
 
 #import "TikTokPaymentObserver.h"
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 #import <StoreKit/StoreKit.h>
@@ -367,7 +367,7 @@ static NSMutableArray *g_pendingRequestors;
     NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
     if (products.count + invalidProductIdentifiers.count != 1) {
 //        [self.logger info:@""]
-        [[[TikTok getInstance] logger] info:@"TikTokPaymentObserver: Expect to resolve one product per request"];
+        [[[TikTokBusiness getInstance] logger] info:@"TikTokPaymentObserver: Expect to resolve one product per request"];
     }
     SKProduct *product = nil;
     if (products.count) {
@@ -477,7 +477,7 @@ static NSMutableArray *g_pendingRequestors;
 //    [eventParameters setObject:@"1" forKey:@"automatic_logged_purchase"];
     [eventParameters setObject:[[NSNumber numberWithDouble:valueToSum] stringValue] forKey:@"value"];
     
-    [[TikTok getInstance] trackPurchase:eventName withProperties:eventParameters];
+    [[TikTokBusiness getInstance] trackPurchase:eventName withProperties:eventParameters];
 }
 
 - (NSData *)fetchDeviceReceipt
