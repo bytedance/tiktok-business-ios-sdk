@@ -33,8 +33,8 @@
 		8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFB62505DE7F008351FA /* TikTokLogger.m */; };
 		8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFB925080821008351FA /* TikTokConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBA25080821008351FA /* TikTokConfig.m */; };
-		8B23DFBF25080872008351FA /* TikTok.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFBD25080872008351FA /* TikTok.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8B23DFC025080872008351FA /* TikTok.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBE25080872008351FA /* TikTok.m */; };
+		8B23DFBF25080872008351FA /* TikTokBusiness.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DFBD25080872008351FA /* TikTokBusiness.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B23DFC025080872008351FA /* TikTokBusiness.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23DFBE25080872008351FA /* TikTokBusiness.m */; };
 		8B64FDEC2548BA82004AFC49 /* TikTokUserAgentCollector.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64FDEA2548BA82004AFC49 /* TikTokUserAgentCollector.h */; };
 		8B64FDED2548BA82004AFC49 /* TikTokUserAgentCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */; };
 		8B64FE042548C68D004AFC49 /* TikTokSKAdNetworkSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64FE022548C68D004AFC49 /* TikTokSKAdNetworkSupport.h */; };
@@ -136,8 +136,8 @@
 		8B23DFB62505DE7F008351FA /* TikTokLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokLogger.m; sourceTree = "<group>"; };
 		8B23DFB925080821008351FA /* TikTokConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokConfig.h; sourceTree = "<group>"; };
 		8B23DFBA25080821008351FA /* TikTokConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokConfig.m; sourceTree = "<group>"; };
-		8B23DFBD25080872008351FA /* TikTok.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTok.h; sourceTree = "<group>"; };
-		8B23DFBE25080872008351FA /* TikTok.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTok.m; sourceTree = "<group>"; };
+		8B23DFBD25080872008351FA /* TikTokBusiness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokBusiness.h; sourceTree = "<group>"; };
+		8B23DFBE25080872008351FA /* TikTokBusiness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokBusiness.m; sourceTree = "<group>"; };
 		8B64FDEA2548BA82004AFC49 /* TikTokUserAgentCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TikTokUserAgentCollector.h; sourceTree = "<group>"; };
 		8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TikTokUserAgentCollector.m; sourceTree = "<group>"; };
 		8B64FE022548C68D004AFC49 /* TikTokSKAdNetworkSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokSKAdNetworkSupport.h; sourceTree = "<group>"; };
@@ -291,8 +291,8 @@
 				8B23DFB62505DE7F008351FA /* TikTokLogger.m */,
 				8B23DFB925080821008351FA /* TikTokConfig.h */,
 				8B23DFBA25080821008351FA /* TikTokConfig.m */,
-				8B23DFBD25080872008351FA /* TikTok.h */,
-				8B23DFBE25080872008351FA /* TikTok.m */,
+				8B23DFBD25080872008351FA /* TikTokBusiness.h */,
+				8B23DFBE25080872008351FA /* TikTokBusiness.m */,
 				8B89A23C251A677300B61811 /* TikTokDeviceInfo.h */,
 				8B89A23D251A677300B61811 /* TikTokDeviceInfo.m */,
 				8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */,
@@ -360,7 +360,7 @@
 			files = (
 				8B89A23A251A64E700B61811 /* UIDevice+TikTokAdditions.h in Headers */,
 				0ADCF53B2538CF1C00D7B57C /* TikTokErrorHandler.h in Headers */,
-				8B23DFBF25080872008351FA /* TikTok.h in Headers */,
+				8B23DFBF25080872008351FA /* TikTokBusiness.h in Headers */,
 				8B23DFB72505DE7F008351FA /* TikTokLogger.h in Headers */,
 				8B23DF8F2502BA73008351FA /* TikTokBusinessSDK.h in Headers */,
 				0ADCF551253A212A00D7B57C /* TikTokTypeUtility.h in Headers */,
@@ -522,7 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B64FDED2548BA82004AFC49 /* TikTokUserAgentCollector.m in Sources */,
-				8B23DFC025080872008351FA /* TikTok.m in Sources */,
+				8B23DFC025080872008351FA /* TikTokBusiness.m in Sources */,
 				8B23DFB82505DE7F008351FA /* TikTokLogger.m in Sources */,
 				0ADCF5422538D16900D7B57C /* TikTokRequestHandler.m in Sources */,
 				8B23DFBC25080821008351FA /* TikTokConfig.m in Sources */,

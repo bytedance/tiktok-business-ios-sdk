@@ -1,5 +1,5 @@
 //
-//  TikTok.h
+//  TikTokBusiness.h
 //  TikTokBusinessSDK
 //
 //  Created by Aditya Khandelwal on 9/8/20.
@@ -41,7 +41,7 @@ extern NSString * __nonnull const TikTokEnvironmentSandbox;
 extern NSString * __nonnull const TikTokEnvironmentProduction;
 
 
-@interface TikTok : NSObject
+@interface TikTokBusiness : NSObject
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
 @property (nonatomic) BOOL trackingEnabled;
@@ -52,7 +52,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @property (nonatomic) NSString *accessToken;
 
 //+ (id<TikTokLogger>)getLogger;
-+ (void)appDidLaunch: (nullable TikTokConfig *)tiktokConfig;
++ (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
 + (void)trackEvent: (NSString *)eventName;
 + (void)trackEvent: (NSString *)eventName
     withProperties: (NSDictionary *)properties;
@@ -103,7 +103,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 + (nullable id)getInstance;
 + (void)resetInstance;
 //- (id<TikTokLogger>)getLogger;
-- (void)appDidLaunch:(nullable TikTokConfig *)tiktokConfig;
+- (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 //+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName

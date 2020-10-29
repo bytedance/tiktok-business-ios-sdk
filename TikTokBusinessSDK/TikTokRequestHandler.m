@@ -11,7 +11,7 @@
 #import "TikTokAppEventStore.h"
 #import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
@@ -159,7 +159,7 @@
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[[TikTok getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
+    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:postData];
     

@@ -7,7 +7,7 @@
 //
 
 #import "TikTokErrorHandler.h"
-#import "TikTok.h"
+#import "TikTokBusiness.h"
 
 @implementation TikTokErrorHandler
 
@@ -19,12 +19,12 @@ static void handleUncaughtException(NSException *exception)
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message
                     exception:(NSException *)exception {
-    [[[TikTok getInstance] logger] error:@"[%@] %@ (%@) \n %@", origin, message, exception, [exception callStackSymbols]];
+    [[[TikTokBusiness getInstance] logger] error:@"[%@] %@ (%@) \n %@", origin, message, exception, [exception callStackSymbols]];
 }
 
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message {
-    [[[TikTok getInstance] logger] error:@"[%@] %@", origin, message];
+    [[[TikTokBusiness getInstance] logger] error:@"[%@] %@", origin, message];
 }
 
 NSUncaughtExceptionHandler *handleUncaughtExceptionPointer = &handleUncaughtException;
