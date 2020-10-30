@@ -286,7 +286,6 @@
 				8B89A237251A64AB00B61811 /* TikTokAdditions */,
 				0A1A064D250953E2001463B8 /* AppEvents */,
 				8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */,
-				8B23DF8E2502BA73008351FA /* Info.plist */,
 				8B23DFB52505DE7F008351FA /* TikTokLogger.h */,
 				8B23DFB62505DE7F008351FA /* TikTokLogger.m */,
 				8B23DFB925080821008351FA /* TikTokConfig.h */,
@@ -309,6 +308,7 @@
 				0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */,
 				0ADCF54F253A212A00D7B57C /* TikTokTypeUtility.h */,
 				0ADCF550253A212A00D7B57C /* TikTokTypeUtility.m */,
+				8B23DF8E2502BA73008351FA /* Info.plist */,
 			);
 			path = TikTokBusinessSDK;
 			sourceTree = "<group>";

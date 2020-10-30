@@ -5,6 +5,11 @@
 //  Created by Aditya Khandelwal on 9/8/20.
 //  Copyright © 2020 bytedance. All rights reserved.
 //
+
+// Apple's AdSupport
+#import <AdSupport/AdSupport.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+
 #import "TikTokBusiness.h"
 #import "TikTokLogger.h"
 #import "TikTokConfig.h"
@@ -12,9 +17,7 @@
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
 #import "AppEvents/TikTokAppEventStore.h"
-#import <AdSupport/AdSupport.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
-#import <AppTrackingTransparency/ATTrackingManager.h>
+
 #import <TikTokPaymentObserver.h>
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
@@ -23,7 +26,6 @@
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
-//static id<TikTokLogger> tiktokLogger = nil;
 
 @interface TikTokBusiness()
 
@@ -588,8 +590,6 @@ static dispatch_once_t onceToken = 0;
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     });
 }
-
-
 
 - (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {
