@@ -43,6 +43,7 @@
         }];
     } else {
         // Fallback on earlier versions
+        
     }
 }
 
@@ -76,31 +77,6 @@
     }
     return -1;
 }
-
-//- (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
-//{
-//    if (@available(iOS 14, *)) {
-//        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-//            completion;
-//        }];
-//    } else {
-//        // Fallback on earlier versions
-//    }
-////    Class appTrackingClass = [self appTrackingManager];
-////    if(appTrackingClass == nil) {
-////        return;
-////    }
-////    NSString *requestAuthorization = [NSString tiktokJoin: @"request", @"tracking", @"authorization", @"with", @"completion", @"handler:", nil];
-////    SEL selRequestAuthorization = NSSelectorFromString(requestAuthorization);
-////    if(![appTrackingClass respondsToSelector:selRequestAuthorization]) {
-////        return;
-////    }
-////#pragma clang diagnostic push
-////#pragma clang diagnostic ignored "-Wunguarded-availability"
-////#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-////    [appTrackingClass performSelector:selRequestAuthorization withObject:completion];
-////#pragma clang diagnostic pop
-//}
 
 - (BOOL)tiktokTrackingEnabled
 {

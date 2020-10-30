@@ -6,37 +6,14 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#import  "TikTokConfig.h"
+#import "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTokAppEventQueue.h"
 #import "TikTokRequestHandler.h"
-//#import "TikTokAttribution.h"
-//#import "TikTokSubscription.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-//@interface TikTokTestOptions : NSObject
-//
-//@property (nonatomic, copy, nullable) NSString *baseUrl;
-//@property (nonatomic, copy, nullable) NSString *gdprUrl;
-//@property (nonatomic, copy, nullable) NSString *subscriptionUrl;
-//@property (nonatomic, copy, nullable) NSString *extraPath;
-//@property (nonatomic, copy, nullable) NSNumber *timerIntervalInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *timerStartInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *sessionIntervalInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *subsessionIntervalInMilliseconds;
-//@property (nonatomic, assign) BOOL teardown;
-//@property (nonatomic, assign) BOOL deleteState;
-//@property (nonatomic, assign) BOOL noBackoffWait;
-//@property (nonatomic, assign) BOOL iAdFrameworkEnabled;
-//@property (nonatomic, assign) BOOL enableSigning;
-//@property (nonatomic, assign) BOOL disableSigning;
-//
-//@end
-
-/*
-    Constants for supported tracking environments
- */
+/** Constants for supported tracking environments */
 extern NSString * __nonnull const TikTokEnvironmentSandbox;
 extern NSString * __nonnull const TikTokEnvironmentProduction;
 

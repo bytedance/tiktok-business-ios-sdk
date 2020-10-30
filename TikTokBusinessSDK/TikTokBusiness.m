@@ -6,7 +6,7 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-// Apple's AdSupport
+/** Frameworks needed to be consistent with Apple's current guidelines when asking users for ad tracking permissions */
 #import <AdSupport/AdSupport.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 
@@ -29,7 +29,6 @@ NSString * const TikTokEnvironmentProduction = @"production";
 
 @interface TikTokBusiness()
 
-//@property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL automaticLoggingEnabled;
 @property (nonatomic) BOOL installLoggingEnabled;
 @property (nonatomic) BOOL launchLoggingEnabled;
