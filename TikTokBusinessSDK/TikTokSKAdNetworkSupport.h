@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTokSKAdNetworkSupport : NSObject
 
+/* The maximum time for app install attribution is set to 3 days by default,
+ * but this value can be changed using setSKAdNetworkCalloutMaxTimeSinceInstall()
+ * through TikTokBusiness
+*/
 @property (nonatomic, assign, readwrite) NSTimeInterval maxTimeSinceInstall;
 
 + (TikTokSKAdNetworkSupport *)sharedInstance;
