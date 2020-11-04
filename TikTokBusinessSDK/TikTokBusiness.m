@@ -359,8 +359,6 @@ static dispatch_once_t onceToken = 0;
                     }
                     
                     if(self.paymentTrackingEnabled){
-                        // TODO: this needs to be checked on the test app!
-                        // [TikTokPaymentObserver startObservingTransactions];
                         [TikTokPaymentObserver startObservingTransactions];
                         
                     }
