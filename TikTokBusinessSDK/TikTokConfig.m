@@ -30,31 +30,31 @@
     [self.logger info:@"[TikTokConfig] Tracking: NO"];
 }
 
-- (void)disableAutomaticLogging
+- (void)disableAutomaticTracking
 {
     self.automaticLoggingEnabled = NO;
     [self.logger info:@"[TikTokConfig] Auto Tracking: NO"];
 }
 
-- (void)disableInstallLogging
+- (void)disableInstallTracking
 {
     self.installLoggingEnabled = NO;
     [self.logger info:@"[TikTokConfig] Install Tracking: NO"];
 }
 
-- (void)disableLaunchLogging
+- (void)disableLaunchTracking
 {
     self.launchLoggingEnabled = NO;
     [self.logger info:@"[TikTokConfig] Launch Tracking: NO"];
 }
 
-- (void)disableRetentionLogging
+- (void)disableRetentionTracking
 {
     self.retentionLoggingEnabled = NO;
     [self.logger info:@"[TikTokConfig] Retention Tracking: NO"];
 }
 
-- (void)disablePaymentLogging
+- (void)disablePaymentTracking
 {
     self.paymentLoggingEnabled = NO;
     [self.logger info:@"[TikTokConfig] Payment Tracking: NO"];

@@ -22,6 +22,9 @@ typedef enum {
 
 } TikTokLogLevel;
 
+/**
+ * @brief Used to log helpful messages during SDK lifecycle
+*/
 @protocol TikTokLogger
 
 - (void)setLogLevel: (TikTokLogLevel)logLevel isProductionEnvironment: (BOOL)isProductionEnvironment;
