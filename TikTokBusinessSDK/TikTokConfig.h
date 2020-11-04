@@ -20,33 +20,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) TikTokLogLevel logLevel;
 
 @property (nonatomic, assign) BOOL trackingEnabled;
-@property (nonatomic, assign) BOOL automaticLoggingEnabled;
-@property (nonatomic, assign) BOOL installLoggingEnabled;
-@property (nonatomic, assign) BOOL launchLoggingEnabled;
-@property (nonatomic, assign) BOOL retentionLoggingEnabled;
-@property (nonatomic, assign) BOOL paymentLoggingEnabled;
+@property (nonatomic, assign) BOOL automaticTrackingEnabled;
+@property (nonatomic, assign) BOOL installTrackingEnabled;
+@property (nonatomic, assign) BOOL launchTrackingEnabled;
+@property (nonatomic, assign) BOOL retentionTrackingEnabled;
+@property (nonatomic, assign) BOOL paymentTrackingEnabled;
 
 + (nullable TikTokConfig *)configWithAccessToken:(nonnull NSString *)accessToken
                                         appID:(nonnull NSString *)appID
                     suppressAppTrackingDialog: (BOOL)isSuppressed;
 
-//+ (void)disableTracking;
 - (void)disableTracking;
 
-//+ (void)disableAutomaticLogging;
-- (void)disableAutomaticLogging;
+- (void)disableAutomaticTracking;
 
-//+ (void)disableInstallLogging;
-- (void)disableInstallLogging;
+- (void)disableInstallTracking;
 
-//+ (void)disableLaunchLogging;
-- (void)disableLaunchLogging;
+- (void)disableLaunchTracking;
 
-//+ (void)disableRetentionLogging;
-- (void)disableRetentionLogging;
+- (void)disableRetentionTracking;
 
-//+ (void)disablePaymentLogging;
-- (void)disablePaymentLogging;
+- (void)disablePaymentTracking;
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
                           appID:(nonnull NSString *)appID

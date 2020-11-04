@@ -11,6 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Handles shared classes like TikTokLogger across multiple objects
+*/
 @interface TikTokFactory : NSObject
 
 + (id<TikTokLogger>)getLogger;

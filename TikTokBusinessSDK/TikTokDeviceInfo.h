@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * @brief Used to fetch device level information
+*/
 @interface TikTokDeviceInfo : NSObject
 
 @property (nonatomic, copy) NSString *appId;

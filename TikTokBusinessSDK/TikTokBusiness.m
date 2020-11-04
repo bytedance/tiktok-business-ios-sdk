@@ -5,34 +5,42 @@
 //  Created by Aditya Khandelwal on 9/8/20.
 //  Copyright © 2020 bytedance. All rights reserved.
 //
+
+/**
+ * Import headers for Apple's App Tracking Transparency Requirements 
+ * - Default: App Tracking Dialog is shown to the user
+ * - Use suppressAppTrackingDialog flag while initializing TikTokConfig to disable IDFA collection
+*/
+#import <AdSupport/AdSupport.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+
 #import "TikTokBusiness.h"
-#import "TikTokLogger.h"
 #import "TikTokConfig.h"
-#import "UIDevice+TikTokAdditions.h"
+#import "TikTokLogger.h"
 #import "AppEvents/TikTokAppEvent.h"
 #import "AppEvents/TikTokAppEventQueue.h"
 #import "AppEvents/TikTokAppEventStore.h"
-#import <AdSupport/AdSupport.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
-#import <AppTrackingTransparency/ATTrackingManager.h>
-#import <TikTokPaymentObserver.h>
+#import "TikTokPaymentObserver.h"
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
 #import "TikTokUserAgentCollector.h"
 #import "TikTokSKAdNetworkSupport.h"
+#import "UIDevice+TikTokAdditions.h"
+
 
 NSString * const TikTokEnvironmentSandbox = @"sandbox";
 NSString * const TikTokEnvironmentProduction = @"production";
-//static id<TikTokLogger> tiktokLogger = nil;
 
 @interface TikTokBusiness()
 
-//@property (nonatomic) BOOL trackingEnabled;
-@property (nonatomic) BOOL automaticLoggingEnabled;
-@property (nonatomic) BOOL installLoggingEnabled;
-@property (nonatomic) BOOL launchLoggingEnabled;
-@property (nonatomic) BOOL retentionLoggingEnabled;
-@property (nonatomic) BOOL paymentLoggingEnabled;
+@property (nonatomic) BOOL enabled;
+@property (nonatomic) BOOL trackingEnabled;
+@property (nonatomic) BOOL automaticTrackingEnabled;
+@property (nonatomic) BOOL installTrackingEnabled;
+@property (nonatomic) BOOL launchTrackingEnabled;
+@property (nonatomic) BOOL retentionTrackingEnabled;
+@property (nonatomic) BOOL paymentTrackingEnabled;
+@property (nonatomic) BOOL IDFACollectionEnabled;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
 
 @end
@@ -71,12 +79,13 @@ static dispatch_once_t onceToken = 0;
     self.queue = nil;
     self.requestHandler = nil;
     self.logger = [TikTokFactory getLogger];
+    self.enabled = YES;
     self.trackingEnabled = YES;
-    self.automaticLoggingEnabled = YES;
-    self.installLoggingEnabled = YES;
-    self.launchLoggingEnabled = YES;
-    self.retentionLoggingEnabled = YES;
-    self.paymentLoggingEnabled = YES;
+    self.automaticTrackingEnabled = YES;
+    self.installTrackingEnabled = YES;
+    self.launchTrackingEnabled = YES;
+    self.retentionTrackingEnabled = YES;
+    self.paymentTrackingEnabled = YES;
     
     if (@available(iOS 14, *)) {
         if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
@@ -87,8 +96,8 @@ static dispatch_once_t onceToken = 0;
             [self.logger info:@"Tracking is disabled"];
         }
     } else {
-        self.userTrackingEnabled = YES; // verify
-        // Fallback on earlier versions
+        // For previous versions, we can assume that IDFA can be collected
+        self.userTrackingEnabled = YES;
     }
     [self loadUserAgent];
     [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
@@ -148,38 +157,38 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)setAutomaticLoggingEnabled:(BOOL)enabled
++ (void)setAutomaticTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setAutomaticLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setAutomaticTrackingEnabled:enabled];
     }
 }
 
-+ (void)setInstallLoggingEnabled:(BOOL)enabled
++ (void)setInstallTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setInstallLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setInstallTrackingEnabled:enabled];
     }
 }
 
-+ (void)setLaunchLoggingEnabled:(BOOL)enabled
++ (void)setLaunchTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setLaunchLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setLaunchTrackingEnabled:enabled];
     }
 }
 
-+ (void)setRetentionLoggingEnabled:(BOOL)enabled
++ (void)setRetentionTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setRetentionLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setRetentionTrackingEnabled:enabled];
     }
 }
 
-+ (void)setPaymentLoggingEnabled:(BOOL)enabled
++ (void)setPaymentTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setPaymentLoggingEnabled:enabled];
+        [[TikTokBusiness getInstance] setPaymentTrackingEnabled:enabled];
     }
 }
 
@@ -190,23 +199,12 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-//+ (BOOL) isEnabled
-//{
-//    @synchronized (self) {
-//        return [[TikTok getInstance] isEnabled];
-//    }
-//}
-
 + (NSString *)idfa {
     @synchronized (self) {
         return [[TikTokBusiness getInstance] idfa];
     }
 }
 
-- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval
-{
-    [TikTokSKAdNetworkSupport sharedInstance].maxTimeSinceInstall = maxTimeInterval;
-}
 
 
 + (BOOL)appInForeground
@@ -295,11 +293,11 @@ static dispatch_once_t onceToken = 0;
     
     NSSetUncaughtExceptionHandler(handleUncaughtExceptionPointer);
     self.trackingEnabled = tiktokConfig.trackingEnabled;
-    self.automaticLoggingEnabled = tiktokConfig.automaticLoggingEnabled;
-    self.installLoggingEnabled = tiktokConfig.installLoggingEnabled;
-    self.launchLoggingEnabled = tiktokConfig.launchLoggingEnabled;
-    self.retentionLoggingEnabled = tiktokConfig.retentionLoggingEnabled;
-    self.paymentLoggingEnabled = tiktokConfig.paymentLoggingEnabled;
+    self.automaticTrackingEnabled = tiktokConfig.automaticTrackingEnabled;
+    self.installTrackingEnabled = tiktokConfig.installTrackingEnabled;
+    self.launchTrackingEnabled = tiktokConfig.launchTrackingEnabled;
+    self.retentionTrackingEnabled = tiktokConfig.retentionTrackingEnabled;
+    self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
     self.accessToken = tiktokConfig.accessToken;
     
     self.requestHandler = [[TikTokRequestHandler alloc] init];
@@ -319,11 +317,11 @@ static dispatch_once_t onceToken = 0;
             NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
             
             if(self.trackingEnabled){
-                if(self.automaticLoggingEnabled) {
+                if(self.automaticTrackingEnabled) {
                     
                     // Enabled: Tracking, Auto Logging, Install Logging
                     // Launched Before: False
-                    if(!launchedBefore && self.installLoggingEnabled) {
+                    if(!launchedBefore && self.installTrackingEnabled) {
                         [self trackEvent:@"InstallApp"];
                         NSDate *currentLaunch = [NSDate date];
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
@@ -333,7 +331,7 @@ static dispatch_once_t onceToken = 0;
                     
                     // Enabled: Tracking, Auto Logging, Launch Logging
                     // Launched Before: True
-                    if (launchedBefore && self.launchLoggingEnabled) {
+                    if (launchedBefore && self.launchTrackingEnabled) {
                         [self trackEvent:@"LaunchApp"];
                     }
                     
@@ -341,7 +339,7 @@ static dispatch_once_t onceToken = 0;
                     // Enabled: Tracking, Auto Logging, 2DRetention Logging
                     // Install Date: Available
                     // 2D Limit has not been passed
-                    if(installDate && self.retentionLoggingEnabled) {
+                    if(installDate && self.retentionTrackingEnabled) {
                         if(!past2DLimit){
                             NSDate *currentLaunch = [NSDate date];
                             NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
@@ -360,7 +358,7 @@ static dispatch_once_t onceToken = 0;
                         }
                     }
                     
-                    if(self.paymentLoggingEnabled){
+                    if(self.paymentTrackingEnabled){
                         // TODO: this needs to be checked on the test app!
                         // [TikTokPaymentObserver startObservingTransactions];
                         [TikTokPaymentObserver startObservingTransactions];
@@ -435,7 +433,7 @@ static dispatch_once_t onceToken = 0;
     BOOL past2DLimit = [defaults boolForKey:@"tiktokPast2DLimit"];
     NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
     
-    if(self.trackingEnabled && self.automaticLoggingEnabled && installDate && self.retentionLoggingEnabled && !past2DLimit) {
+    if(self.trackingEnabled && self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled && !past2DLimit) {
         if(!past2DLimit){
             NSDate *currentLaunch = [NSDate date];
             NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
@@ -493,11 +491,11 @@ static dispatch_once_t onceToken = 0;
 - (void)setTrackingEnabled:(BOOL)trackingEnabled
 {
     _trackingEnabled = trackingEnabled;
-    _automaticLoggingEnabled = trackingEnabled;
-    _installLoggingEnabled = trackingEnabled;
-    _launchLoggingEnabled = trackingEnabled;
-    _retentionLoggingEnabled = trackingEnabled;
-    _paymentLoggingEnabled = trackingEnabled;
+    _automaticTrackingEnabled = trackingEnabled;
+    _installTrackingEnabled = trackingEnabled;
+    _launchTrackingEnabled = trackingEnabled;
+    _retentionTrackingEnabled = trackingEnabled;
+    _paymentTrackingEnabled = trackingEnabled;
     if(trackingEnabled){
         [TikTokPaymentObserver startObservingTransactions];
     } else {
@@ -510,13 +508,13 @@ static dispatch_once_t onceToken = 0;
     _userTrackingEnabled = userTrackingEnabled;
 }
 
-- (void)setAutomaticLoggingEnabled:(BOOL)enabled
+- (void)setAutomaticTrackingEnabled:(BOOL)enabled
 {
-    _automaticLoggingEnabled = enabled;
-    _installLoggingEnabled = enabled;
-    _launchLoggingEnabled = enabled;
-    _retentionLoggingEnabled = enabled;
-    _paymentLoggingEnabled = enabled;
+    _automaticTrackingEnabled = enabled;
+    _installTrackingEnabled = enabled;
+    _launchTrackingEnabled = enabled;
+    _retentionTrackingEnabled = enabled;
+    _paymentTrackingEnabled = enabled;
     if(enabled){
         [TikTokPaymentObserver startObservingTransactions];
     } else {
@@ -524,36 +522,36 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)setInstallLoggingEnabled:(BOOL)enabled
+- (void)setInstallTrackingEnabled:(BOOL)enabled
 {
-    if (self.automaticLoggingEnabled) {
-        _installLoggingEnabled = enabled;
+    if (self.automaticTrackingEnabled) {
+        _installTrackingEnabled = enabled;
     }
 }
 
-- (void)setLaunchLoggingEnabled:(BOOL)enabled
+- (void)setLaunchTrackingEnabled:(BOOL)enabled
 {
-    if (self.automaticLoggingEnabled) {
-        _launchLoggingEnabled = enabled;
+    if (self.automaticTrackingEnabled) {
+        _launchTrackingEnabled = enabled;
     }
 }
 
-- (void)setRetentionLoggingEnabled:(BOOL)enabled
+- (void)setRetentionTrackingEnabled:(BOOL)enabled
 {
-    if (self.automaticLoggingEnabled) {
-        _retentionLoggingEnabled = enabled;
+    if (self.automaticTrackingEnabled) {
+        _retentionTrackingEnabled = enabled;
     }
 }
 
-- (void)setPaymentLoggingEnabled:(BOOL)enabled
+- (void)setPaymentTrackingEnabled:(BOOL)enabled
 {
-    if (self.automaticLoggingEnabled == YES) {
-        if(!enabled && _paymentLoggingEnabled){
+    if (self.automaticTrackingEnabled == YES) {
+        if(!enabled && _paymentTrackingEnabled){
             [TikTokPaymentObserver stopObservingTransactions];
-            _paymentLoggingEnabled = enabled;
-        } else if (enabled && !_paymentLoggingEnabled) {
+            _paymentTrackingEnabled = enabled;
+        } else if (enabled && !_paymentTrackingEnabled) {
             [TikTokPaymentObserver startObservingTransactions];
-            _paymentLoggingEnabled = YES;
+            _paymentTrackingEnabled = YES;
         }
     }
 }
@@ -573,11 +571,10 @@ static dispatch_once_t onceToken = 0;
     return self.userTrackingEnabled;
 }
 
-//- (void)setEnabled:(BOOL)enabled
-//{
-//    self.enabled = enabled;
-//}
-//
+- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval
+{
+    [TikTokSKAdNetworkSupport sharedInstance].maxTimeSinceInstall = maxTimeInterval;
+}
 
 - (void)loadUserAgent {
     dispatch_async(self.isolationQueue, ^(){
@@ -588,8 +585,6 @@ static dispatch_once_t onceToken = 0;
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     });
 }
-
-
 
 - (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {

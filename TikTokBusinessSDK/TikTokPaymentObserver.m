@@ -111,7 +111,6 @@ static NSMutableArray *g_pendingRequestors;
 {
     TikTokPaymentProductRequestor *productRequest = [[TikTokPaymentProductRequestor alloc] initWithTransaction:transaction];
     [productRequest resolveProducts];
-//    [[TikTok getInstance] trackPurchase:[[TikTokAppEvent alloc] initWithEventName:@"PURCHASE" withParameters: [NSData alloc]]];
 }
 
 @end
@@ -124,7 +123,6 @@ static NSMutableArray *g_pendingRequestors;
 {
     NSMutableSet<NSString *> *_originalTransactionSet;
     NSSet<NSString *> *_eventsWithReceipt;
-//    NSDateFormatter *_formatter;
 }
 
 + (void)initialize
@@ -139,11 +137,6 @@ static NSMutableArray *g_pendingRequestors;
     self = [super init];
     if (self) {
         _transaction = transaction;
-//        _formatter = [[NSDateFormatter alloc] init];
-//        _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
-        // TODO: Check what happens if key does not exist
-//        NSString *data = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
-//        _eventsWithReceipt = [NSSet setWithArray:@[@"Purchase", @"Subscribe", @"StartTrial"]];
         NSString *data = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
         _eventsWithReceipt = [NSSet setWithArray:@[@"Purchase"]];
         
@@ -173,47 +166,29 @@ static NSMutableArray *g_pendingRequestors;
     self.productRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
     self.productRequest.delegate = self;
     @synchronized (g_pendingRequestors) {
-        // TODO: Add Type Safe array here in future version
         [g_pendingRequestors addObject:self];
     }
     [self.productRequest start];
 }
 
-
-//- (BOOL)isSubscription:(SKProduct *)product
-//{
-//    if (@available(iOS 11.2, *)) {
-//        return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
-//    }
-//    return NO;
-//}
-
 - (void)logTransactionEvent: (SKProduct *)product
 {
-//    if([self isSubscription:product]) {
-//        [self trackAutomaticSubscribeEvent:self.transaction ofProduct:product];
-//    } else {
-//        [self trackAutomaticPurchaseEvent:self.transaction ofProduct:product];
-//    }
     [self trackAutomaticPurchaseEvent:self.transaction ofProduct:product];
 }
 
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct: (SKProduct *)product withTransaction: (SKPaymentTransaction *)transaction
 {
     NSString *transactionId = nil;
-//    NSString *transactionDate = nil;
     
     switch (transaction.transactionState) {
         case SKPaymentTransactionStatePurchasing:
             break;
         case SKPaymentTransactionStatePurchased:
             transactionId = self.transaction.transactionIdentifier;
-//            transactionDate = [_formatter stringFromDate:self.transaction.transactionDate];
             break;
         case SKPaymentTransactionStateFailed:
             break;
         case SKPaymentTransactionStateRestored:
-//            transactionDate = [_formatter stringFromDate:self.transaction.transactionDate];
             break;
         default:
             break;
@@ -227,10 +202,8 @@ static NSMutableArray *g_pendingRequestors;
 
         [eventParameters addEntriesFromDictionary:@{
             @"currency": [product.priceLocale objectForKey:NSLocaleCurrencyCode] ? : @"",
-//            @"num_items": @(payment.quantity) ? : @"",
             @"description": product.localizedTitle ? : @"",
             @"query":@"",
-//            @"name_description": product.localizedDescription ? : @"",
         }];
 
         NSMutableArray *contents = [[NSMutableArray alloc] init];
@@ -248,117 +221,8 @@ static NSMutableArray *g_pendingRequestors;
         }
 
         [eventParameters setObject:contents forKey:@"contents"];
-//        if(transactionId){
-//            [eventParameters setObject:transactionId forKey:@"order_id"];
-//        }
     }
-
-//    if (@available(iOS 11.2, *)) {
-//        if([self isSubscription:product]) {
-//            [eventParameters setObject:[self durationOfSubscriptionPeriod:product.subscriptionPeriod] forKey:@"subscription_period"];
-//            [eventParameters setObject:@"subs" forKey:@"in_app_purchase_type"];
-//            [eventParameters setObject: [self isStartTrial:transaction ofProduct:product] ? @"1" : @"0" forKey:@"is_start_trial"];
-//
-//            SKProductDiscount *discount = product.introductoryPrice;
-//            if(discount) {
-//                if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-//                    [eventParameters setObject:@"1" forKey:@"has_free_trial"];
-//                } else {
-//                    [eventParameters setObject:@"0" forKey:@"has_free_trial"];
-//                }
-//                [eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:@"trial_period"];
-//                [eventParameters setObject:discount.price forKey:@"trial_price"];
-//            }
-//
-//        } else {
-//            [eventParameters setObject:@"inapp" forKey:@"in_app_purchase_type"];
-//        }
-//    }
-
     return eventParameters;
-}
-
-- (void)appendOriginalTransactionId:(NSString *)transactionId
-{
-    if (!transactionId) {
-        return;
-    }
-    [_originalTransactionSet addObject:transactionId];
-    [[NSUserDefaults standardUserDefaults] setObject:[[_originalTransactionSet allObjects] componentsJoinedByString:@","] forKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
-}
-
-- (void)clearOriginalTransactionId:(NSString *)transactionId
-{
-    if(!transactionId){
-        return;
-    }
-    [_originalTransactionSet removeObject:transactionId];
-    [[NSUserDefaults standardUserDefaults] setObject:[[_originalTransactionSet allObjects] componentsJoinedByString:@","] forKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
-}
-
-- (BOOL)isStartTrial:(SKPaymentTransaction *)transaction ofProduct:(SKProduct *)product
-{
-    if (@available(iOS 12.2, *)) {
-        SKPaymentDiscount *paymentDiscount = transaction.payment.paymentDiscount;
-        if(paymentDiscount) {
-            NSArray<SKProductDiscount *> *discounts = product.discounts;
-            for (SKProductDiscount *discount in discounts) {
-                if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial && [paymentDiscount.identifier isEqualToString:discount.identifier]) {
-                    return YES;
-                }
-            }
-        }
-    }
-    
-    if (@available(iOS 11.2, *)) {
-        if (product.introductoryPrice && product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-            NSString *originalTransactionId = transaction.originalTransaction.transactionIdentifier;
-            if (!originalTransactionId) {
-                return YES;
-            }
-        }
-    }
-    return NO;
-}
-
-- (BOOL)hasStartTrial:(SKProduct *)product
-{
-    if (@available(iOS 12.2, *)) {
-        NSArray<SKProductDiscount *> *discounts = product.discounts;
-        for (SKProductDiscount *discount in discounts) {
-            if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-                return YES;
-            }
-        }
-    }
-    
-    if (@available(iOS 11.2, *)) {
-        if (product.introductoryPrice && (product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial)) {
-            return YES;
-        }
-    }
-    
-    return NO;
-}
-
-- (NSString *)durationOfSubscriptionPeriod:(id)subscriptionPeriod
-{
-    if (@available(iOS 11.2, *)) {
-        if (subscriptionPeriod) {
-            if (subscriptionPeriod && [subscriptionPeriod isKindOfClass:[SKProductSubscriptionPeriod class]]) {
-                SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subscriptionPeriod;
-                NSString *unit = nil;
-                switch (period.unit) {
-                    case SKProductPeriodUnitDay: unit = @"D"; break;
-                    case SKProductPeriodUnitWeek: unit = @"W"; break;
-                    case SKProductPeriodUnitMonth: unit = @"M"; break;
-                    case SKProductPeriodUnitYear: unit = @"Y"; break;
-                }
-                return [NSString stringWithFormat:@"P%lu%@", (unsigned long)period.numberOfUnits, unit];
-            }
-        }
-    }
-    return nil;
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
@@ -366,8 +230,7 @@ static NSMutableArray *g_pendingRequestors;
     NSArray *products = response.products;
     NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
     if (products.count + invalidProductIdentifiers.count != 1) {
-//        [self.logger info:@""]
-        [[[TikTokBusiness getInstance] logger] info:@"TikTokPaymentObserver: Expect to resolve one product per request"];
+        [[TikTokFactory getLogger] info:@"TikTokPaymentObserver: Expect to resolve one product per request"];
     }
     SKProduct *product = nil;
     if (products.count) {
@@ -394,60 +257,18 @@ static NSMutableArray *g_pendingRequestors;
     }
 }
 
-//- (void)trackAutomaticSubscribeEvent:(SKPaymentTransaction *)transaction ofProduct:(SKProduct *)product
-//{
-//    NSString *eventName = nil;
-//    NSString *originalTransactionId = transaction.originalTransaction.transactionIdentifier;
-//    switch (transaction.transactionState) {
-//        case SKPaymentTransactionStatePurchasing:
-//            eventName = @"SubscribeInitiatedCheckout";
-//            break;
-//        case SKPaymentTransactionStatePurchased:
-//            if ([self isStartTrial:transaction ofProduct:product]) {
-//                eventName = @"StartTrial";
-//                [self clearOriginalTransactionId:originalTransactionId];
-//            } else {
-//                if (originalTransactionId && [_originalTransactionSet containsObject:originalTransactionId]) {
-//                    return;
-//                }
-//                eventName = @"Subscribe";
-//                [self appendOriginalTransactionId:(originalTransactionId ? : transaction.transactionIdentifier)];
-//            }
-//            break;
-//        case SKPaymentTransactionStateFailed:
-//            eventName = @"SubscribeFailed";
-//            break;
-//        case SKPaymentTransactionStateRestored:
-//            eventName = @"SubscribeRestored";
-//            break;
-//        case SKPaymentTransactionStateDeferred:
-//            return;
-//    }
-//
-//    double totalAmount = 0;
-//    if(product) {
-//        totalAmount = transaction.payment.quantity * product.price.doubleValue;
-//    }
-//
-//    // TODO: This is where we need to call track method from TikTok class. But not sure what the event parameters will be
-//    [self logImplicitTransactionEvent:eventName valueToSum:totalAmount parameters:[self getEventParametersOfProduct:product withTransaction:transaction]];
-//}
-
 - (void)trackAutomaticPurchaseEvent:(SKPaymentTransaction *)transaction ofProduct:(SKProduct *)product
 {
     NSString *eventName = nil;
     switch (transaction.transactionState) {
         case SKPaymentTransactionStatePurchasing:
-//            eventName = @"InitiatedCheckout";
             break;
         case SKPaymentTransactionStatePurchased:
             eventName = @"Purchase";
             break;
         case SKPaymentTransactionStateFailed:
-//            eventName = @"PurchaseFailed";
             break;
         case SKPaymentTransactionStateRestored:
-//            eventName = @"PurchaseRestored";
             break;
         case SKPaymentTransactionStateDeferred:
             break;
@@ -465,18 +286,7 @@ static NSMutableArray *g_pendingRequestors;
 - (void)logImplicitTransactionEvent: (NSString *)eventName valueToSum:(double)valueToSum parameters: (NSDictionary<NSString *, id>*)parameters
 {
     NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
-    
-//    if([_eventsWithReceipt containsObject:eventName]) {
-//        NSData *receipt = [self fetchDeviceReceipt];
-//        if(receipt){
-//            NSString *base64encodedReceipt = [receipt base64EncodedStringWithOptions:0];
-//            [eventParameters setObject:base64encodedReceipt forKey:@"receipt_data"];
-//        }
-//    }
-    
-//    [eventParameters setObject:@"1" forKey:@"automatic_logged_purchase"];
     [eventParameters setObject:[[NSNumber numberWithDouble:valueToSum] stringValue] forKey:@"value"];
-    
     [[TikTokBusiness getInstance] trackPurchase:eventName withProperties:eventParameters];
 }
 

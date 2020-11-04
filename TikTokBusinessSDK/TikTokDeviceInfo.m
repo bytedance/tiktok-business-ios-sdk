@@ -10,7 +10,6 @@
 #import <sys/utsname.h>
 #import <AdSupport/ASIdentifierManager.h>
 #import "UIDevice+TikTokAdditions.h"
-#import "NSString+TikTokAdditions.h"
 #import "TikTokUserAgentCollector.h"
 
 @interface TikTokDeviceInfo()
@@ -46,8 +45,7 @@
     self.deviceVendorId = device.tiktokVendorId;
     self.localeInfo = [NSString stringWithFormat:@"%@-%@", [locale objectForKey:NSLocaleLanguageCode], [locale objectForKey:NSLocaleCountryCode]];
     self.ipInfo = device.tiktokDeviceIp;
-//    self.userAgent = getUAString();
-    self.trackingEnabled = device.tiktokTrackingEnabled;
+    self.trackingEnabled = device.tiktokUserTrackingEnabled;
     self.deviceType = device.tiktokDeviceType;
     self.deviceName = device.tiktokDeviceName;
     self.systemVersion = device.systemVersion;

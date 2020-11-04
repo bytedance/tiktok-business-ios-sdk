@@ -8,27 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <TikTokDeviceInfo.h>
-#import <TikTokAppEventQueue.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
-#import <AppTrackingTransparency/ATTrackingManager.h>
 #import <AdSupport/AdSupport.h>
-#import <AdSupport/ASIdentifierManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import "TikTokDeviceInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIDevice(TikTokAdditions)
 
-- (int)tiktokATTStatus;
-- (BOOL)tiktokTrackingEnabled;
-- (NSString *)tiktokIdForAdvertisers;
+- (BOOL)tiktokUserTrackingEnabled;
 - (NSString *)tiktokDeviceType;
 - (NSString *)tiktokDeviceName;
 - (NSString *)tiktokCreateUuid;
 - (NSString *)tiktokVendorId;
-//- (NSString *)tiktokDeviceId: (TikTokDeviceInfo *)deviceInfo;
 - (NSString *)tiktokDeviceIp;
-//- (void) tiktokCheckForiAd: (TikTokAppEventQueue *)appEventQueue queue:(dispatch_queue_t)queue;
 - (void)requestTrackingAuthorizationWithCompletionHandler: (void(^)(NSUInteger status))completion;
 - (NSString *)getIPAddress:(BOOL)preferIPv4;
 - (NSDictionary *)getIPAddresses;

@@ -6,178 +6,230 @@
 //  Copyright © 2020 bytedance. All rights reserved.
 //
 
-#import  "TikTokConfig.h"
+#import "TikTokConfig.h"
 #import "TikTokLogger.h"
 #import "TikTokAppEventQueue.h"
 #import "TikTokRequestHandler.h"
-//#import "TikTokAttribution.h"
-//#import "TikTokSubscription.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-//@interface TikTokTestOptions : NSObject
-//
-//@property (nonatomic, copy, nullable) NSString *baseUrl;
-//@property (nonatomic, copy, nullable) NSString *gdprUrl;
-//@property (nonatomic, copy, nullable) NSString *subscriptionUrl;
-//@property (nonatomic, copy, nullable) NSString *extraPath;
-//@property (nonatomic, copy, nullable) NSNumber *timerIntervalInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *timerStartInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *sessionIntervalInMilliseconds;
-//@property (nonatomic, copy, nullable) NSNumber *subsessionIntervalInMilliseconds;
-//@property (nonatomic, assign) BOOL teardown;
-//@property (nonatomic, assign) BOOL deleteState;
-//@property (nonatomic, assign) BOOL noBackoffWait;
-//@property (nonatomic, assign) BOOL iAdFrameworkEnabled;
-//@property (nonatomic, assign) BOOL enableSigning;
-//@property (nonatomic, assign) BOOL disableSigning;
-//
-//@end
-
-/*
-    Constants for supported tracking environments
- */
+/** Constants for supported tracking environments */
 extern NSString * __nonnull const TikTokEnvironmentSandbox;
 extern NSString * __nonnull const TikTokEnvironmentProduction;
 
-
+/** 
+ * @brief This is the main interface for TikTok's Business SDK
+ *
+ * @note Use the methods exposed in this class to track app events
+ *
+*/
 @interface TikTokBusiness : NSObject
 
+// TODO: Review whether these are really needed here or which ones are really required
 @property (nonatomic, weak) id<TikTokLogger> logger;
-@property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 @property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic) NSString *accessToken;
 
-//+ (id<TikTokLogger>)getLogger;
+/**
+ * @brief This method should be called in the didFinishLaunching method of your AppDelegate
+ *        This is required to initialize the TikTokBusinessSDK
+ *
+ * @note See TikTokConfig.h for more configuration options
+ *
+ * @param tiktokConfig The configuration object must be initialized before this function is called.
+ *                     This object contains the accessToken and appID, which can be acquired from
+ *                     TikTok's Marketing API dashboard.
+*/
 + (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
+
+/**
+ * @brief This method should be called whenever an event needs to be tracked
+ *
+ * @note See TikTokAppEvent.h for more event options.
+ *
+ * @param eventName This parameter should be a string object. You can find the list of
+ *                  supported events in the documentation.
+ *                  Custom events can be tracked by simply passing in custom names.
+*/
 + (void)trackEvent: (NSString *)eventName;
-+ (void)trackEvent: (NSString *)eventName
-    withProperties: (NSDictionary *)properties;
+
+/**
+ * @brief This method should be called whenever an event needs to be tracked
+ *
+ * @note See TikTokAppEvent.h for more event options.
+ *
+ * @param eventName This parameter should be a string object. You can find the list of
+ *                  supported events in the documentation.
+ *                  Custom events can be tracked by simply passing in custom names.
+ * @param properties This parameter should be a dictionary. For supported events,
+ *                       the parameters passed should be formatted according to the
+ *                       structure provided in the documentation. For custom events,
+ *                       you can pass in custom properties
+*/
++ (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
+
+// TODO: Ask Chris if we still need these separate purchase events
+/**
+ * @brief This method should be called whenever a purchase needs to be tracked
+ *
+ * @note See TikTokAppEvent.h for more event options.
+ *
+ * @param eventName This parameter should be a string object. You can find the list of
+ *                  supported purchase events in the documentation.
+ *                  Custom purchase events can be tracked by simply passing in custom names.
+*/
 + (void)trackPurchase: (NSString *)eventName;
-+ (void)trackPurchase: (NSString *)eventName
-    withProperties: (NSDictionary *)properties;
-//+ (void)trackSubsessionStart;
-//+ (void)trackSubsessionEnd;
+
+/**
+ * @brief This method should be called whenever a purchase needs to be tracked
+ *
+ * @note See TikTokAppEvent.h for more event options.
+ *
+ * @param eventName This parameter should be a string object. You can find the list of
+ *                  supported purchase events in the documentation.
+ *                  Custom purchase events can be tracked by simply passing in custom names.
+ * @param properties This parameter should be a dictionary. For supported purchase events,
+ *                       the parameters passed should be formatted according to the
+ *                       structure provided in the documentation. For custom purchase events,
+ *                       you can pass in custom properties
+*/
++ (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
+
+/**
+ * @brief Use this method to enable or disable event tracking
+*/
 + (void)setTrackingEnabled: (BOOL)enabled;
-//+ (void)setUserTrackingEnabled: (BOOL)enabled;
-+ (void)setAutomaticLoggingEnabled: (BOOL)enabled;
-+ (void)setInstallLoggingEnabled: (BOOL)enabled;
-+ (void)setLaunchLoggingEnabled: (BOOL)enabled;
-+ (void)setRetentionLoggingEnabled: (BOOL)enabled;
-+ (void)setPaymentLoggingEnabled: (BOOL)enabled;
+
+/**
+ * @brief Use this method to enable or disable automatic event tracking
+ *        List of automatically tracked events:
+ *        1. Install
+ *        2. Launch
+ *        3. 2D Retention
+ *        4. iOS Native Payments
+*/
++ (void)setAutomaticTrackingEnabled: (BOOL)enabled;
+
+/**
+ * @brief Use this method to enable or disable automatic 2D-Retention Tracking
+*/
++ (void)setRetentionTrackingEnabled: (BOOL)enabled;
+
+/**
+ * @brief Use this method to enable or disable automatic iOS Native Payments Tracking
+*/
++ (void)setPaymentTrackingEnabled: (BOOL)enabled;
+
+/**
+ * @brief Use this method to update accessToken
+*/
 + (void)updateAccessToken: (nonnull NSString *)accessToken;
-//+ (BOOL)isEnabled;
+
+/**
+ * @brief Use this method to check if tracking has been enabled internally
+ *        This method will return false **ONLY IF** tiktokConfig.disableTracking() is called
+ *        before TikTokBusiness.initializeSdk() is called
+*/
 + (BOOL)isTrackingEnabled;
+
+/**
+ * @brief Use this method to check if user has given permission to collect IDFA
+ *        This method will return true if user chooses to let app track them after
+ *        AppTrackingTransparency dialog is displayed in iOS 14.0 and onwards
+*/
 + (BOOL)isUserTrackingEnabled;
+
+/**
+ * @brief This method is used internally to keep track of event queue state
+ *        The event queue is populated by several tracked events and then
+ *        flushed to the Marketing API endpoint every 15 seconds or when the
+ *        event queue has 100 events
+*/
 + (TikTokAppEventQueue *)getQueue;
+
+/**
+ * @brief Use this method to get the count of events that are currently in
+ *        the event queue
+*/
 + (long)getInMemoryEventCount;
+
+/**
+ * @brief Use this method to get the count of events that are currently in
+ *        the disk and have to be flushed to the Marketing API endpoint
+*/
 + (long)getInDiskEventCount;
+
+/**
+ * @brief Use this method to find the number of seconds before next flush
+ *        to the Marketing API endpoint
+*/
 + (long)getTimeInSecondsUntilFlush;
+
+/**
+ * @brief Use this method to find the threshold of the number of events that
+ *        are flushed to the Marketing API
+*/
 + (long)getRemainingEventsUntilFlushThreshold;
-//+ (void)appWillOpenUrl:(nonnull NSURL *)url;
-//+ (void)setDeviceToken:(nonnull NSData *)deviceToken;
-//+ (void)setPushToken:(nonnull NSString *)pushToken;
-//+ (void)setOfflineMode:(BOOL)enabled;
+
+/**
+ * @brief Retrieve iOS device IDFA value.
+ *
+ * @return Device IDFA value.
+ */
 + (nullable NSString *)idfa;
+
+/**
+* @brief This method returns true if app is active and in the foreground
+*/
 + (BOOL)appInForeground;
+
+/**
+ * @brief This method returns true if app is inactive and in the background
+*/
 + (BOOL)appInBackground;
+
+/**
+ * @brief This method returns true if app is inactive or in the background
+*/
 + (BOOL)appIsInactive;
-//+ (nullable ADJAttribution *)attribution;
-//+ (nullable NSString *)sdkVersion;
-//+ (void)sendFirstPackages;
-//+ (void)sendAdWordsRequest;
-//+ (void)addSessionCallbackParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
-//+ (void)addSessionPartnerParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
-//+ (void)removeSessionCallbackParameter:(nonnull NSString *)key;
-//+ (void)removeSessionPartnerParameter:(nonnull NSString *)key;
-//+ (void)resetSessionCallbackParameters;
-//+ (void)resetSessionPartnerParameters;
-//+ (void)gdprForgetMe;
-//+ (void)trackAdRevenue:(nonnull NSString *)source payload:(nonnull NSData *)payload;
-//+ (void)disableThirdPartySharing;
-//+ (void)trackSubscription:(nonnull ADJSubscription *)subscription;
+
+/**
+ * @brief Use this callback to display AppTrackingTransparency dialog to ask
+ *        user for tracking permissions. This is a required method for any app
+ *        that works on iOS 14.0 and above and that wants to track users through IDFA
+*/
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
+
+/**
+ *  @brief Obtain singleton TikTokBusiness class
+ *  @return id referencing the singleton TikTokBusiness class
+*/
 + (nullable id)getInstance;
+
+/**
+ *  @brief Reset TikTokBusiness class singleton
+*/
 + (void)resetInstance;
-//- (id<TikTokLogger>)getLogger;
+
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
-//+ (void)setTestOptions:(nullable TikTokTestOptions *)testOptions;
 - (void)trackEvent: (NSString *)eventName;
-- (void)trackEvent: (NSString *)eventName
-    withProperties: (NSDictionary *)properties;
+- (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
 - (void)trackPurchase: (NSString *)eventName;
-- (void)trackPurchase: (NSString *)eventName
-    withProperties: (NSDictionary *)properties;
-//- (void)setEnabled:(BOOL)enabled;
-- (void)setAutomaticLoggingEnabled: (BOOL)enabled;
-- (void)setInstallLoggingEnabled: (BOOL)enabled;
-- (void)setLaunchLoggingEnabled: (BOOL)enabled;
-- (void)setRetentionLoggingEnabled: (BOOL)enabled;
-- (void)setPaymentLoggingEnabled: (BOOL)enabled;
+- (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
+- (void)setAutomaticTrackingEnabled: (BOOL)enabled;
+- (void)setRetentionTrackingEnabled: (BOOL)enabled;
+- (void)setPaymentTrackingEnabled: (BOOL)enabled;
 - (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
 - (BOOL)appIsInactive;
-//- (void)teardown; // ??
-//- (void)appWillOpenUrl:(nonnull NSURL *)url;
-//
-//- (void)setOfflineMode:(BOOL)enabled;
-//
-//- (void)setDeviceToken:(nonnull NSData *)deviceToken;
-//
-//- (void)setPushToken:(nonnull NSString *)pushToken;
-//
-//- (void)sendFirstPackages;
-//
-//- (void)trackSubsessionEnd;
-//
-//- (void)trackSubsessionStart;
-//
-//- (void)resetSessionPartnerParameters;
-//
-//- (void)resetSessionCallbackParameters;
-//
-//- (void)removeSessionPartnerParameter:(nonnull NSString *)key;
-//
-//- (void)removeSessionCallbackParameter:(nonnull NSString *)key;
-//
-//- (void)addSessionPartnerParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
-//
-//- (void)addSessionCallbackParameter:(nonnull NSString *)key value:(nonnull NSString *)value;
-//- (void)gdprForgetMe;
-//
-//- (void)trackAdRevenue:(nonnull NSString *)source payload:(nonnull NSData *)payload;
-//
-//- (void)trackSubscription:(nonnull ADJSubscription *)subscription;
-//- (BOOL)isEnabled;
 - (nullable NSString *)idfa;
-//- (nullable ADJAttribution *)attribution;
-//
-//- (nullable NSURL *)convertUniversalLink:(nonnull NSURL *)url scheme:(nonnull NSString *)scheme;
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
-
-
-//#import <Foundation/Foundation.h>
-//#import "TikTokLogger.h"
-//#import "TikTokAppEventQueue.h"
-//#import "TikTokAppEvent.h"
-//
-//NS_ASSUME_NONNULL_BEGIN
-//
-//@interface TikTok : NSObject
-//
-//+ (id)sharedInstance;
-//- (id)init;
-//- (id)initDuringTest: (BOOL) testEnvironment;
-//
-//- (void)trackEvent:(nullable TikTokAppEvent *)event;
-//
-//@end
-//

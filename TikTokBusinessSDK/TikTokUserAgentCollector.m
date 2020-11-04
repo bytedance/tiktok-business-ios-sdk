@@ -15,7 +15,6 @@
 
 @end
 
-
 @implementation TikTokUserAgentCollector
 
 + (TikTokUserAgentCollector *)singleton

@@ -7,11 +7,12 @@
 //
 
 #import "UIDevice+TikTokAdditions.h"
-#import "NSString+TikTokAdditions.h"
 #import <sys/sysctl.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 #import <net/if.h>
+#import <AdSupport/ASIdentifierManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 #define IOS_CELLULAR    @"pdp_ip0"
 #define IOS_WIFI        @"en0"
@@ -19,17 +20,6 @@
 #define IOS_VPN         @"utun0"
 #define IP_ADDR_IPv4    @"ipv4"
 #define IP_ADDR_IPv6    @"ipv6"
-
-#if !TIKTOK_NO_IDFA
-#import <AdSupport/ASIdentifierManager.h>
-#endif
-
-#import <AppTrackingTransparency/ATTrackingManager.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
-
-#if !TIKTOK_NO_IAD
-#import <iAd/iAd.h>
-#endif
 
 @implementation UIDevice(TikTokAdditions)
 
@@ -46,63 +36,7 @@
     }
 }
 
-- (Class)adSupportManager
-{
-    NSString *className = [NSString tiktokJoin:@"A", @"S", @"identifier", @"manager", nil];
-    Class class = NSClassFromString(className);
-    return class;
-}
-
-- (Class)appTrackingManager
-{
-    NSString *className = [NSString tiktokJoin:@"A", @"T", @"tracking", @"manager", nil];
-    Class class = NSClassFromString(className);
-    return class;
-}
-
-- (int)tiktokATTStatus
-{
-    Class appTrackingClass = [self appTrackingManager];
-    if(appTrackingClass != nil) {
-        NSString *keyAuthorization = [NSString tiktokJoin:@"tracking", @"authorization", @"status", nil];
-        SEL selAuthorization = NSSelectorFromString(keyAuthorization);
-        if([appTrackingClass respondsToSelector:selAuthorization]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            return (int)[appTrackingClass performSelector:selAuthorization];
-#pragma clang diagnostic pop
-        }
-    }
-    return -1;
-}
-
-//- (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
-//{
-//    if (@available(iOS 14, *)) {
-//        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-//            completion;
-//        }];
-//    } else {
-//        // Fallback on earlier versions
-//    }
-////    Class appTrackingClass = [self appTrackingManager];
-////    if(appTrackingClass == nil) {
-////        return;
-////    }
-////    NSString *requestAuthorization = [NSString tiktokJoin: @"request", @"tracking", @"authorization", @"with", @"completion", @"handler:", nil];
-////    SEL selRequestAuthorization = NSSelectorFromString(requestAuthorization);
-////    if(![appTrackingClass respondsToSelector:selRequestAuthorization]) {
-////        return;
-////    }
-////#pragma clang diagnostic push
-////#pragma clang diagnostic ignored "-Wunguarded-availability"
-////#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-////    [appTrackingClass performSelector:selRequestAuthorization withObject:completion];
-////#pragma clang diagnostic pop
-//}
-
-- (BOOL)tiktokTrackingEnabled
+- (BOOL)tiktokUserTrackingEnabled
 {
     if (@available(iOS 14, *)) {
         ATTrackingManagerAuthorizationStatus trackingStatus = ATTrackingManager.trackingAuthorizationStatus;
@@ -115,45 +49,6 @@
         // Fallback on earlier versions
         return YES;
     }
-}
-
-- (NSString *)tiktokIdForAdvertisers
-{
-#if TIKTOK_NO_IDFA
-    return @""
-#else
-    Class adSupportClass = [self adSupportManager];
-    if (adSupportClass == nil) {
-        return @"";
-    }
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
-    NSString *keyManager = [NSString tiktokJoin:@"shared", @"manager", nil];
-    SEL selManager = NSSelectorFromString(keyManager);
-    if (![adSupportClass respondsToSelector:selManager]) {
-        return @"";
-    }
-    id manager = [adSupportClass performSelector:selManager];
-
-    NSString *keyIdentifier = [NSString tiktokJoin:@"advertising", @"identifier", nil];
-    SEL selIdentifier = NSSelectorFromString(keyIdentifier);
-    if (![manager respondsToSelector:selIdentifier]) {
-        return @"";
-    }
-    id identifier = [manager performSelector:selIdentifier];
-
-    NSString *keyString = [NSString tiktokJoin:@"UUID", @"string", nil];
-    SEL selString = NSSelectorFromString(keyString);
-    if (![identifier respondsToSelector:selString]) {
-        return @"";
-    }
-    NSString *string = [identifier performSelector:selString];
-    return string;
-
-#pragma clang diagnostic pop
-#endif
 }
 
 - (NSString *)tiktokDeviceType
