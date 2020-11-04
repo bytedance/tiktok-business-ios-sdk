@@ -178,7 +178,8 @@ static NSMutableArray *g_pendingRequestors;
 
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct: (SKProduct *)product withTransaction: (SKPaymentTransaction *)transaction
 {
-    NSString *transactionId = nil;    
+    NSString *transactionId = nil;
+    
     switch (transaction.transactionState) {
         case SKPaymentTransactionStatePurchasing:
             break;
@@ -222,89 +223,6 @@ static NSMutableArray *g_pendingRequestors;
         [eventParameters setObject:contents forKey:@"contents"];
     }
     return eventParameters;
-}
-
-- (void)appendOriginalTransactionId:(NSString *)transactionId
-{
-    if (!transactionId) {
-        return;
-    }
-    [_originalTransactionSet addObject:transactionId];
-    [[NSUserDefaults standardUserDefaults] setObject:[[_originalTransactionSet allObjects] componentsJoinedByString:@","] forKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
-}
-
-- (void)clearOriginalTransactionId:(NSString *)transactionId
-{
-    if(!transactionId){
-        return;
-    }
-    [_originalTransactionSet removeObject:transactionId];
-    [[NSUserDefaults standardUserDefaults] setObject:[[_originalTransactionSet allObjects] componentsJoinedByString:@","] forKey:@"com.tiktok.appevents.PaymentObserver.originalTransaction"];
-}
-
-- (BOOL)isStartTrial:(SKPaymentTransaction *)transaction ofProduct:(SKProduct *)product
-{
-    if (@available(iOS 12.2, *)) {
-        SKPaymentDiscount *paymentDiscount = transaction.payment.paymentDiscount;
-        if(paymentDiscount) {
-            NSArray<SKProductDiscount *> *discounts = product.discounts;
-            for (SKProductDiscount *discount in discounts) {
-                if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial && [paymentDiscount.identifier isEqualToString:discount.identifier]) {
-                    return YES;
-                }
-            }
-        }
-    }
-    
-    if (@available(iOS 11.2, *)) {
-        if (product.introductoryPrice && product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-            NSString *originalTransactionId = transaction.originalTransaction.transactionIdentifier;
-            if (!originalTransactionId) {
-                return YES;
-            }
-        }
-    }
-    return NO;
-}
-
-- (BOOL)hasStartTrial:(SKProduct *)product
-{
-    if (@available(iOS 12.2, *)) {
-        NSArray<SKProductDiscount *> *discounts = product.discounts;
-        for (SKProductDiscount *discount in discounts) {
-            if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-                return YES;
-            }
-        }
-    }
-    
-    if (@available(iOS 11.2, *)) {
-        if (product.introductoryPrice && (product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial)) {
-            return YES;
-        }
-    }
-    
-    return NO;
-}
-
-- (NSString *)durationOfSubscriptionPeriod:(id)subscriptionPeriod
-{
-    if (@available(iOS 11.2, *)) {
-        if (subscriptionPeriod) {
-            if (subscriptionPeriod && [subscriptionPeriod isKindOfClass:[SKProductSubscriptionPeriod class]]) {
-                SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subscriptionPeriod;
-                NSString *unit = nil;
-                switch (period.unit) {
-                    case SKProductPeriodUnitDay: unit = @"D"; break;
-                    case SKProductPeriodUnitWeek: unit = @"W"; break;
-                    case SKProductPeriodUnitMonth: unit = @"M"; break;
-                    case SKProductPeriodUnitYear: unit = @"Y"; break;
-                }
-                return [NSString stringWithFormat:@"P%lu%@", (unsigned long)period.numberOfUnits, unit];
-            }
-        }
-    }
-    return nil;
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
