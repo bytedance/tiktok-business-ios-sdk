@@ -293,11 +293,11 @@ static dispatch_once_t onceToken = 0;
     
     NSSetUncaughtExceptionHandler(handleUncaughtExceptionPointer);
     self.trackingEnabled = tiktokConfig.trackingEnabled;
-    self.automaticTrackingEnabled = tiktokConfig.automaticLoggingEnabled;
-    self.installTrackingEnabled = tiktokConfig.installLoggingEnabled;
-    self.launchTrackingEnabled = tiktokConfig.launchLoggingEnabled;
-    self.retentionTrackingEnabled = tiktokConfig.retentionLoggingEnabled;
-    self.paymentTrackingEnabled = tiktokConfig.paymentLoggingEnabled;
+    self.automaticTrackingEnabled = tiktokConfig.automaticTrackingEnabled;
+    self.installTrackingEnabled = tiktokConfig.installTrackingEnabled;
+    self.launchTrackingEnabled = tiktokConfig.launchTrackingEnabled;
+    self.retentionTrackingEnabled = tiktokConfig.retentionTrackingEnabled;
+    self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
     self.accessToken = tiktokConfig.accessToken;
     
     self.requestHandler = [[TikTokRequestHandler alloc] init];

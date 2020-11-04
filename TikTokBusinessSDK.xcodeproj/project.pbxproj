@@ -54,7 +54,7 @@
 		8BB88F25250A96CA00EC9D74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F23250A96CA00EC9D74 /* Main.storyboard */; };
 		8BB88F27250A96CB00EC9D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F26250A96CB00EC9D74 /* Assets.xcassets */; };
 		8BB88F2A250A96CB00EC9D74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */; };
-		8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
+		8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		8BB88F30250A96D400EC9D74 /* TikTokBusinessSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F34250A986600EC9D74 /* FormViewController.swift */; };
 		8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F36250A9A4100EC9D74 /* EventViewController.swift */; };
@@ -183,9 +183,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */,
 				8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */,
 				8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */,
-				8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
