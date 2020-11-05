@@ -25,7 +25,6 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 */
 @interface TikTokBusiness : NSObject
 
-// TODO: Review whether these are really needed here or which ones are really required
 @property (nonatomic, weak) id<TikTokLogger> logger;
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
@@ -72,7 +71,6 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 */
 + (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
 
-// TODO: Ask Chris if we still need these separate purchase events
 /**
  * @brief This method should be called whenever a purchase needs to be tracked
  *

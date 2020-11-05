@@ -260,7 +260,6 @@ extension EventViewController: UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // TODO
         eventTextField.text = events[row]
         eventTextField.resignFirstResponder()
     }
