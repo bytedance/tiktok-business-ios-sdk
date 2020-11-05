@@ -31,6 +31,7 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 @property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic) NSString *accessToken;
+@property (nonatomic) NSString* sdkEnvironement;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -227,6 +228,8 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 - (BOOL)appIsInactive;
 - (nullable NSString *)idfa;
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
++ (BOOL)isEnvironmentSandbox;
+- (BOOL)isEnvironmentSandbox;
 
 @end
 

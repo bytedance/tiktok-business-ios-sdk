@@ -40,13 +40,14 @@
 		8B64FDED2548BA82004AFC49 /* TikTokUserAgentCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B64FDEB2548BA82004AFC49 /* TikTokUserAgentCollector.m */; };
 		8B64FE042548C68D004AFC49 /* TikTokSKAdNetworkSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64FE022548C68D004AFC49 /* TikTokSKAdNetworkSupport.h */; };
 		8B64FE052548C68D004AFC49 /* TikTokSKAdNetworkSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B64FE032548C68D004AFC49 /* TikTokSKAdNetworkSupport.m */; };
-		8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216C251D7D630041E73B /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8B6D9C062525333C00829F88 /* MetricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6D9C052525333C00829F88 /* MetricsViewController.swift */; };
 		8B89A23A251A64E700B61811 /* UIDevice+TikTokAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B89A238251A64E700B61811 /* UIDevice+TikTokAdditions.h */; };
 		8B89A23B251A64E700B61811 /* UIDevice+TikTokAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B89A239251A64E700B61811 /* UIDevice+TikTokAdditions.m */; };
 		8B89A23E251A677300B61811 /* TikTokDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B89A23C251A677300B61811 /* TikTokDeviceInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B89A23F251A677300B61811 /* TikTokDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B89A23D251A677300B61811 /* TikTokDeviceInfo.m */; };
+		8B903E182553826800D039A5 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6A216A251D7D500041E73B /* AppTrackingTransparency.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8B903E202553B45000D039A5 /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; };
 		8B93D3042530668600EDAAA1 /* TikTokFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B93D3022530668600EDAAA1 /* TikTokFactory.h */; };
 		8B93D3052530668600EDAAA1 /* TikTokFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B93D3032530668600EDAAA1 /* TikTokFactory.m */; };
 		8BB88F1E250A96CA00EC9D74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F1D250A96CA00EC9D74 /* AppDelegate.swift */; };
@@ -55,7 +56,6 @@
 		8BB88F25250A96CA00EC9D74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F23250A96CA00EC9D74 /* Main.storyboard */; };
 		8BB88F27250A96CB00EC9D74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F26250A96CB00EC9D74 /* Assets.xcassets */; };
 		8BB88F2A250A96CB00EC9D74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BB88F28250A96CB00EC9D74 /* LaunchScreen.storyboard */; };
-		8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		8BB88F30250A96D400EC9D74 /* TikTokBusinessSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BB88F35250A986600EC9D74 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F34250A986600EC9D74 /* FormViewController.swift */; };
 		8BB88F37250A9A4100EC9D74 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB88F36250A9A4100EC9D74 /* EventViewController.swift */; };
@@ -185,9 +185,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8BB88F2F250A96D400EC9D74 /* TikTokBusinessSDK.framework in Frameworks */,
+				8B903E202553B45000D039A5 /* TikTokBusinessSDK.framework in Frameworks */,
+				8B903E182553826800D039A5 /* AppTrackingTransparency.framework in Frameworks */,
 				8B6A216D251D7D630041E73B /* AdSupport.framework in Frameworks */,
-				8B6A216B251D7D500041E73B /* AppTrackingTransparency.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
