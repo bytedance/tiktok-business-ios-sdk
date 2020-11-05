@@ -106,7 +106,6 @@ class MetricsViewController: UIViewController {
     
     @IBAction func numberOfEventsChanged(_ sender: Any) {
         if((numberOfEventsField.text?.count)! > 0){
-            print("should change")
             randomEvents.setTitle("Generate \(numberOfEventsField.text ?? "") Random events", for: .normal)
         }
     }
