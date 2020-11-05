@@ -25,9 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL launchTrackingEnabled;
 @property (nonatomic, assign) BOOL retentionTrackingEnabled;
 @property (nonatomic, assign) BOOL paymentTrackingEnabled;
+@property (nonatomic, assign) NSString * tiktokEnvironment;
 
 + (nullable TikTokConfig *)configWithAccessToken:(nonnull NSString *)accessToken
                                         appID:(nonnull NSString *)appID
+                                     environment: environment 
                     suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 - (void)disableTracking;
@@ -44,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
                           appID:(nonnull NSString *)appID
+                       environment: environment
                 suppressAppTrackingDialog: (BOOL)isSuppressed;
 
 @end

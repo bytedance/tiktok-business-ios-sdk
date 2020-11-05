@@ -299,6 +299,7 @@ static dispatch_once_t onceToken = 0;
     self.retentionTrackingEnabled = tiktokConfig.retentionTrackingEnabled;
     self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
     self.accessToken = tiktokConfig.accessToken;
+    self.sdkEnvironement = tiktokConfig.tiktokEnvironment;
     
     self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
@@ -606,6 +607,21 @@ static dispatch_once_t onceToken = 0;
         }
         // Might want to add more code here, but not sure at the moment
     }];
+}
+
++ (BOOL)isEnvironmentSandbox
+{
+    @synchronized (self) {
+        return [[TikTokBusiness getInstance] isEnvironmentSandbox];
+    }
+}
+
+- (BOOL)isEnvironmentSandbox
+{
+    if(self.sdkEnvironement == TikTokEnvironmentSandbox) {
+        return true;
+    }
+    return false;
 }
 
 @end

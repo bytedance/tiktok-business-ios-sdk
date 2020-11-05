@@ -7,6 +7,7 @@
 //
 
 import UIKit
+/* ADD IMPORT STATEMENT HERE */
 import TikTokBusinessSDK
 
 @UIApplicationMain
@@ -16,11 +17,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        // Override point for customization after application launch.
-        let config = TikTokConfig.init(accessToken: "d5db46888d3884b1b91b1b77542b16514e788f6f", appID: "com.shopee.my", suppressAppTrackingDialog: false);
-//        config?.disableTracking()
-        TikTokBusiness.initializeSdk(config);
-//        TikTok.setTrackingEnabled(true);
+        /* UNCOMMENT DURING DEMO */
+        let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my", environment: TikTokEnvironmentSandbox, suppressAppTrackingDialog: false)
+
+        //        config?.disableTracking()
+        
+        /* ADD LINE HERE */
+        TikTokBusiness.initializeSdk(config)
+        
         return true
     }
 

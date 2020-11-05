@@ -158,6 +158,12 @@
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
     
+    if([TikTokBusiness isEnvironmentSandbox]) {
+        NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+        [self.logger info:@"[TikTokRequestHandler] Access token: %@", [[TikTokBusiness getInstance] accessToken]];
+        [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
+    }
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;
     [request setURL:[NSURL URLWithString:url]];

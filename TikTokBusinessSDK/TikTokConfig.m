@@ -19,9 +19,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID suppressAppTrackingDialog:(BOOL)isSuppressed
++ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment suppressAppTrackingDialog:(BOOL)isSuppressed
 {
-    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID suppressAppTrackingDialog:isSuppressed];
+    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID environment: environment suppressAppTrackingDialog:isSuppressed];
 }
 
 - (void)disableTracking
@@ -60,7 +60,7 @@
     [self.logger info:@"[TikTokConfig] Payment Tracking: NO"];
 }
 
-- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID suppressAppTrackingDialog:(BOOL)isSuppressed
+- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment suppressAppTrackingDialog:(BOOL)isSuppressed
 {
     self = [super init];
     
@@ -75,6 +75,7 @@
     _launchTrackingEnabled = YES;
     _retentionTrackingEnabled = YES;
     _paymentTrackingEnabled = YES;
+    _tiktokEnvironment = environment;
     
     self.logger = [TikTokFactory getLogger];
     return self;

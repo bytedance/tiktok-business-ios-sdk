@@ -134,7 +134,10 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         let finalPayloadDictionary = try? JSONSerialization.jsonObject(with: finalPayloadJSON, options: [])
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"response\": \"SUCCESS\"\n}"
+        /* UNCOMMENT THIS LINE */
         TikTokBusiness.trackEvent(eventTitle, withProperties: finalPayloadDictionary as! [AnyHashable : Any])
+        
+        /* Print statements used for debugging */
 //        print("Hello");
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appId)
 //        print(TikTokDeviceInfo.init(sdkPrefix: "1.1").appName)
@@ -188,6 +191,8 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
             self.payload = self.payload + "}"
             let payloadJSON = self.payload.data(using: .utf8)!
             let payloadDictionary = try? JSONSerialization.jsonObject(with: payloadJSON, options: [])
+            
+            /* UNCOMMENT THIS LINE */
             TikTokBusiness.trackEvent(randomEvent!, withProperties: payloadDictionary as! [AnyHashable : Any])
         }
         finalPayloadTextField.text = "{\n\t\"repsonse\": \"SUCCESS\"\n}"
