@@ -27,11 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL appTrackingDialogSuppressed;
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
-@property (nonatomic, assign) NSString * tiktokEnvironment;
 
 + (nullable TikTokConfig *)configWithAccessToken:(nonnull NSString *)accessToken
-                                           appID:(nonnull NSString *)appID
-                                     environment: environment;
+                                           appID:(nonnull NSString *)appID;
+
 - (void)disableTracking;
 - (void)disableAutomaticTracking;
 - (void)disableInstallTracking;
@@ -43,8 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableUserAgentCollectionEnabled;
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
-                             appID:(nonnull NSString *)appID
-                       environment: environment;
+                             appID:(nonnull NSString *)appID;
 
 @end
 

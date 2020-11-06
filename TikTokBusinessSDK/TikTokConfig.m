@@ -19,9 +19,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment
++ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID
 {
-    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID environment: environment];
+    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID];
 }
 
 - (void)disableTracking
@@ -78,7 +78,7 @@
     [self.logger info:@"[TikTokConfig] User Agent Collection: NO"];
 }
 
-- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment
+- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID
 {
     self = [super init];
     
@@ -95,7 +95,6 @@
     _appTrackingDialogSuppressed = NO;
     _SKAdNetworkSupportEnabled = YES;
     _userAgentCollectionEnabled = YES;
-    _tiktokEnvironment = environment;
     
     self.logger = [TikTokFactory getLogger];
     return self;
