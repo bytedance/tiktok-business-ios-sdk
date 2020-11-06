@@ -9,6 +9,7 @@
 #import "TikTokFactory.h"
 
 static id<TikTokLogger> internalLogger = nil;
+static TikTokRequestHandler *requestHandler = nil;
 
 @implementation TikTokFactory
 
@@ -23,6 +24,14 @@ static id<TikTokLogger> internalLogger = nil;
 + (void)setLogger:(id<TikTokLogger>)logger
 {
     internalLogger = logger;
+}
+
++ (TikTokRequestHandler*)getRequestHandler
+{
+    if (requestHandler == nil) {
+        requestHandler = [[TikTokRequestHandler alloc] init];
+    }
+    return requestHandler;
 }
 
 @end
