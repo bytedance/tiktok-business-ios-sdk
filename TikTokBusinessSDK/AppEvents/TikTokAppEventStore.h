@@ -11,9 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// https://stackoverflow.com/a/5337804/1498352
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
 @class TikTokAppEventQueue;
 
 @interface TikTokAppEventStore : NSObject
