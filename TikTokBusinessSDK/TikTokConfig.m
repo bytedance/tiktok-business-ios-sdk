@@ -62,7 +62,7 @@
 
 - (void)disableAppTrackingDialog
 {
-    self.appTrackingDialogNotSuppressed = NO;
+    self.appTrackingDialogSuppressed = YES;
     [self.logger info:@"[TikTokConfig] AppTrackingTransparency dialog has been suppressed"];
 }
 
@@ -92,7 +92,7 @@
     _launchTrackingEnabled = YES;
     _retentionTrackingEnabled = YES;
     _paymentTrackingEnabled = YES;
-    _appTrackingDialogNotSuppressed = YES;
+    _appTrackingDialogSuppressed = NO;
     _SKAdNetworkSupportEnabled = YES;
     _userAgentCollectionEnabled = YES;
     _tiktokEnvironment = environment;

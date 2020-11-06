@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL launchTrackingEnabled;
 @property (nonatomic, assign) BOOL retentionTrackingEnabled;
 @property (nonatomic, assign) BOOL paymentTrackingEnabled;
-@property (nonatomic, assign) BOOL appTrackingDialogNotSuppressed;
+@property (nonatomic, assign) BOOL appTrackingDialogSuppressed;
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 @property (nonatomic, assign) NSString * tiktokEnvironment;

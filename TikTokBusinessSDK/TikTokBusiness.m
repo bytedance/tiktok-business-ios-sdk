@@ -40,7 +40,7 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @property (nonatomic) BOOL launchTrackingEnabled;
 @property (nonatomic) BOOL retentionTrackingEnabled;
 @property (nonatomic) BOOL paymentTrackingEnabled;
-@property (nonatomic) BOOL appTrackingDialogNotSuppressed;
+@property (nonatomic) BOOL appTrackingDialogSuppressed;
 @property (nonatomic) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic) BOOL userAgentCollectionEnabled;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
@@ -88,7 +88,7 @@ static dispatch_once_t onceToken = 0;
     self.launchTrackingEnabled = YES;
     self.retentionTrackingEnabled = YES;
     self.paymentTrackingEnabled = YES;
-    self.appTrackingDialogNotSuppressed = YES;
+    self.appTrackingDialogSuppressed = NO;
     self.SKAdNetworkSupportEnabled = YES;
     self.userAgentCollectionEnabled = YES;
     
@@ -323,7 +323,7 @@ static dispatch_once_t onceToken = 0;
     self.launchTrackingEnabled = tiktokConfig.launchTrackingEnabled;
     self.retentionTrackingEnabled = tiktokConfig.retentionTrackingEnabled;
     self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
-    self.appTrackingDialogNotSuppressed = tiktokConfig.appTrackingDialogNotSuppressed;
+    self.appTrackingDialogSuppressed = tiktokConfig.appTrackingDialogSuppressed;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
     self.userAgentCollectionEnabled = tiktokConfig.userAgentCollectionEnabled;
     self.accessToken = tiktokConfig.accessToken;
@@ -404,7 +404,7 @@ static dispatch_once_t onceToken = 0;
                 
                 // Remove this later, based on where modal needs to be called to start tracking
                 // This will be needed to be called before we can call a function to get IDFA
-                if(self.appTrackingDialogNotSuppressed) {
+                if(!self.appTrackingDialogSuppressed) {
                     [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
                 }
             } else {
@@ -596,9 +596,9 @@ static dispatch_once_t onceToken = 0;
 {
     if(enabled){
         [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
-        _appTrackingDialogNotSuppressed = YES;
+        self.appTrackingDialogSuppressed = NO;
     } else {
-        _appTrackingDialogNotSuppressed = NO;
+        self.appTrackingDialogSuppressed = YES;
     }
 }
 
