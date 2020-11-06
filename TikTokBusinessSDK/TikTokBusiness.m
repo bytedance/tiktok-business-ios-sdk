@@ -40,7 +40,9 @@ NSString * const TikTokEnvironmentProduction = @"production";
 @property (nonatomic) BOOL launchTrackingEnabled;
 @property (nonatomic) BOOL retentionTrackingEnabled;
 @property (nonatomic) BOOL paymentTrackingEnabled;
-@property (nonatomic) BOOL IDFACollectionEnabled;
+@property (nonatomic) BOOL appTrackingDialogNotSuppressed;
+@property (nonatomic) BOOL SKAdNetworkSupportEnabled;
+@property (nonatomic) BOOL userAgentCollectionEnabled;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
 
 @end
@@ -86,6 +88,9 @@ static dispatch_once_t onceToken = 0;
     self.launchTrackingEnabled = YES;
     self.retentionTrackingEnabled = YES;
     self.paymentTrackingEnabled = YES;
+    self.appTrackingDialogNotSuppressed = YES;
+    self.SKAdNetworkSupportEnabled = YES;
+    self.userAgentCollectionEnabled = YES;
     
     if (@available(iOS 14, *)) {
         if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
@@ -99,8 +104,7 @@ static dispatch_once_t onceToken = 0;
         // For previous versions, we can assume that IDFA can be collected
         self.userTrackingEnabled = YES;
     }
-    [self loadUserAgent];
-    [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
+
     return self;
 }
 
@@ -189,6 +193,27 @@ static dispatch_once_t onceToken = 0;
 {
     @synchronized (self) {
         [[TikTokBusiness getInstance] setPaymentTrackingEnabled:enabled];
+    }
+}
+
++ (void)setAppTrackingDialog: (BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] setAppTrackingDialog: enabled];
+    }
+}
+
++ (void)setSKAdNetworkSupport: (BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] setSKAdNetworkSupport: enabled];
+    }
+}
+
++ (void)setUserAgentCollection: (BOOL)enabled
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] setUserAgentCollection: enabled];
     }
 }
 
@@ -290,7 +315,7 @@ static dispatch_once_t onceToken = 0;
         [self.logger warn:@"TikTok SDK has been initialized already!"];
         return;
     }
-    
+
     NSSetUncaughtExceptionHandler(handleUncaughtExceptionPointer);
     self.trackingEnabled = tiktokConfig.trackingEnabled;
     self.automaticTrackingEnabled = tiktokConfig.automaticTrackingEnabled;
@@ -298,9 +323,20 @@ static dispatch_once_t onceToken = 0;
     self.launchTrackingEnabled = tiktokConfig.launchTrackingEnabled;
     self.retentionTrackingEnabled = tiktokConfig.retentionTrackingEnabled;
     self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
+    self.appTrackingDialogNotSuppressed = tiktokConfig.appTrackingDialogNotSuppressed;
+    self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
+    self.userAgentCollectionEnabled = tiktokConfig.userAgentCollectionEnabled;
     self.accessToken = tiktokConfig.accessToken;
     self.sdkEnvironement = tiktokConfig.tiktokEnvironment;
     
+    if(self.userAgentCollectionEnabled) {
+        [self loadUserAgent];
+    }
+    
+    if(self.SKAdNetworkSupportEnabled) {
+        [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
+    }
+
     self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
@@ -324,6 +360,7 @@ static dispatch_once_t onceToken = 0;
                     // Launched Before: False
                     if(!launchedBefore && self.installTrackingEnabled) {
                         [self trackEvent:@"InstallApp"];
+                        [self trackEvent:@"LaunchApp"];
                         NSDate *currentLaunch = [NSDate date];
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
                         [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
@@ -367,7 +404,7 @@ static dispatch_once_t onceToken = 0;
                 
                 // Remove this later, based on where modal needs to be called to start tracking
                 // This will be needed to be called before we can call a function to get IDFA
-                if(!tiktokConfig.isSuppressed) {
+                if(self.appTrackingDialogNotSuppressed) {
                     [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
                 }
             } else {
@@ -552,6 +589,36 @@ static dispatch_once_t onceToken = 0;
             [TikTokPaymentObserver startObservingTransactions];
             _paymentTrackingEnabled = YES;
         }
+    }
+}
+
+- (void)setAppTrackingDialog:(BOOL)enabled
+{
+    if(enabled){
+        [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
+        _appTrackingDialogNotSuppressed = YES;
+    } else {
+        _appTrackingDialogNotSuppressed = NO;
+    }
+}
+
+- (void)setSKAdNetworkSupport:(BOOL)enabled
+{
+    if(enabled){
+        _SKAdNetworkSupportEnabled = YES;
+        [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
+    } else {
+        _SKAdNetworkSupportEnabled = NO;
+    }
+}
+
+- (void)setUserAgentCollection:(BOOL)enabled
+{
+    if(enabled){
+        _userAgentCollectionEnabled = YES;
+        [self loadUserAgent];
+    } else {
+        _userAgentCollectionEnabled = NO;
     }
 }
 

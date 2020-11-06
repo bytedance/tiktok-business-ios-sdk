@@ -123,6 +123,21 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 + (void)setPaymentTrackingEnabled: (BOOL)enabled;
 
 /**
+ * @brief Use this method to enable or disable AppTrackingTransparency Dialog
+*/
++ (void)setAppTrackingDialog: (BOOL)enabled;
+
+/**
+ * @brief Use this method to disable sending a callback to SKAdNetwork
+*/
++ (void)setSKAdNetworkSupport: (BOOL)enabled;
+
+/**
+ * @brief Use this method to disable collection of User Agent
+*/
++ (void)setUserAgentCollection: (BOOL)enabled;
+
+/**
  * @brief Use this method to update accessToken
 */
 + (void)updateAccessToken: (nonnull NSString *)accessToken;
@@ -221,6 +236,9 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 - (void)setAutomaticTrackingEnabled: (BOOL)enabled;
 - (void)setRetentionTrackingEnabled: (BOOL)enabled;
 - (void)setPaymentTrackingEnabled: (BOOL)enabled;
+- (void)setAppTrackingDialog: (BOOL)enabled;
+- (void)setSKAdNetworkSupport: (BOOL)enabled;
+- (void)setUserAgentCollection: (BOOL)enabled;
 - (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
 - (BOOL)appInForeground;
