@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly, nonnull) NSString *accessToken;
 @property (nonatomic, copy, readonly, nonnull) NSString *appID;
-@property (nonatomic, readonly) BOOL isSuppressed;
 
 @property (nonatomic, assign) TikTokLogLevel logLevel;
 
@@ -25,29 +24,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL launchTrackingEnabled;
 @property (nonatomic, assign) BOOL retentionTrackingEnabled;
 @property (nonatomic, assign) BOOL paymentTrackingEnabled;
+@property (nonatomic, assign) BOOL appTrackingDialogSuppressed;
+@property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
+@property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 @property (nonatomic, assign) NSString * tiktokEnvironment;
 
 + (nullable TikTokConfig *)configWithAccessToken:(nonnull NSString *)accessToken
-                                        appID:(nonnull NSString *)appID
-                                     environment: environment 
-                    suppressAppTrackingDialog: (BOOL)isSuppressed;
-
+                                           appID:(nonnull NSString *)appID
+                                     environment: environment;
 - (void)disableTracking;
-
 - (void)disableAutomaticTracking;
-
 - (void)disableInstallTracking;
-
 - (void)disableLaunchTracking;
-
 - (void)disableRetentionTracking;
-
 - (void)disablePaymentTracking;
+- (void)disableAppTrackingDialog;
+- (void)disableSKAdNetworkSupportEnabled;
+- (void)disableUserAgentCollectionEnabled;
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
-                          appID:(nonnull NSString *)appID
-                       environment: environment
-                suppressAppTrackingDialog: (BOOL)isSuppressed;
+                             appID:(nonnull NSString *)appID
+                       environment: environment;
 
 @end
 

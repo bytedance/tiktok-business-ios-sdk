@@ -19,9 +19,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment suppressAppTrackingDialog:(BOOL)isSuppressed
++ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment
 {
-    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID environment: environment suppressAppTrackingDialog:isSuppressed];
+    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID environment: environment];
 }
 
 - (void)disableTracking
@@ -60,7 +60,25 @@
     [self.logger info:@"[TikTokConfig] Payment Tracking: NO"];
 }
 
-- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment suppressAppTrackingDialog:(BOOL)isSuppressed
+- (void)disableAppTrackingDialog
+{
+    self.appTrackingDialogSuppressed = YES;
+    [self.logger info:@"[TikTokConfig] AppTrackingTransparency dialog has been suppressed"];
+}
+
+- (void)disableSKAdNetworkSupportEnabled
+{
+    self.SKAdNetworkSupportEnabled = NO;
+    [self.logger info:@"[TikTokConfig] SKAdNetwork Support: NO"];
+}
+
+- (void)disableUserAgentCollectionEnabled
+{
+    self.userAgentCollectionEnabled = NO;
+    [self.logger info:@"[TikTokConfig] User Agent Collection: NO"];
+}
+
+- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID environment: environment
 {
     self = [super init];
     
@@ -68,13 +86,15 @@
     
     _accessToken = accessToken;
     _appID = appID;
-    _isSuppressed = isSuppressed;
     _trackingEnabled = YES;
     _automaticTrackingEnabled = YES;
     _installTrackingEnabled = YES;
     _launchTrackingEnabled = YES;
     _retentionTrackingEnabled = YES;
     _paymentTrackingEnabled = YES;
+    _appTrackingDialogSuppressed = NO;
+    _SKAdNetworkSupportEnabled = YES;
+    _userAgentCollectionEnabled = YES;
     _tiktokEnvironment = environment;
     
     self.logger = [TikTokFactory getLogger];

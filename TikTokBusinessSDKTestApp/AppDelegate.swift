@@ -18,9 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my", environment: TikTokEnvironmentSandbox, suppressAppTrackingDialog: false)
 
-        // config?.disableTracking()
+        let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my", environment: TikTokEnvironmentSandbox)
+//        config?.disableAppTrackingDialog()
+//        config?.disableUserAgentCollectionEnabled()
+//        config?.disableAppTrackingDialog()
         
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
