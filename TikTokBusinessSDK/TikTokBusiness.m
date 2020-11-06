@@ -27,12 +27,9 @@
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
 
-
-NSString * const TikTokEnvironmentSandbox = @"sandbox";
-NSString * const TikTokEnvironmentProduction = @"production";
-
 @interface TikTokBusiness()
 
+@property (nonatomic, weak) id<TikTokLogger> logger;
 @property (nonatomic) BOOL enabled;
 @property (nonatomic) BOOL trackingEnabled;
 @property (nonatomic) BOOL automaticTrackingEnabled;
@@ -327,7 +324,6 @@ static dispatch_once_t onceToken = 0;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
     self.userAgentCollectionEnabled = tiktokConfig.userAgentCollectionEnabled;
     self.accessToken = tiktokConfig.accessToken;
-    self.sdkEnvironement = tiktokConfig.tiktokEnvironment;
     
     if(self.userAgentCollectionEnabled) {
         [self loadUserAgent];
@@ -672,21 +668,6 @@ static dispatch_once_t onceToken = 0;
         }
         // Might want to add more code here, but not sure at the moment
     }];
-}
-
-+ (BOOL)isEnvironmentSandbox
-{
-    @synchronized (self) {
-        return [[TikTokBusiness getInstance] isEnvironmentSandbox];
-    }
-}
-
-- (BOOL)isEnvironmentSandbox
-{
-    if(self.sdkEnvironement == TikTokEnvironmentSandbox) {
-        return true;
-    }
-    return false;
 }
 
 @end

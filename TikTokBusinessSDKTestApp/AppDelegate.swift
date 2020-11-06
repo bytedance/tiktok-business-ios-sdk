@@ -18,14 +18,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-
-        let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my", environment: TikTokEnvironmentSandbox)
-//        config?.disableAppTrackingDialog()
-//        config?.disableUserAgentCollectionEnabled()
-//        config?.disableAppTrackingDialog()
+        let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my")
+        
+        /* UNCOMMENT TO DISABLE OPTIONS BEFORE INITIALIZING SDK
+        
+        config?.disableTracking()                       // Disable All Tracking
+        config?.disableAutomaticTracking()              // Disable All Automatic Tracking
+        config?.disableInstallTracking()                // Disable Automatic Install Tracking
+        config?.disableLaunchTracking()                 // Disable Automatic Launch Tracking
+        config?.disableRetentionTracking()              // Disable Automatic 2DRetention Tracking
+        config?.disablePaymentTracking()                // Disable Automatic Payment Tracking
+        config?.disableAppTrackingDialog()              // Disable App Tracking Transparency Dialog
+        config?.disableSKAdNetworkSupportEnabled()      // Disable SKAdNetwork Support
+        config?.disableUserAgentCollectionEnabled()     // Disable User Agent Collection
+        
+        */
         
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
+        
+        /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
+ 
+        TikTokBusiness.setTrackingEnabled(/* value */)
+        TikTokBusiness.setAutomaticTrackingEnabled(/* value */)
+        TikTokBusiness.setRetentionTrackingEnabled(/* value */)
+        TikTokBusiness.setPaymentTrackingEnabled(/* value */)
+        TikTokBusiness.setAppTrackingDialog(/* value */)
+        TikTokBusiness.setSKAdNetworkSupport(/* value */)
+        
+        */
         
         return true
     }

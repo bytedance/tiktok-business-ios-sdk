@@ -13,10 +13,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** Constants for supported tracking environments */
-extern NSString * __nonnull const TikTokEnvironmentSandbox;
-extern NSString * __nonnull const TikTokEnvironmentProduction;
-
 /** 
  * @brief This is the main interface for TikTok's Business SDK
  *
@@ -25,13 +21,11 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 */
 @interface TikTokBusiness : NSObject
 
-@property (nonatomic, weak) id<TikTokLogger> logger;
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 @property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic) NSString *accessToken;
-@property (nonatomic) NSString* sdkEnvironement;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -246,8 +240,6 @@ extern NSString * __nonnull const TikTokEnvironmentProduction;
 - (BOOL)appIsInactive;
 - (nullable NSString *)idfa;
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
-+ (BOOL)isEnvironmentSandbox;
-- (BOOL)isEnvironmentSandbox;
 
 @end
 
