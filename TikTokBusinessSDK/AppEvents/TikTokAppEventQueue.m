@@ -23,6 +23,7 @@
 @interface TikTokAppEventQueue()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
+@property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 
 @end
 
@@ -61,6 +62,8 @@
     self.config = config;
     
     self.logger = [TikTokFactory getLogger];
+    
+    self.requestHandler = [TikTokFactory getRequestHandler];
     
     [self calculateAndSetRemainingEventThreshold];
 
@@ -131,7 +134,7 @@
                 }
                 
                 for (NSArray *eventChunk in eventChunks) {
-                    [[[TikTokBusiness getInstance] requestHandler] sendBatchRequest:eventChunk withConfig:self.config];
+                    [self.requestHandler sendBatchRequest:eventChunk withConfig:self.config];
                 }
             } else {
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];

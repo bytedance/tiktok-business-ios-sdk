@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TikTokLogger.h>
+#import <TikTokRequestHandler.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (id<TikTokLogger>)getLogger;
 + (void)setLogger:(id<TikTokLogger>)logger;
++ (TikTokRequestHandler*)getRequestHandler;
 
 @end
 

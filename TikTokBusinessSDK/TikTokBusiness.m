@@ -40,7 +40,10 @@
 @property (nonatomic) BOOL appTrackingDialogSuppressed;
 @property (nonatomic) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic) BOOL userAgentCollectionEnabled;
+@property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
+@property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
+@property (nonatomic) NSString *accessToken;
 
 @end
 
