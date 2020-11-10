@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
 
 /**
- * @brief Use this method to enable or disable event tracking
+ * @brief Use this method to enable or disable event tracking. Tracked events will still be cached locally until tracking is enabled again
 */
 + (void)setTrackingEnabled: (BOOL)enabled;
 
