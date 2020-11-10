@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config?.disableRetentionTracking()              // Disable Automatic 2DRetention Tracking
         config?.disablePaymentTracking()                // Disable Automatic Payment Tracking
         config?.disableAppTrackingDialog()              // Disable App Tracking Transparency Dialog
-        config?.disableSKAdNetworkSupportEnabled()      // Disable SKAdNetwork Support
-        config?.disableUserAgentCollectionEnabled()     // Disable User Agent Collection
+        config?.disableSKAdNetworkSupport()             // Disable SKAdNetwork Support
+        config?.disableUserAgentCollection()            // Disable User Agent Collection
         
         */
         

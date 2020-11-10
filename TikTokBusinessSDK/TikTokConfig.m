@@ -66,13 +66,13 @@
     [self.logger info:@"[TikTokConfig] AppTrackingTransparency dialog has been suppressed"];
 }
 
-- (void)disableSKAdNetworkSupportEnabled
+- (void)disableSKAdNetworkSupport
 {
     self.SKAdNetworkSupportEnabled = NO;
     [self.logger info:@"[TikTokConfig] SKAdNetwork Support: NO"];
 }
 
-- (void)disableUserAgentCollectionEnabled
+- (void)disableUserAgentCollection
 {
     self.userAgentCollectionEnabled = NO;
     [self.logger info:@"[TikTokConfig] User Agent Collection: NO"];
