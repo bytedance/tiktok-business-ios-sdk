@@ -63,7 +63,10 @@ static long numberOfEventsDumped = 0;
             }
         } else {
             // archiveRootObject used for iOS versions below 11.0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             result = [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] getFilePath]];
+#pragma clang diagnostic pop
         }
         
         if(result == YES) {
@@ -90,7 +93,10 @@ static long numberOfEventsDumped = 0;
                 [events addObjectsFromArray:[unarchiver decodeObjectOfClass:[NSArray class] forKey:NSKeyedArchiveRootObjectKey]];
             } else {
                 // unarchiveObjectWithFile used for iOS versions below 11.0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [events addObjectsFromArray:[NSKeyedUnarchiver unarchiveObjectWithFile:[[self class] getFilePath]]];
+#pragma clang diagnostic pop
             }
         } @catch (NSException *exception) {
             [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([self class]) message:@"Failed to read from disk" exception:exception];
