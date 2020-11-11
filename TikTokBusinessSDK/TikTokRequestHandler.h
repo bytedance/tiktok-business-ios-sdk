@@ -1,9 +1,8 @@
 //
-//  TikTokRequestHandler.h
-//  TikTokBusinessSDK
+// Copyright (c) 2020. Bytedance Inc.
 //
-//  Created by Christopher Yang on 9/17/20.
-//  Copyright © 2020 bytedance. All rights reserved.
+// This source code is licensed under the MIT license found in
+// the LICENSE file in the root directory of this source tree.
 //
 
 #import <Foundation/Foundation.h>
