@@ -13,6 +13,7 @@
 #import "TikTokRequestHandler.h"
 
 @interface TikTokAppEventQueue()
+@property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 
 - (void)flushOnMainQueue:(NSMutableArray *)eventsToBeFlushed
                forReason:(TikTokAppEventsFlushReason)flushReason;
@@ -39,7 +40,7 @@
     self.queue = OCMPartialMock(queue);
     
     TikTokRequestHandler *requestHandler = OCMClassMock([TikTokRequestHandler class]);
-    OCMStub([self.tiktokBusiness requestHandler]).andReturn(requestHandler);
+    OCMStub(self.queue.requestHandler).andReturn(requestHandler);
     
     XCTAssertTrue(self.queue.eventQueue.count == 0, @"Queue should be empty");
 }
@@ -70,7 +71,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // expect sendBatchRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [[self.tiktokBusiness requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify(never(), [self.queue.requestHandler sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
 
 
     // add an event to queue
@@ -80,7 +81,7 @@
     [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 
     // now expect sendBatchRequest to be called, since queue has an event
-    OCMVerify([[self.tiktokBusiness requestHandler] sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
+    OCMVerify([self.queue.requestHandler sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
 
 }
 
