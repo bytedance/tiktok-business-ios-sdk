@@ -100,6 +100,8 @@ static long numberOfEventsDumped = 0;
             }
         } @catch (NSException *exception) {
             [TikTokErrorHandler handleErrorWithOrigin:NSStringFromClass([self class]) message:@"Failed to read from disk" exception:exception];
+            // if exception is caused and failed to read from disk, delete the file
+            [[self class] clearPersistedAppEvents];
         }
     }
     
