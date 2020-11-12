@@ -210,10 +210,10 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)setUserAgentCollection: (BOOL)enabled
++ (void)setCustomUserAgent:(NSString *)customUserAgent
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] setUserAgentCollection: enabled];
+        [[TikTokBusiness getInstance] setCustomUserAgent:customUserAgent];
     }
 }
 
@@ -397,7 +397,6 @@ static dispatch_once_t onceToken = 0;
                     
                     if(self.paymentTrackingEnabled){
                         [TikTokPaymentObserver startObservingTransactions];
-                        
                     }
                 }
                 
@@ -543,82 +542,9 @@ static dispatch_once_t onceToken = 0;
     _userTrackingEnabled = userTrackingEnabled;
 }
 
-- (void)setAutomaticTrackingEnabled:(BOOL)enabled
+- (void)setCustomUserAgent:(NSString *)customUserAgent
 {
-    _automaticTrackingEnabled = enabled;
-    _installTrackingEnabled = enabled;
-    _launchTrackingEnabled = enabled;
-    _retentionTrackingEnabled = enabled;
-    _paymentTrackingEnabled = enabled;
-    if(enabled){
-        [TikTokPaymentObserver startObservingTransactions];
-    } else {
-        [TikTokPaymentObserver stopObservingTransactions];
-    }
-}
-
-- (void)setInstallTrackingEnabled:(BOOL)enabled
-{
-    if (self.automaticTrackingEnabled) {
-        _installTrackingEnabled = enabled;
-    }
-}
-
-- (void)setLaunchTrackingEnabled:(BOOL)enabled
-{
-    if (self.automaticTrackingEnabled) {
-        _launchTrackingEnabled = enabled;
-    }
-}
-
-- (void)setRetentionTrackingEnabled:(BOOL)enabled
-{
-    if (self.automaticTrackingEnabled) {
-        _retentionTrackingEnabled = enabled;
-    }
-}
-
-- (void)setPaymentTrackingEnabled:(BOOL)enabled
-{
-    if (self.automaticTrackingEnabled == YES) {
-        if(!enabled && _paymentTrackingEnabled){
-            [TikTokPaymentObserver stopObservingTransactions];
-            _paymentTrackingEnabled = enabled;
-        } else if (enabled && !_paymentTrackingEnabled) {
-            [TikTokPaymentObserver startObservingTransactions];
-            _paymentTrackingEnabled = YES;
-        }
-    }
-}
-
-- (void)setAppTrackingDialog:(BOOL)enabled
-{
-    if(enabled){
-        [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
-        self.appTrackingDialogSuppressed = NO;
-    } else {
-        self.appTrackingDialogSuppressed = YES;
-    }
-}
-
-- (void)setSKAdNetworkSupport:(BOOL)enabled
-{
-    if(enabled){
-        _SKAdNetworkSupportEnabled = YES;
-        [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
-    } else {
-        _SKAdNetworkSupportEnabled = NO;
-    }
-}
-
-- (void)setUserAgentCollection:(BOOL)enabled
-{
-    if(enabled){
-        _userAgentCollectionEnabled = YES;
-        [self loadUserAgent];
-    } else {
-        _userAgentCollectionEnabled = NO;
-    }
+    [[TikTokUserAgentCollector singleton] setUserAgent:customUserAgent];
 }
 
 - (void)updateAccessToken:(nonnull NSString *)accessToken
@@ -634,11 +560,6 @@ static dispatch_once_t onceToken = 0;
 - (BOOL)isUserTrackingEnabled
 {
     return self.userTrackingEnabled;
-}
-
-- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval
-{
-    [TikTokSKAdNetworkSupport sharedInstance].maxTimeSinceInstall = maxTimeInterval;
 }
 
 - (void)loadUserAgent {

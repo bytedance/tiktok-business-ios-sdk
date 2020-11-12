@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disablePaymentTracking;
 - (void)disableAppTrackingDialog;
 - (void)disableSKAdNetworkSupport;
-- (void)disableUserAgentCollection;
+- (void)setCustomUserAgent:(NSString *)customUserAgent;
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
                              appID:(nonnull NSString *)appID;

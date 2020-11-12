@@ -10,6 +10,7 @@
 #import "TikTokLogger.h"
 #import "TikTokBusiness.h"
 #import "TikTokFactory.h"
+#import "TikTokUserAgentCollector.h"
 
 @interface TikTokConfig()
 
@@ -72,10 +73,10 @@
     [self.logger info:@"[TikTokConfig] SKAdNetwork Support: NO"];
 }
 
-- (void)disableUserAgentCollection
+- (void)setCustomUserAgent: (NSString *)customUserAgent
 {
-    self.userAgentCollectionEnabled = NO;
-    [self.logger info:@"[TikTokConfig] User Agent Collection: NO"];
+    [[TikTokUserAgentCollector singleton] setUserAgent:customUserAgent];
+    [self.logger info:@"[TikTokConfig] User Agent set to: %@", customUserAgent];
 }
 
 - (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID
