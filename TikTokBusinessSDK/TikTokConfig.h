@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nonnull) NSString *accessToken;
 @property (nonatomic, copy, readonly, nonnull) NSString *appID;
 
-@property (nonatomic, assign) TikTokLogLevel logLevel;
-
 @property (nonatomic, assign) BOOL trackingEnabled;
 @property (nonatomic, assign) BOOL automaticTrackingEnabled;
 @property (nonatomic, assign) BOOL installTrackingEnabled;
@@ -40,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableAppTrackingDialog;
 - (void)disableSKAdNetworkSupport;
 - (void)setCustomUserAgent:(NSString *)customUserAgent;
+- (void)setLogLevel:(TikTokLogLevel)logLevel;
 
 - (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
                              appID:(nonnull NSString *)appID;

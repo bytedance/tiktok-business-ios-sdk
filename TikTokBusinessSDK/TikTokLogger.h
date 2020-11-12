@@ -27,7 +27,7 @@ typedef enum {
 */
 @protocol TikTokLogger
 
-- (void)setLogLevel: (TikTokLogLevel)logLevel isProductionEnvironment: (BOOL)isProductionEnvironment;
+- (void)setLogLevel: (TikTokLogLevel)logLevel;
 - (void)lockLogLevel;
 - (void)verbose: (nonnull NSString *)message, ...;
 - (void)debug: (nonnull NSString *)message, ...;

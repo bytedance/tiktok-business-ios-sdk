@@ -15,6 +15,7 @@
 @interface TikTokConfig()
 
 @property (nonatomic, weak) id<TikTokLogger> logger;
+@property (nonatomic, assign) TikTokLogLevel logLevel;
 
 @end
 
@@ -77,6 +78,12 @@
 {
     [[TikTokUserAgentCollector singleton] setUserAgent:customUserAgent];
     [self.logger info:@"[TikTokConfig] User Agent set to: %@", customUserAgent];
+}
+
+-(void)setLogLevel:(TikTokLogLevel)logLevel
+{
+    _logLevel = logLevel;
+    [self.logger setLogLevel:logLevel];
 }
 
 - (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID

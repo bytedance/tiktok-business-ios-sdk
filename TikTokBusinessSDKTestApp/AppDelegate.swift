@@ -31,12 +31,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config?.disableAppTrackingDialog()              // Disable App Tracking Transparency Dialog
         config?.disableSKAdNetworkSupport()             // Disable SKAdNetwork Support
         config?.disableUserAgentCollection()            // Disable User Agent Collection
+        config?.setLogLevel(TikTokLogLevelVerbose)
+        config?.setCustomUserAgent("THIS IS A CUSTOM USER AGENT")
+        
+        */
+        
+        /*
+        
+
         
         */
         
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
-        
+
         /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
  
         TikTokBusiness.setTrackingEnabled(/* value */)

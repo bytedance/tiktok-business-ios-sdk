@@ -230,8 +230,6 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-
-
 + (BOOL)appInForeground
 {
     @synchronized (self) {
@@ -447,7 +445,6 @@ static dispatch_once_t onceToken = 0;
     [self trackEvent:eventName withProperties:properties];
     [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 }
-
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
