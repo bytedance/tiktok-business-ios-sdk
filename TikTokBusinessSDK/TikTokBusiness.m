@@ -39,7 +39,6 @@
 @property (nonatomic) BOOL paymentTrackingEnabled;
 @property (nonatomic) BOOL appTrackingDialogSuppressed;
 @property (nonatomic) BOOL SKAdNetworkSupportEnabled;
-@property (nonatomic) BOOL userAgentCollectionEnabled;
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 @property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
@@ -90,7 +89,6 @@ static dispatch_once_t onceToken = 0;
     self.paymentTrackingEnabled = YES;
     self.appTrackingDialogSuppressed = NO;
     self.SKAdNetworkSupportEnabled = YES;
-    self.userAgentCollectionEnabled = YES;
     
     if (@available(iOS 14, *)) {
         if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
@@ -252,14 +250,11 @@ static dispatch_once_t onceToken = 0;
     self.paymentTrackingEnabled = tiktokConfig.paymentTrackingEnabled;
     self.appTrackingDialogSuppressed = tiktokConfig.appTrackingDialogSuppressed;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
-    self.userAgentCollectionEnabled = tiktokConfig.userAgentCollectionEnabled;
     self.accessToken = tiktokConfig.accessToken;
     
     NSLog(self.trackingEnabled ? @"Yes" : @"No");
     
-    if(self.userAgentCollectionEnabled) {
-        [self loadUserAgent];
-    }
+    [self loadUserAgent];
 
     self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
@@ -501,7 +496,6 @@ static dispatch_once_t onceToken = 0;
                 // Fallback on earlier versions
             }
         }
-        // Might want to add more code here, but not sure at the moment
     }];
 }
 
