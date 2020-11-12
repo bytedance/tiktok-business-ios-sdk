@@ -255,6 +255,8 @@ static dispatch_once_t onceToken = 0;
     self.userAgentCollectionEnabled = tiktokConfig.userAgentCollectionEnabled;
     self.accessToken = tiktokConfig.accessToken;
     
+    NSLog(self.trackingEnabled ? @"Yes" : @"No");
+    
     if(self.userAgentCollectionEnabled) {
         [self loadUserAgent];
     }
@@ -285,7 +287,9 @@ static dispatch_once_t onceToken = 0;
                     if(self.SKAdNetworkSupportEnabled) {
                         [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
                     }
-                    [self trackEvent:@"LaunchApp"];
+                    if(self.launchTrackingEnabled){
+                        [self trackEvent:@"LaunchApp"];
+                    }
                     NSDate *currentLaunch = [NSDate date];
                     [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
                     [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
@@ -324,6 +328,8 @@ static dispatch_once_t onceToken = 0;
                 if(self.paymentTrackingEnabled){
                     [TikTokPaymentObserver startObservingTransactions];
                 }
+            } else {
+                [TikTokPaymentObserver stopObservingTransactions];
             }
             
             // Remove this later, based on where modal needs to be called to start tracking
