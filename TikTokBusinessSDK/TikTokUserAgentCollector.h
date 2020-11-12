@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Handles asynchronous Javascript call to the WebKit browser
 */
 - (void)loadUserAgentWithCompletion:(void(^)(NSString * _Nullable userAgent))completion;
++ (void)setUserAgent:(NSString *)userAgent;
+- (void)setUserAgent:(NSString *)userAgent;
 
 @end
 

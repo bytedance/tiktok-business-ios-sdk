@@ -38,7 +38,9 @@
 - (void)loadUserAgentWithCompletion:(void (^)(NSString * _Nullable))completion
 {
     [self collectUserAgentWithCompletion: ^(NSString * _Nullable userAgent) {
-        self.userAgent = userAgent;
+        if(self.userAgent == nil){
+            self.userAgent = userAgent;
+        }
         if(completion){
             completion(userAgent);
         }
@@ -66,6 +68,18 @@
             }
         }];
     });
+}
+
++ (void)setUserAgent:(NSString *)userAgent
+{
+    @synchronized (self) {
+        [[TikTokUserAgentCollector singleton] setUserAgent:userAgent];
+    }
+}
+
+- (void)setUserAgent:(NSString *)userAgent
+{
+    _userAgent = userAgent;
 }
 
 @end

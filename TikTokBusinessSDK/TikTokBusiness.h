@@ -62,70 +62,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
 
 /**
- * @brief This method should be called whenever a purchase needs to be tracked
- *
- * @note See TikTokAppEvent.h for more event options.
- *
- * @param eventName This parameter should be a string object. You can find the list of
- *                  supported purchase events in the documentation.
- *                  Custom purchase events can be tracked by simply passing in custom names.
-*/
-+ (void)trackPurchase: (NSString *)eventName;
-
-/**
- * @brief This method should be called whenever a purchase needs to be tracked
- *
- * @note See TikTokAppEvent.h for more event options.
- *
- * @param eventName This parameter should be a string object. You can find the list of
- *                  supported purchase events in the documentation.
- *                  Custom purchase events can be tracked by simply passing in custom names.
- * @param properties This parameter should be a dictionary. For supported purchase events,
- *                       the parameters passed should be formatted according to the
- *                       structure provided in the documentation. For custom purchase events,
- *                       you can pass in custom properties
-*/
-+ (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
-
-/**
  * @brief Use this method to enable or disable event tracking. Tracked events will still be cached locally until tracking is enabled again
 */
 + (void)setTrackingEnabled: (BOOL)enabled;
 
 /**
- * @brief Use this method to enable or disable automatic event tracking
- *        List of automatically tracked events:
- *        1. Install
- *        2. Launch
- *        3. 2D Retention
- *        4. iOS Native Payments
+ * @brief Use this method to disable collection of User Agent automatically and set a custom User Agent
 */
-+ (void)setAutomaticTrackingEnabled: (BOOL)enabled;
-
-/**
- * @brief Use this method to enable or disable automatic 2D-Retention Tracking
-*/
-+ (void)setRetentionTrackingEnabled: (BOOL)enabled;
-
-/**
- * @brief Use this method to enable or disable automatic iOS Native Payments Tracking
-*/
-+ (void)setPaymentTrackingEnabled: (BOOL)enabled;
-
-/**
- * @brief Use this method to enable or disable AppTrackingTransparency Dialog
-*/
-+ (void)setAppTrackingDialog: (BOOL)enabled;
-
-/**
- * @brief Use this method to disable sending a callback to SKAdNetwork
-*/
-+ (void)setSKAdNetworkSupport: (BOOL)enabled;
-
-/**
- * @brief Use this method to disable collection of User Agent
-*/
-+ (void)setUserAgentCollection: (BOOL)enabled;
++ (void)setCustomUserAgent: (NSString *)customUserAgent;
 
 /**
  * @brief Use this method to update accessToken
@@ -221,15 +165,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
-- (void)trackPurchase: (NSString *)eventName;
-- (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
-- (void)setAutomaticTrackingEnabled: (BOOL)enabled;
-- (void)setRetentionTrackingEnabled: (BOOL)enabled;
-- (void)setPaymentTrackingEnabled: (BOOL)enabled;
-- (void)setAppTrackingDialog: (BOOL)enabled;
-- (void)setSKAdNetworkSupport: (BOOL)enabled;
-- (void)setUserAgentCollection: (BOOL)enabled;
-- (void)setSKAdNetworkCalloutMaxTimeSinceInstall:(NSTimeInterval)maxTimeInterval;
+- (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;

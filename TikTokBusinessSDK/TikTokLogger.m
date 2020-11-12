@@ -13,7 +13,6 @@ static NSString * const kLogTag = @"TikTok";
 
 @property (nonatomic, assign) TikTokLogLevel logLevel;
 @property (nonatomic, assign) BOOL logLevelLocked;
-@property (nonatomic, assign) BOOL isProductionEnvironment;
 
 @end
 
@@ -28,19 +27,17 @@ static NSString * const kLogTag = @"TikTok";
     // default values
     _logLevel = TikTokLogLevelInfo;
     self.logLevelLocked = NO;
-    self.isProductionEnvironment = NO;
     
     return self;
 }
 
-- (void)setLogLevel:(TikTokLogLevel)logLevel isProductionEnvironment:(BOOL)isProductionEnvironment
+- (void)setLogLevel:(TikTokLogLevel)logLevel
 {
     if(self.logLevelLocked)
     {
         return;
     }
     _logLevel = logLevel; // instance log level
-    self.isProductionEnvironment = isProductionEnvironment;
 }
 
 - (void)lockLogLevel
@@ -50,7 +47,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)verbose:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelVerbose) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"v" format: message parameters: parameters];
@@ -58,7 +54,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)debug:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelDebug) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"d" format: message parameters: parameters];
@@ -66,7 +61,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)info:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelInfo) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"i" format: message parameters: parameters];
@@ -74,7 +68,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)warn:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelWarn) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"w" format: message parameters: parameters];
@@ -89,7 +82,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)error:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelError) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"e" format: message parameters: parameters];
@@ -97,7 +89,6 @@ static NSString * const kLogTag = @"TikTok";
 
 - (void)assert:(NSString *)message, ...
 {
-    if(self.isProductionEnvironment) return;
     if(self.logLevel > TikTokLogLevelAssert) return;
     va_list parameters; va_start(parameters, message);
     [self logLevel: @"a" format: message parameters: parameters];

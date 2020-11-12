@@ -18,32 +18,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my")
+
+        /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
-        /* UNCOMMENT TO DISABLE OPTIONS BEFORE INITIALIZING SDK
-        
-        config?.disableTracking()                       // Disable All Tracking
-        config?.disableAutomaticTracking()              // Disable All Automatic Tracking
-        config?.disableInstallTracking()                // Disable Automatic Install Tracking
-        config?.disableLaunchTracking()                 // Disable Automatic Launch Tracking
-        config?.disableRetentionTracking()              // Disable Automatic 2DRetention Tracking
-        config?.disablePaymentTracking()                // Disable Automatic Payment Tracking
-        config?.disableAppTrackingDialog()              // Disable App Tracking Transparency Dialog
-        config?.disableSKAdNetworkSupport()             // Disable SKAdNetwork Support
-        config?.disableUserAgentCollection()            // Disable User Agent Collection
+        config?.disableTracking()                           // Disable All Tracking
+        config?.disableAutomaticTracking()                  // Disable All Automatic Tracking
+        config?.disableInstallTracking()                    // Disable Automatic Install Tracking
+        config?.disableLaunchTracking()                     // Disable Automatic Launch Tracking
+        config?.disableRetentionTracking()                  // Disable Automatic 2DRetention Tracking
+        config?.disablePaymentTracking()                    // Disable Automatic Payment Tracking
+        config?.disableAppTrackingDialog()                  // Disable App Tracking Transparency Dialog
+        config?.disableSKAdNetworkSupport()                 // Disable SKAdNetwork Support
+        config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
+        config?.setCustomUserAgent("CUSTOM USER AGENT")     // Set Custom User Agent Collection
         
         */
         
         /* ADD LINE HERE */
+        config?.setLogLevel(TikTokLogLevelVerbose)
+//        config?.disableTracking()
+//        config?.disableAutomaticTracking()
         TikTokBusiness.initializeSdk(config)
-        
         /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
  
         TikTokBusiness.setTrackingEnabled(/* value */)
-        TikTokBusiness.setAutomaticTrackingEnabled(/* value */)
-        TikTokBusiness.setRetentionTrackingEnabled(/* value */)
-        TikTokBusiness.setPaymentTrackingEnabled(/* value */)
-        TikTokBusiness.setAppTrackingDialog(/* value */)
-        TikTokBusiness.setSKAdNetworkSupport(/* value */)
+        TikTokBusiness.setCustomUserAgent("THIS IS A CUSTOM USER AGENT")
         
         */
         
