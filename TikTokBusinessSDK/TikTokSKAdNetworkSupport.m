@@ -13,7 +13,6 @@
 @property (nonatomic, copy, readwrite) NSDate *installDate;
 @property (nonatomic, strong, readwrite) Class skAdNetworkClass;
 @property (nonatomic, assign, readwrite) SEL skAdNetworkRegisterAppForAdNetworkAttribution;
-@property (nonatomic, assign, readwrite) SEL skAdNetworkUpdateConversionValue;
 
 @end
 
@@ -39,8 +38,6 @@
         self.installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
         self.skAdNetworkClass = NSClassFromString(@"SKAdNetwork");
         self.skAdNetworkRegisterAppForAdNetworkAttribution = NSSelectorFromString(@"registerAppForAdNetworkAttribution");
-        self.skAdNetworkUpdateConversionValue = NSSelectorFromString(@"updateConversionValue");
-
     }
     return self;
 }
@@ -64,15 +61,6 @@
     if (@available(iOS 14.0, *)) {
         if([self shouldAttemptSKAdNetworkCallout]) {
             ((id (*)(id, SEL))[self.skAdNetworkClass methodForSelector:self.skAdNetworkRegisterAppForAdNetworkAttribution])(self.skAdNetworkClass, self.skAdNetworkRegisterAppForAdNetworkAttribution);
-        }
-    }
-}
-
-- (void)updateConversionValue:(NSInteger)conversionValue
-{
-    if (@available(iOS 14.0, *)) {
-        if([self shouldAttemptSKAdNetworkCallout]){
-            ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, conversionValue);
         }
     }
 }

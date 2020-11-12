@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TikTokSKAdNetworkSupport *)sharedInstance;
 - (void)registerAppForAdNetworkAttribution;
-- (void)updateConversionValue:(NSInteger)conversionValue;
 
 @end
 
