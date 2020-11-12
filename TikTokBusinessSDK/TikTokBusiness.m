@@ -132,81 +132,10 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)trackPurchase:(NSString *)eventName
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] trackPurchase:eventName];
-    }
-}
-
-+ (void)trackPurchase:(NSString *)eventName
-    withProperties:(NSDictionary *)properties
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] trackPurchase:eventName withProperties:properties];
-    }
-}
-
 + (void)setTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
         [[TikTokBusiness getInstance] setTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setUserTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setUserTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setAutomaticTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setAutomaticTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setInstallTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setInstallTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setLaunchTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setLaunchTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setRetentionTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setRetentionTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setPaymentTrackingEnabled:(BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setPaymentTrackingEnabled:enabled];
-    }
-}
-
-+ (void)setAppTrackingDialog: (BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setAppTrackingDialog: enabled];
-    }
-}
-
-+ (void)setSKAdNetworkSupport: (BOOL)enabled
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] setSKAdNetworkSupport: enabled];
     }
 }
 
@@ -515,21 +444,11 @@ static dispatch_once_t onceToken = 0;
 - (void)setTrackingEnabled:(BOOL)trackingEnabled
 {
     _trackingEnabled = trackingEnabled;
-    _automaticTrackingEnabled = trackingEnabled;
-    _installTrackingEnabled = trackingEnabled;
-    _launchTrackingEnabled = trackingEnabled;
-    _retentionTrackingEnabled = trackingEnabled;
-    _paymentTrackingEnabled = trackingEnabled;
     if(trackingEnabled){
         [TikTokPaymentObserver startObservingTransactions];
     } else {
         [TikTokPaymentObserver stopObservingTransactions];
     }
-}
-
-- (void)setUserTrackingEnabled:(BOOL)userTrackingEnabled
-{
-    _userTrackingEnabled = userTrackingEnabled;
 }
 
 - (void)setCustomUserAgent:(NSString *)customUserAgent
