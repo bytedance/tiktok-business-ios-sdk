@@ -331,10 +331,6 @@ static dispatch_once_t onceToken = 0;
     if(self.userAgentCollectionEnabled) {
         [self loadUserAgent];
     }
-    
-    if(self.SKAdNetworkSupportEnabled) {
-        [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
-    }
 
     self.requestHandler = [[TikTokRequestHandler alloc] init];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
@@ -359,6 +355,10 @@ static dispatch_once_t onceToken = 0;
                     // Launched Before: False
                     if(!launchedBefore && self.installTrackingEnabled) {
                         [self trackEvent:@"InstallApp"];
+                        // SKAdNetwork Support for Install Tracking (works on iOS 14.0+)
+                        if(self.SKAdNetworkSupportEnabled) {
+                            [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
+                        }
                         [self trackEvent:@"LaunchApp"];
                         NSDate *currentLaunch = [NSDate date];
                         [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];

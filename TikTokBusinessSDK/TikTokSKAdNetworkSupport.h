@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
  * but this value can be changed using setSKAdNetworkCalloutMaxTimeSinceInstall()
  * through TikTokBusiness
 */
-@property (nonatomic, assign, readwrite) NSTimeInterval maxTimeSinceInstall;
-
 + (TikTokSKAdNetworkSupport *)sharedInstance;
 - (void)registerAppForAdNetworkAttribution;
 
