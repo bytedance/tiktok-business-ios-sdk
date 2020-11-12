@@ -1,9 +1,8 @@
 //
-//  TikTokBusiness.m
-//  TikTokBusinessSDK
+// Copyright (c) 2020. Bytedance Inc.
 //
-//  Created by Aditya Khandelwal on 9/8/20.
-//  Copyright © 2020 bytedance. All rights reserved.
+// This source code is licensed under the MIT license found in
+// the LICENSE file in the root directory of this source tree.
 //
 
 /**
@@ -333,15 +332,18 @@ static dispatch_once_t onceToken = 0;
                 [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
             }
             
-            NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-            [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-            [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+            // Remove this later, based on where modal needs to be called to start tracking
+            // This will be needed to be called before we can call a function to get IDFA
+            if(!self.appTrackingDialogSuppressed) {
+                [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
+            }
         } else {
-            [self.logger info:@"Remote switch is off"];
-            [self.queue.flushTimer invalidate];
-            [self.queue.logTimer invalidate];
-            self.queue.timeInSecondsUntilFlush = 0;
+            [self.logger info:@"Tracking has not been enabled by the developer!"];
         }
+        
+        NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+        [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }];
 
 }
