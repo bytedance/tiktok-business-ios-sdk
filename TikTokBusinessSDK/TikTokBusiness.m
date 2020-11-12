@@ -253,7 +253,7 @@ static dispatch_once_t onceToken = 0;
         
     [self loadUserAgent];
 
-    self.requestHandler = [[TikTokRequestHandler alloc] init];
+    self.requestHandler = [TikTokFactory getRequestHandler];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
     [self.requestHandler getRemoteSwitch:tiktokConfig withCompletionHandler:^(BOOL isRemoteSwitchOn) {
