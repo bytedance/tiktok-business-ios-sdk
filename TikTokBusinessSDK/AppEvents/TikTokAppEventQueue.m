@@ -72,7 +72,7 @@
 - (void)addEvent:(TikTokAppEvent *)event
 {
     if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
-        [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no event added"];
+        [self.logger verbose:@"[TikTokAppEventQueue] Remote switch is off, no event added"];
         return;
     }
     [self.eventQueue addObject:event];
@@ -86,7 +86,7 @@
 - (void)flush:(TikTokAppEventsFlushReason)flushReason
 {
     if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
-        [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
+        [self.logger verbose:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
         return;
     }
     

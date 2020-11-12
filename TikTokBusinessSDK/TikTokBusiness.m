@@ -258,60 +258,64 @@ static dispatch_once_t onceToken = 0;
     
     [self.requestHandler getRemoteSwitch:tiktokConfig withCompletionHandler:^(BOOL isRemoteSwitchOn) {
         self.isRemoteSwitchOn = isRemoteSwitchOn;
-        if(self.isRemoteSwitchOn) {
-            [self.logger info:@"Remote switch is on"];
-            [self.logger info:@"TikTok SDK Initialized Successfully!"];
-            
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
-            NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
-            
-            // Enabled: Tracking, Auto Tracking, Install Tracking
-            // Launched Before: False
-            if(self.automaticTrackingEnabled && !launchedBefore && self.installTrackingEnabled){
-                [self trackEvent:@"InstallApp"];
-                // SKAdNetwork Support for Install Tracking (works on iOS 14.0+)
-                if(self.SKAdNetworkSupportEnabled) {
-                    [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
-                }
-                if(self.launchTrackingEnabled) {
-                    [self trackEvent:@"LaunchApp"];
-                }
-                NSDate *currentLaunch = [NSDate date];
-                [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
-                [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
-                [defaults synchronize];
+        
+        if(!self.isRemoteSwitchOn) {
+            [self.logger info:@"Remote switch is off"];
+            [self.queue.flushTimer invalidate];
+            [self.queue.logTimer invalidate];
+            self.queue.timeInSecondsUntilFlush = 0;
+            return;
+        }
+        
+        [self.logger info:@"Remote switch is on"];
+        [self.logger info:@"TikTok SDK Initialized Successfully!"];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
+        NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
+        
+        // Enabled: Tracking, Auto Tracking, Install Tracking
+        // Launched Before: False
+        if(self.automaticTrackingEnabled && !launchedBefore && self.installTrackingEnabled){
+            [self trackEvent:@"InstallApp"];
+            // SKAdNetwork Support for Install Tracking (works on iOS 14.0+)
+            if(self.SKAdNetworkSupportEnabled) {
+                [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
             }
-            
-            // Enabled: Tracking, Auto Tracking, Launch Logging
-            // Launched Before: True
-            if(self.automaticTrackingEnabled && launchedBefore && self.launchTrackingEnabled){
+            if(self.launchTrackingEnabled) {
                 [self trackEvent:@"LaunchApp"];
             }
-            
-            // Enabled: Auto Tracking, 2DRetention Tracking
-            // Install Date: Available
-            // 2D Limit has not been passed
-            if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled){
-                [self track2DRetention];
-            }
-            
-            if(self.automaticTrackingEnabled && self.paymentTrackingEnabled){
-                [TikTokPaymentObserver startObservingTransactions];
-            }
-            
-            if(!self.automaticTrackingEnabled){
-                [TikTokPaymentObserver stopObservingTransactions];
-            }
-            
-            // Remove this later, based on where modal needs to be called to start tracking
-            // This will be needed to be called before we can call a function to get IDFA
-            if(!self.appTrackingDialogSuppressed) {
-                [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
-            }
-            
-        } else {
-            [self.logger info:@"Remote Switch is not currently ON!"];
+            NSDate *currentLaunch = [NSDate date];
+            [defaults setBool:YES forKey:@"tiktokLaunchedBefore"];
+            [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
+            [defaults synchronize];
+        }
+        
+        // Enabled: Tracking, Auto Tracking, Launch Logging
+        // Launched Before: True
+        if(self.automaticTrackingEnabled && launchedBefore && self.launchTrackingEnabled){
+            [self trackEvent:@"LaunchApp"];
+        }
+        
+        // Enabled: Auto Tracking, 2DRetention Tracking
+        // Install Date: Available
+        // 2D Limit has not been passed
+        if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled){
+            [self track2DRetention];
+        }
+        
+        if(self.automaticTrackingEnabled && self.paymentTrackingEnabled){
+            [TikTokPaymentObserver startObservingTransactions];
+        }
+        
+        if(!self.automaticTrackingEnabled){
+            [TikTokPaymentObserver stopObservingTransactions];
+        }
+        
+        // Remove this later, based on where modal needs to be called to start tracking
+        // This will be needed to be called before we can call a function to get IDFA
+        if(!self.appTrackingDialogSuppressed) {
+            [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
         }
         
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
