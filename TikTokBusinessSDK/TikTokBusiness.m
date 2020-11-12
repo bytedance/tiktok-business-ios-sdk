@@ -235,7 +235,7 @@ static dispatch_once_t onceToken = 0;
 
 - (void)initializeSdk:(TikTokConfig *)tiktokConfig
 {
-    if(self.queue != nil){
+    if(self.queue != nil) {
         [self.logger warn:@"TikTok SDK has been initialized already!"];
         return;
     }
@@ -250,9 +250,7 @@ static dispatch_once_t onceToken = 0;
     self.appTrackingDialogSuppressed = tiktokConfig.appTrackingDialogSuppressed;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
     self.accessToken = tiktokConfig.accessToken;
-    
-    NSLog(self.trackingEnabled ? @"Yes" : @"No");
-    
+        
     [self loadUserAgent];
 
     self.requestHandler = [[TikTokRequestHandler alloc] init];
@@ -281,7 +279,7 @@ static dispatch_once_t onceToken = 0;
                     if(self.SKAdNetworkSupportEnabled) {
                         [[TikTokSKAdNetworkSupport sharedInstance] registerAppForAdNetworkAttribution];
                     }
-                    if(self.launchTrackingEnabled){
+                    if(self.launchTrackingEnabled) {
                         [self trackEvent:@"LaunchApp"];
                     }
                     NSDate *currentLaunch = [NSDate date];
@@ -301,7 +299,7 @@ static dispatch_once_t onceToken = 0;
                 // Install Date: Available
                 // 2D Limit has not been passed
                 if(installDate && self.retentionTrackingEnabled) {
-                    if(!past2DLimit){
+                    if(!past2DLimit) {
                         NSDate *currentLaunch = [NSDate date];
                         NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
                         NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
@@ -312,14 +310,14 @@ static dispatch_once_t onceToken = 0;
                             [defaults synchronize];
                         }
                         
-                        if (numberOfDays > 2){
+                        if (numberOfDays > 2) {
                             [defaults setBool:YES forKey:@"tiktokPast2DLimit"];
                             [defaults synchronize];
                         }
                     }
                 }
                 
-                if(self.paymentTrackingEnabled){
+                if(self.paymentTrackingEnabled) {
                     [TikTokPaymentObserver startObservingTransactions];
                 }
             } else {
@@ -352,7 +350,7 @@ static dispatch_once_t onceToken = 0;
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName];
     [self.queue addEvent:appEvent];
-    if([eventName isEqualToString:@"Purchase"]){
+    if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
     }
 }
@@ -362,7 +360,7 @@ static dispatch_once_t onceToken = 0;
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
     [self.queue addEvent:appEvent];
-    if([eventName isEqualToString:@"Purchase"]){
+    if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
     }
 }
@@ -386,7 +384,7 @@ static dispatch_once_t onceToken = 0;
     NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
     
     if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled && !past2DLimit) {
-        if(!past2DLimit){
+        if(!past2DLimit) {
             NSDate *currentLaunch = [NSDate date];
             NSDate *oneDayAgo = [currentLaunch dateByAddingTimeInterval:-1 * 24 * 60 * 60];
             NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
@@ -398,7 +396,7 @@ static dispatch_once_t onceToken = 0;
                 [defaults synchronize];
             }
             
-            if (numberOfDays > 2){
+            if (numberOfDays > 2) {
                 [defaults setBool:YES forKey:@"tiktokPast2DLimit"];
                 [defaults synchronize];
             }
@@ -443,7 +441,7 @@ static dispatch_once_t onceToken = 0;
 - (void)setTrackingEnabled:(BOOL)trackingEnabled
 {
     _trackingEnabled = trackingEnabled;
-    if(trackingEnabled){
+    if(trackingEnabled) {
         [TikTokPaymentObserver startObservingTransactions];
     } else {
         [TikTokPaymentObserver stopObservingTransactions];

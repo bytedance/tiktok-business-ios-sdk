@@ -134,7 +134,6 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"response\": \"SUCCESS\"\n}"
         /* UNCOMMENT THIS LINE */
-        TikTokBusiness.setCustomUserAgent("HAHAHAH")
         TikTokBusiness.trackEvent(eventTitle, withProperties: finalPayloadDictionary as! [AnyHashable : Any])
         
         /* Print statements used for debugging */
