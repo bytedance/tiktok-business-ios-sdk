@@ -35,7 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         */
         
         /* ADD LINE HERE */
-        config?.setLogLevel(TikTokLogLevelVerbose)
 //        config?.disableTracking()
 //        config?.disableAutomaticTracking()
         TikTokBusiness.initializeSdk(config)
