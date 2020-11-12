@@ -424,6 +424,9 @@ static dispatch_once_t onceToken = 0;
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName];
     [self.queue addEvent:appEvent];
+    if([eventName isEqualToString:@"Purchase"]){
+        [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+    }
 }
 
 - (void)trackEvent:(NSString *)eventName
@@ -431,19 +434,9 @@ static dispatch_once_t onceToken = 0;
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
     [self.queue addEvent:appEvent];
-}
-
-- (void)trackPurchase:(NSString *)eventName
-{
-    [self trackEvent:eventName];
-    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
-}
-
-- (void)trackPurchase:(NSString *)eventName
-       withProperties: (NSDictionary *)properties
-{
-    [self trackEvent:eventName withProperties:properties];
-    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+    if([eventName isEqualToString:@"Purchase"]){
+        [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+    }
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification

@@ -63,32 +63,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
 
 /**
- * @brief This method should be called whenever a purchase needs to be tracked
- *
- * @note See TikTokAppEvent.h for more event options.
- *
- * @param eventName This parameter should be a string object. You can find the list of
- *                  supported purchase events in the documentation.
- *                  Custom purchase events can be tracked by simply passing in custom names.
-*/
-+ (void)trackPurchase: (NSString *)eventName;
-
-/**
- * @brief This method should be called whenever a purchase needs to be tracked
- *
- * @note See TikTokAppEvent.h for more event options.
- *
- * @param eventName This parameter should be a string object. You can find the list of
- *                  supported purchase events in the documentation.
- *                  Custom purchase events can be tracked by simply passing in custom names.
- * @param properties This parameter should be a dictionary. For supported purchase events,
- *                       the parameters passed should be formatted according to the
- *                       structure provided in the documentation. For custom purchase events,
- *                       you can pass in custom properties
-*/
-+ (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
-
-/**
  * @brief Use this method to enable or disable event tracking. Tracked events will still be cached locally until tracking is enabled again
 */
 + (void)setTrackingEnabled: (BOOL)enabled;
@@ -192,8 +166,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
-- (void)trackPurchase: (NSString *)eventName;
-- (void)trackPurchase: (NSString *)eventName withProperties: (NSDictionary *)properties;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
 - (BOOL)appInForeground;

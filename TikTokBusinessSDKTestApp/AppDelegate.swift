@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         let config = TikTokConfig.init(accessToken: Bundle.main.object(forInfoDictionaryKey: "TikTokAccessToken") as! String, appID: "com.shopee.my")
         
-        /* UNCOMMENT TO DISABLE OPTIONS BEFORE INITIALIZING SDK
+        /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
         config?.disableTracking()                       // Disable All Tracking
         config?.disableAutomaticTracking()              // Disable All Automatic Tracking
@@ -36,23 +36,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         */
         
-        /*
-        
-
-        
-        */
-        
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
-
+        
         /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
  
         TikTokBusiness.setTrackingEnabled(/* value */)
-        TikTokBusiness.setAutomaticTrackingEnabled(/* value */)
-        TikTokBusiness.setRetentionTrackingEnabled(/* value */)
-        TikTokBusiness.setPaymentTrackingEnabled(/* value */)
         TikTokBusiness.setAppTrackingDialog(/* value */)
         TikTokBusiness.setSKAdNetworkSupport(/* value */)
+        TikTokBusiness.setCustomUserAgent("THIS IS A CUSTOM USER AGENT")
         
         */
         
