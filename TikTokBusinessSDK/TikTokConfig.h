@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 
-+ (nullable TikTokConfig *)configWithAccessToken:(nonnull NSString *)accessToken
-                                           appID:(nonnull NSString *)appID;
++ (nullable TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken
+                                           appID:(nullable NSString *)appID;
 
 - (void)disableTracking;
 - (void)disableAutomaticTracking;
@@ -39,8 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setCustomUserAgent:(NSString *)customUserAgent;
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
 
-- (nullable id)initWithAccessToken:(nonnull NSString *)accessToken
-                             appID:(nonnull NSString *)appID;
+- (nullable id)initWithAccessToken:(nullable NSString *)accessToken
+                             appID:(nullable NSString *)appID;
 
 @end
 

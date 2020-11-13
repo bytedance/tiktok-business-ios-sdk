@@ -20,7 +20,7 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appID:(NSString *)appID
++ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
 {
     return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID];
 }
@@ -85,7 +85,7 @@
     [self.logger setLogLevel:logLevel];
 }
 
-- (id)initWithAccessToken:(NSString *)accessToken appID:(NSString *)appID
+- (id)initWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
 {
     self = [super init];
     

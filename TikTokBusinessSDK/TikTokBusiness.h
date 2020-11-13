@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
+@property (nonatomic) NSString *accessToken;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
