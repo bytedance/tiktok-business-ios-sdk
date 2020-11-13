@@ -459,7 +459,7 @@ static dispatch_once_t onceToken = 0;
     });
 }
 
-- (void) requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
+- (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {
     [UIDevice.currentDevice requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status)
     {

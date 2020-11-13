@@ -12,6 +12,7 @@
 #import <net/if.h>
 #import <AdSupport/ASIdentifierManager.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import "TikTokFactory.h"
 
 #define IOS_CELLULAR    @"pdp_ip0"
 #define IOS_WIFI        @"en0"
@@ -24,12 +25,17 @@
 
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
 {
+    NSString *trackingDesc = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSUserTrackingUsageDescription"];
     if (@available(iOS 14, *)) {
-        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-            if(completion) {
-                completion(status);
-            }
-        }];
+        if (trackingDesc) {
+            [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+                if(completion) {
+                    completion(status);
+                }
+            }];
+        } else {
+            [[TikTokFactory getLogger] warn:@"Please set NSUserTrackingUsageDescription in Property List before calling App Tracking Dialog"];
+        }
     } else {
         // Fallback on earlier versions
     }
