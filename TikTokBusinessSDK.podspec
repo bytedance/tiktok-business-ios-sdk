@@ -15,10 +15,10 @@ Pod::Spec.new do |s|
 The TikTok Business SDK is the easiest way to log events (e.g. app install, purchase) in your mobile application and send these events to TikTok for targeting, measurement, conversion optimization, etc.
                        DESC
 
-  s.homepage         = 'https://github.com/bytedance'
+  s.homepage         = 'https://ads.tiktok.com/marketing_api/docs?rid=rscv11ob9m9&id=1683138352999426'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = 'ByteDance'
-  s.source           = { :git => 'https://github.com/bytedance/TikTokBusinessSDK.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/bytedance/tiktok-business-ios-sdk.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '12.0'
 
