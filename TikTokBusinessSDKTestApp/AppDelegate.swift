@@ -35,9 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         */
         
         /* ADD LINE HERE */
-//        config?.disableTracking()
-//        config?.disableAutomaticTracking()
         TikTokBusiness.initializeSdk(config)
+        
         /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
  
         TikTokBusiness.setTrackingEnabled(/* value */)
