@@ -17,7 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        let config = TikTokConfig.init(accessToken: "YOUR_ACCESS_TOKEN", appID: "YOUR_APP_ID")
+        
+        /* POPULATE WITH ACCESS TOKEN AND APPLICATION ID IN CONFIG */
+        let config = TikTokConfig.init(accessToken: nil, appID: nil)
 
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         

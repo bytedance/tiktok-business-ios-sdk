@@ -86,7 +86,17 @@
 - (void)flush:(TikTokAppEventsFlushReason)flushReason
 {
     if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
-        [self.logger verbose:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
+        [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
+        return;
+    }
+    
+    if([[TikTokBusiness getInstance] accessToken] == nil) {
+        [self.logger info:@"[TikTokAppEventQueue] Skip flushing because access token is null"];
+        return;
+    }
+    
+    if(self.config.appID == nil) {
+        [self.logger info:@"[TikTokAppEventQueue] Skip flushing because application ID is null"];
         return;
     }
     
