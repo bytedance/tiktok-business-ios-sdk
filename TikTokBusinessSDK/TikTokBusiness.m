@@ -289,7 +289,6 @@ static dispatch_once_t onceToken = 0;
         }
         
         // Enabled: Tracking, Auto Tracking, Launch Logging
-        // Launched Before: True
         if(self.automaticTrackingEnabled && self.launchTrackingEnabled){
             [self trackEvent:@"LaunchApp"];
         }
