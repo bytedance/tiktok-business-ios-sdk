@@ -34,7 +34,7 @@
                 }
             }];
         } else {
-            [[TikTokFactory getLogger] info:@"Please set NSUserTrackingUsageDescription in Property List before calling App Tracking Dialog"];
+            [[TikTokFactory getLogger] warn:@"Please set NSUserTrackingUsageDescription in Property List before calling App Tracking Dialog"];
         }
     } else {
         // Fallback on earlier versions
