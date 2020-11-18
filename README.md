@@ -1,6 +1,6 @@
 # TikTok Business Mobile SDK for Reporting App Events
 
-** For details including integration instructions, see the [TikTok Business Mobile SDK Documentation](https://ads.tiktok.com/marketing_api/docs?rid=rscv11ob9m9&id=1683138352999426). **
+** For details including integration instructions, see the [TikTok Business Mobile SDK Documentation](https://ads.tiktok.com/marketing_api/docs?rid=rscv11ob9m9&id=1683661413969921). **
 
 
 ## Objective
@@ -38,4 +38,4 @@ The TikTok business SDK takes the automatically/manually logged events, and repo
    * We may use this app event data for subsequent retargeting and dynamic product ads like we do with app event data forwarded from measurement partners.
    * In the near future, we will introduce our own attribution solutions and input into our optimization models based on these app events.
 
-** For details including integration instructions, see the [TikTok Business Mobile SDK Documentation](https://ads.tiktok.com/marketing_api/docs?rid=rscv11ob9m9&id=1683138352999426). **
+** For details including integration instructions, see the [TikTok Business Mobile SDK Documentation](https://ads.tiktok.com/marketing_api/docs?rid=rscv11ob9m9&id=1683661413969921). **
