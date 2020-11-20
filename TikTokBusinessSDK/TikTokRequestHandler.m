@@ -15,7 +15,7 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
-#define SDK_VERSION @"iOS1.0.0"
+#define SDK_VERSION @"iOS0.1.4"
 
 @interface TikTokRequestHandler()
 
@@ -39,7 +39,7 @@
 }
 
 - (void)getRemoteSwitch:(TikTokConfig *)config
-  withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn))completionHandler
+  withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -56,12 +56,13 @@
     }
     [[self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         BOOL isSwitchOn = nil;
+        BOOL isGlobalConfigFetched = NO;
         // handle basic connectivity issues
         if(error) {
             [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
             // leave switch to on if error on request
             isSwitchOn = YES;
-            completionHandler(isSwitchOn);
+            completionHandler(isSwitchOn, isGlobalConfigFetched);
             return;
         }
         
@@ -73,7 +74,7 @@
                 [self.logger error:@"[TikTokRequestHandler] HTTP error status code: %lu", statusCode];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
-                completionHandler(isSwitchOn);
+                completionHandler(isSwitchOn, isGlobalConfigFetched);
                 return;
             }
             
@@ -89,7 +90,7 @@
                 [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 // leave switch to on if error on request
                 isSwitchOn = YES;
-                completionHandler(isSwitchOn);
+                completionHandler(isSwitchOn, isGlobalConfigFetched);
                 return;
             }
             NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
@@ -99,11 +100,15 @@
             if(apiVersion != nil) {
                 self.apiVersion = apiVersion;
             }
+            isGlobalConfigFetched = YES;
+            NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+            [self.logger verbose:@"[TikTokRequestHandler] Request global config response: %@", requestResponse];
         }
 
-        completionHandler(isSwitchOn);
+        completionHandler(isSwitchOn, isGlobalConfigFetched);
     }] resume];
 }
+
 - (void)sendBatchRequest:(NSArray *)eventsToBeFlushed
               withConfig:(TikTokConfig *)config
 {
