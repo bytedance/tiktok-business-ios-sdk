@@ -90,16 +90,6 @@
         return;
     }
     
-    if([[TikTokBusiness getInstance] accessToken] == nil) {
-        [self.logger info:@"[TikTokAppEventQueue] Skip flushing because access token is null"];
-        return;
-    }
-    
-    if(self.config.appID == nil) {
-        [self.logger info:@"[TikTokAppEventQueue] Skip flushing because application ID is null"];
-        return;
-    }
-    
     @try {
         @synchronized (self) {
             [self.logger info:@"[TikTokAppEventQueue] Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count];
@@ -128,7 +118,7 @@
     @try {
         [self.logger info:@"[TikTokAppEventQueue] Total number events to be flushed: %lu", eventsToBeFlushed.count];
         if(eventsToBeFlushed.count > 0) {
-            if([[TikTokBusiness getInstance] isTrackingEnabled]) {
+            if([[TikTokBusiness getInstance] isTrackingEnabled] && [[TikTokBusiness getInstance] accessToken] != nil && self.config.appID != nil) {
                 // chunk eventsToBeFlushed into subarrays of API_LIMIT length or less and send requests for each
                 NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
                 NSUInteger eventsRemaining = eventsToBeFlushed.count;
@@ -148,6 +138,12 @@
             } else {
                 [TikTokAppEventStore persistAppEvents:eventsToBeFlushed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
+                if([[TikTokBusiness getInstance] accessToken] == nil) {
+                    [self.logger info:@"[TikTokAppEventQueue] Request not sent because access token is null"];
+                }
+                if(self.config.appID == nil) {
+                    [self.logger info:@"[TikTokAppEventQueue] Request not sent because application ID is null"];
+                }
             }
         }
         [self.logger info:@"[TikTokAppEventQueue] End flush, current queue count: %lu", self.eventQueue.count];
