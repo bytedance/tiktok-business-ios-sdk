@@ -11,7 +11,7 @@
 
 + (NSString *)getCurrentTimestampInISO8601
 {
-    NSTimeZone *timeZone = [NSTimeZone defaultTimeZone];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeZone:timeZone];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
