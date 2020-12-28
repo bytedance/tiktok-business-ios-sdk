@@ -36,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         */
         /* ADD LINE HERE */
-        config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
         TikTokBusiness.initializeSdk(config)
         
         /* UNCOMMENT TO CUSTOMIZE AFTER INITIALIZING SDK
