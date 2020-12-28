@@ -33,9 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config?.disableSKAdNetworkSupport()                 // Disable SKAdNetwork Support
         config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
         config?.setCustomUserAgent("CUSTOM USER AGENT")     // Set Custom User Agent Collection
-        
+
         */
-        
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
         

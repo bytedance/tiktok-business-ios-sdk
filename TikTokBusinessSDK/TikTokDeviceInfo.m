@@ -123,9 +123,18 @@ static NSString* appNameAndVersion()
     return [NSString stringWithFormat:@"%@/%@", appName, appVersion];
 }
 
+static NSString* phoneResolution()
+{
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenBounds.size.width;
+    CGFloat screenHeight = screenBounds.size.height;
+    NSString *resolution = [NSString stringWithFormat:@"Resolution/%d*%d", (int)screenWidth, (int)screenHeight];
+    return resolution;
+}
+
 - (NSString*)fallbackUserAgent
 {
-    return [NSString stringWithFormat:@"%@ %@ %@ %@ %@", appNameAndVersion(), deviceName(), deviceVersion(), CFNetworkVersion(), DarwinVersion()];
+    return [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@", appNameAndVersion(), deviceName(), deviceVersion(), CFNetworkVersion(), DarwinVersion(), phoneResolution()];
 }
 
 @end
