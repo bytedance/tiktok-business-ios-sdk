@@ -5,11 +5,6 @@
 // the LICENSE file in the root directory of this source tree.
 //
 
-//#import <CoreTelephony/CoreTelephonyDefines.h>
-#import<CoreTelephony/CTCallCenter.h>
-#import<CoreTelephony/CTCall.h>
-#import<CoreTelephony/CTCarrier.h>
-#import<CoreTelephony/CTTelephonyNetworkInfo.h>
 #import "TikTokDeviceInfo.h"
 #import <sys/utsname.h>
 #import <AdSupport/ASIdentifierManager.h>
@@ -135,56 +130,6 @@ static NSString* phoneResolution()
     CGFloat screenHeight = screenBounds.size.height;
     NSString *resolution = [NSString stringWithFormat:@"Resolution/%d*%d", (int)screenWidth, (int)screenHeight];
     return resolution;
-}
-
-static NSString* networkType()
-{
-    Reachabii
-//    Reachabil
-    Reachability *reachability = [Reachability reachabilityForInternetConnection];
-
-        [reachability startNotifier];
-
-        NetworkStatus status = [reachability currentReachabilityStatus];
-
-        if(status == NotReachable)
-        {
-            //No internet
-        }
-        else if (status == ReachableViaWiFi)
-        {
-            //WiFi
-        }
-        else if (status == ReachableViaWWAN)
-        {
-            CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-            NSString * carrierType = netinfo.currentRadioAccessTechnology;
-            if ([carrierType isEqualToString:CTRadioAccessTechnologyGPRS]) {
-    //             @"2G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyEdge]) {
-    //             @"2G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyWCDMA]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyHSDPA]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyHSUPA]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
-    //             @"2G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyeHRPD]) {
-    //             @"3G";
-            } else if ([carrierType isEqualToString:CTRadioAccessTechnologyLTE]) {
-    //             @"4G";
-            }
-
-        }
-    share  improve this answer  follow
 }
 
 - (NSString*)fallbackUserAgent
