@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         /* POPULATE WITH ACCESS TOKEN AND APPLICATION ID IN CONFIG */
-        let config = TikTokConfig.init(accessToken: nil, appID: nil)
+        let config = TikTokConfig.init(accessToken: "nil", appID: "nil")
 
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config?.setCustomUserAgent("CUSTOM USER AGENT")     // Set Custom User Agent Collection
         
         */
-        
+        config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
         /* ADD LINE HERE */
         TikTokBusiness.initializeSdk(config)
         

@@ -132,7 +132,7 @@
         @"device": device,
         @"locale": deviceInfo.localeInfo,
         @"ip": deviceInfo.ipInfo,
-        @"user_agent":( [deviceInfo getUserAgent] != nil) ? [deviceInfo getUserAgent] : [deviceInfo fallbackUserAgent],
+        @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
     };
     
     // format events into object[]
