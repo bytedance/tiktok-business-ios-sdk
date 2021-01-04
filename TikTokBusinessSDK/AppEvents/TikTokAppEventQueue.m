@@ -45,19 +45,28 @@
     self.eventQueue = [NSMutableArray array];
     
     __weak TikTokAppEventQueue *weakSelf = self;
-    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *timer) {
-        [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-    }];
     
-    self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
+    if(@available(iOS 10, *)){
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *timer) {
+            [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+        }];
         
-        NSDate *fireDate = [self.flushTimer fireDate];
-        NSDate *nowDate = [NSDate date];
-        self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
+            
+            NSDate *fireDate = [self.flushTimer fireDate];
+            NSDate *nowDate = [NSDate date];
+            self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+        }];
+    } else {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
-    }];
+        // TIMER LOGIC GOES IN HERE. DISCUSS WITH CHRIS
+//        self.flushTimer = [NSTimer timerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self.flushTimer selector:@selector(flush:) userInfo:nil repeats:YES];
+//        self.logTimer = [NSTimer timerWithTimeInterval:1 target:self.logTimer selector:<#(nonnull SEL)#> userInfo:<#(nullable id)#> repeats:<#(BOOL)#>]
+    }
     
+
     self.config = config;
     
     self.logger = [TikTokFactory getLogger];
