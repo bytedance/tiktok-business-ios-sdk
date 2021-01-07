@@ -45,19 +45,26 @@
     self.eventQueue = [NSMutableArray array];
     
     __weak TikTokAppEventQueue *weakSelf = self;
-    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *timer) {
-        [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-    }];
     
-    self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
+    if(@available(iOS 10, *)){
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *timer) {
+            [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+        }];
         
-        NSDate *fireDate = [self.flushTimer fireDate];
-        NSDate *nowDate = [NSDate date];
-        self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
-    }];
+        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
+            
+            NSDate *fireDate = [self.flushTimer fireDate];
+            NSDate *nowDate = [NSDate date];
+            self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+        }];
+    } else {
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
+        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleLogTimerUpdate:) userInfo:nil repeats:YES];
+    }
     
+
     self.config = config;
     
     self.logger = [TikTokFactory getLogger];
@@ -67,6 +74,23 @@
     [self calculateAndSetRemainingEventThreshold];
 
     return self;
+}
+
+// function used for pre iOS 10, since selector takes timer as an argument
+- (void)handleFlushTimerUpdate:(NSTimer*)timer
+{
+    __weak TikTokAppEventQueue *weakSelf = self;
+    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+}
+
+// function used for pre iOS 10, since selector takes timer as an argument
+- (void)handleLogTimerUpdate:(NSTimer*)timer
+{
+    NSDate *fireDate = [self.flushTimer fireDate];
+    NSDate *nowDate = [NSDate date];
+    self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
 }
 
 - (void)addEvent:(TikTokAppEvent *)event
