@@ -45,7 +45,7 @@
 }
 
 - (void)testPersistAppEventsFunction {
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchAPP"];
     
     NSArray *events = [NSArray array];
     events = [events arrayByAddingObject:event];
@@ -70,7 +70,7 @@
 }
 
 - (void)testRetrieveAppEventsFunction {
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchAPP"];
     
     NSArray *events = [NSArray array];
     events = [events arrayByAddingObject:event];

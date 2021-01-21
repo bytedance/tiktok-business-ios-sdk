@@ -14,9 +14,9 @@ class FormViewController: UIViewController {
     var eventToField =
         [
             "CustomEvent": [],
-            "LaunchApp": [],
+            "LaunchAPP": [],
             "InstallApp": [],
-            "2DRetention": [],
+            "2Dretention": [],
             "AddPaymentInfo": ["app_id", "idfa", "attribution"],
             "AddToCart": ["content_type", "sku_id", "description", "currency", "value"],
             "AddToWishList": ["page_type", "content_id", "description", "currency", "value"],

@@ -273,7 +273,7 @@ static dispatch_once_t onceToken = 0;
         NSTimeInterval secondsBetween = [currentLaunch timeIntervalSinceDate:installDate];
         int numberOfDays = secondsBetween / 86400;
         if ([[NSCalendar currentCalendar] isDate:oneDayAgo inSameDayAsDate:installDate] && !logged2DRetention) {
-            [self trackEvent:@"2DRetention"];
+            [self trackEvent:@"2Dretention"];
             [defaults setBool:YES forKey:@"tiktokLogged2DRetention"];
             [defaults synchronize];
         }
@@ -430,7 +430,7 @@ static dispatch_once_t onceToken = 0;
             
             // Enabled: Tracking, Auto Tracking, Launch Logging
             if(self.automaticTrackingEnabled && self.launchTrackingEnabled){
-                [self trackEvent:@"LaunchApp"];
+                [self trackEvent:@"LaunchAPP"];
             }
             
             // Enabled: Auto Tracking, 2DRetention Tracking

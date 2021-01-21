@@ -15,7 +15,7 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 
-#define SDK_VERSION @"iOS0.1.4"
+#define SDK_VERSION @"iOS0.1.7"
 
 @interface TikTokRequestHandler()
 
