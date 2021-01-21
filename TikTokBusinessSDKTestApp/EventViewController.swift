@@ -19,14 +19,14 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var eventPickerView = UIPickerView()
     
-    let events = ["CustomEvent", "LaunchApp", "InstallApp", "2DRetention", "AddPaymentInfo", "AddToCart", "AddToWishList", "Checkout", "CompleteTutorial", "ViewContent", "CreateGroup", "CreateRole", "GenerateLead", "InAppAdClick", "InAppAdImpr", "JoinGroup", "AchieveLevel", "LoanApplication", "LoanApproval", "LoanDisbursal", "Login", "Purchase", "Rate", "Registration", "Search", "SpendCredits", "StartTrial", "Subscribe", "Share", "Contact", "UnlockAchievement"]
+    let events = ["CustomEvent", "LaunchAPP", "InstallApp", "2Dretention", "AddPaymentInfo", "AddToCart", "AddToWishList", "Checkout", "CompleteTutorial", "ViewContent", "CreateGroup", "CreateRole", "GenerateLead", "InAppAdClick", "InAppAdImpr", "JoinGroup", "AchieveLevel", "LoanApplication", "LoanApproval", "LoanDisbursal", "Login", "Purchase", "Rate", "Registration", "Search", "SpendCredits", "StartTrial", "Subscribe", "Share", "Contact", "UnlockAchievement"]
     
     var eventToField =
         [
             "CustomEvent": [],
-            "LaunchApp": [],
+            "LaunchAPP": [],
             "InstallApp": [],
-            "2DRetention": [],
+            "2Dretention": [],
             "AddPaymentInfo": ["app_id", "idfa", "attribution"],
             "AddToCart": ["content_type", "sku_id", "description", "currency", "value"],
             "AddToWishList": ["page_type", "content_id", "description", "currency", "value"],
@@ -56,7 +56,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
             "UnlockAchievement": ["description", "achievement_type"]
     ]
     
-    var titleForForm = "LaunchApp"
+    var titleForForm = "LaunchAPP"
     var payload = "{\n\n}"
     var eventTitle = ""
     var tiktok: Any?
@@ -172,7 +172,7 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         for var num in 0...count - 1 {
             self.payload = ""
             let randomEvent = self.events.randomElement();
-            if(randomEvent == "LaunchApp" || randomEvent == "InstallApp") {
+            if(randomEvent == "LaunchAPP" || randomEvent == "InstallApp") {
                 num -= 1
             }
             self.payload = "{\n"

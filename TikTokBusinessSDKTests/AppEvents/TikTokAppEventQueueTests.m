@@ -51,7 +51,7 @@
 }
 
 - (void)testAddEvent {
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
+    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchAPP"];
     
     for (int i = 0; i < 99; i++)
     {
@@ -64,25 +64,6 @@
     
     // expect events to flush after 100 events added to queue
     OCMVerify([self.queue flush:TikTokAppEventsFlushReasonEventThreshold]);
-}
-
-- (void)testFlushOnMainQueue {
-
-    [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
-
-    // expect sendBatchRequest to not be called, since queue currently has no events
-    OCMVerify(never(), [self.queue.requestHandler sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
-
-
-    // add an event to queue
-    TikTokAppEvent *event = [[TikTokAppEvent alloc] initWithEventName:@"LaunchApp"];
-    [self.queue addEvent:event];
-
-    [self.queue flushOnMainQueue:self.queue.eventQueue forReason:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
-
-    // now expect sendBatchRequest to be called, since queue has an event
-    OCMVerify([self.queue.requestHandler sendBatchRequest:[OCMArg any] withConfig:[OCMArg any]]);
-
 }
 
 @end
