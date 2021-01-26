@@ -14,8 +14,9 @@
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
-#define SDK_VERSION @"iOS0.1.7"
+#define SDK_VERSION @"iOS0.1.8"
 
 @interface TikTokRequestHandler()
 
@@ -127,19 +128,43 @@
         @"idfv": deviceInfo.deviceVendorId,
     };
     
-    NSDictionary *context = @{
-        @"app": app,
-        @"device": device,
-        @"locale": deviceInfo.localeInfo,
-        @"ip": deviceInfo.ipInfo,
-        @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
-    };
-    
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
+        
+        NSMutableDictionary *user = [NSMutableDictionary new];
+        if(event.userInfo != nil) {
+            [user addEntriesFromDictionary:event.userInfo];
+        }
+        [user setObject:[[TikTokBusiness getInstance] anonymousID] forKey:@"anonymous_id"];
+        
+        // ATT Authorization Status switch
+        // default status is NOT_APPLICABLE
+        NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
+        if (@available(iOS 14, *)) {
+            if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+                attAuthorizationStatus = @"AUTHORIZED";
+            } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
+                attAuthorizationStatus = @"DENIED";
+            } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
+                attAuthorizationStatus = @"NOT_DETERMINED";
+            } else { // Restricted
+                attAuthorizationStatus = @"RESTRICTED";
+            }
+        }
+        
+        NSDictionary *context = @{
+            @"app": app,
+            @"att_authorization_status": attAuthorizationStatus,
+            @"device": device,
+            @"locale": deviceInfo.localeInfo,
+            @"ip": deviceInfo.ipInfo,
+            @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
+            @"user": user,
+        };
+        
         NSDictionary *eventDict = @{
-            @"type" : @"track",
+            @"type" : event.type,
             @"event": event.eventName,
             @"timestamp":event.timestamp,
             @"context": context,

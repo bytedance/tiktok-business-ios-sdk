@@ -7,6 +7,7 @@
 
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventUtility.h"
+#import "TikTokBusiness.h"
 
 #define TIKTOKSDK_EVENTNAME_KEY @"eventName"
 #define TIKTOKSDK_TIMESTAMP_KEY @"timestamp"
@@ -25,6 +26,17 @@
 }
 
 - (id)initWithEventName:(NSString *)eventName
+         withType: (NSString *)type
+{
+    if (self == nil) {
+        return nil;
+    }
+    
+    return [self initWithEventName:eventName withProperties:@{} withType:@"identify"];
+    
+}
+
+- (id)initWithEventName:(NSString *)eventName
          withProperties: (NSDictionary *)properties
 {
     self = [super init];
@@ -35,6 +47,26 @@
     self.eventName = eventName;
     self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
     self.properties = properties;
+    self.userInfo = [[TikTokBusiness getInstance] userInfo];
+    self.type = @"track"; // when type not defined, automatically assume it is track
+   
+    return self;
+}
+
+- (id)initWithEventName:(NSString *)eventName
+         withProperties: (NSDictionary *)properties
+               withType: (NSString *)type
+{
+    self = [super init];
+    if (self == nil) {
+        return nil;
+    }
+    
+    self.eventName = eventName;
+    self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
+    self.properties = properties;
+    self.userInfo = [[TikTokBusiness getInstance] userInfo];
+    self.type = type;
    
     return self;
 }
