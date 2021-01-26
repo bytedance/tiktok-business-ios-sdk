@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic) NSString *accessToken;
+@property (nonatomic) NSString *anonymousID;
+@property (nonatomic, nullable) NSDictionary *userInfo;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -71,6 +73,16 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Use this method to disable collection of User Agent automatically and set a custom User Agent
 */
 + (void)setCustomUserAgent: (NSString *)customUserAgent;
+
+/**
+ * @brief Use this method once user has logged in or registered
+*/
++ (void)identify:(NSDictionary *)userInfo;
+
+/**
+ * @brief Call this method when user has logged out
+*/
++ (void)logout;
 
 /**
  * @brief Use this method to update accessToken
@@ -166,8 +178,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
+- (void)trackEvent: (NSString *)eventName withType: (NSString *)type;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName withProperties: (NSDictionary *)properties;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName withType: (NSString *)type;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
+- (void)identify:(NSDictionary *)userInfo;
+- (void)logout;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
 - (BOOL)appIsInactive;

@@ -126,6 +126,17 @@ class MetricsViewController: UIViewController {
         }
     }
     
+    @IBAction func identify(_ sender: UIButton) {
+        let userInfo: NSDictionary = [
+            "name": "Test User"
+        ];
+        TikTokBusiness.identify(userInfo as! [AnyHashable : Any]);
+    }
+    
+    @IBAction func logout(_ sender: UIButton) {
+        TikTokBusiness.logout();
+    }
+    
     func randomText(from: Int, to: Int, justLowerCase: Bool = false) -> String {
         var text = ""
         let range = UInt32(to - from)

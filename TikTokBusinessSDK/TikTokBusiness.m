@@ -22,6 +22,7 @@
 #import "TikTokPaymentObserver.h"
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
+#import "TikTokIdentifyUtility.h"
 #import "TikTokUserAgentCollector.h"
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
@@ -156,6 +157,20 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)identify:(NSDictionary *)userInfo
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] identify:userInfo];
+    }
+}
+
++ (void)logout
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] logout];
+    }
+}
+
 + (BOOL)appInForeground
 {
     @synchronized (self) {
@@ -250,6 +265,9 @@ static dispatch_once_t onceToken = 0;
     self.appTrackingDialogSuppressed = tiktokConfig.appTrackingDialogSuppressed;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
     self.accessToken = tiktokConfig.accessToken;
+    NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    self.anonymousID = anonymousID;
+    [self.logger info:@"[TikTokRequestHandler] anonymousID: %@", self.anonymousID];
         
     [self loadUserAgent];
 
@@ -302,6 +320,37 @@ static dispatch_once_t onceToken = 0;
     if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
     }
+}
+
+- (void)trackEvent:(NSString *)eventName
+          withType:(NSString *)type
+{
+    TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withType:type];
+    [self.queue addEvent:appEvent];
+    if([eventName isEqualToString:@"Purchase"]) {
+        [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+    }
+}
+
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+{
+    [self trackEvent:eventName];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+       withProperties: (NSDictionary *)properties
+{
+    [self trackEvent:eventName withProperties:properties];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+       withType:(NSString *)type
+{
+    [self trackEvent:eventName withType:type];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
@@ -379,6 +428,27 @@ static dispatch_once_t onceToken = 0;
     if(!self.isGlobalConfigFetched) {
         [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
     }
+}
+
+- (void)identify:(NSDictionary *)userInfo
+{
+    self.userInfo = userInfo;
+    [self.logger verbose:@"AnonymousID on identify: %@", self.anonymousID];
+    [self.logger verbose:@"Identified with user info: %@", self.userInfo];
+    [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
+}
+
+- (void)logout
+{
+    // clear old anonymousID from NSUserDefaults
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    NSString *anonymousIDkey = @"AnonymousID";
+    [preferences setObject:nil forKey:anonymousIDkey];
+    
+    self.userInfo = nil;
+    NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
+    [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
 }
 
 - (BOOL)isTrackingEnabled
