@@ -44,12 +44,27 @@
     
     self.eventQueue = [NSMutableArray array];
     
+    self.hasFirstFlushOccurred = NO;
+    
     __weak TikTokAppEventQueue *weakSelf = self;
     
     if(@available(iOS 10, *)){
-        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS repeats:YES block:^(NSTimer *timer) {
-            [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-        }];
+        if(!self.hasFirstFlushOccurred) {
+            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:config.initialFlushDelay
+                repeats:NO block:^(NSTimer *timer) {
+                self.hasFirstFlushOccurred = YES;
+                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+                self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                    repeats:YES block:^(NSTimer *timer) {
+                    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+                }];
+            }];
+        } else {
+            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                repeats:YES block:^(NSTimer *timer) {
+                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+            }];
+        }
         
         self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
             
