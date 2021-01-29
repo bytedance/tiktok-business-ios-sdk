@@ -18,8 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Overriding Layout Constraint Warning Messages in Test App
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
-        /* POPULATE WITH ACCESS TOKEN AND APPLICATION ID IN CONFIG */
-        let config = TikTokConfig.init(accessToken: nil, appID: nil)
+        /* POPULATE WITH ACCESS TOKEN, APPLICATION ID AND TIKTOK APPLICATION ID IN CONFIG */
+        let config = TikTokConfig.init(accessToken: nil, appID: nil, tiktokAppID: nil)
 
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         

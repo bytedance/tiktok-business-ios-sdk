@@ -20,9 +20,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
++ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID tiktokAppID:(nullable NSString *)tiktokAppID
 {
-    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID];
+    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID tiktokAppID:tiktokAppID];
 }
 
 - (void)disableTracking
@@ -85,7 +85,7 @@
     [self.logger setLogLevel:logLevel];
 }
 
-- (id)initWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
+- (id)initWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID tiktokAppID:(nullable NSString *)tiktokAppID
 {
     self = [super init];
     
@@ -93,6 +93,7 @@
     
     _accessToken = accessToken;
     _appID = appID;
+    _tiktokAppID = tiktokAppID;
     _trackingEnabled = YES;
     _automaticTrackingEnabled = YES;
     _installTrackingEnabled = YES;
