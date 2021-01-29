@@ -45,6 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, nullable) TikTokConfig *config;
 
+/**
+ * @brief Flag to see if first flush has occurred
+ */
+@property (nonatomic) BOOL hasFirstFlushOccurred;
+
 
 - (id)init;
 

@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 
+@property (nonatomic) long initialFlushDelay;
+
 + (nullable TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken
                                            appID:(nullable NSString *)appID
                                      tiktokAppID:(nullable NSString *)tiktokAppID;
@@ -39,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableSKAdNetworkSupport;
 - (void)setCustomUserAgent:(NSString *)customUserAgent;
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
+- (void)setDelayForATTUserAuthorizationInSeconds:(long)seconds;
 
 - (nullable id)initWithAccessToken:(nullable NSString *)accessToken
                              appID:(nullable NSString *)appID

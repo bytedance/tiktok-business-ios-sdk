@@ -85,6 +85,12 @@
     [self.logger setLogLevel:logLevel];
 }
 
+- (void)setDelayForATTUserAuthorizationInSeconds: (long)seconds
+{
+    self.initialFlushDelay = seconds;
+    [self.logger info:@"[TikTokConfig] Initial flush delay set to: %lu", seconds];
+}
+
 - (id)initWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID tiktokAppID:(nullable NSString *)tiktokAppID
 {
     self = [super init];
