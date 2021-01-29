@@ -157,10 +157,14 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)identify:(NSDictionary *)userInfo
++ (void)identifyWithExternalID:(NSString *)externalID
+        externalUserName:(NSString *)externalUserName
+             phoneNumber:(NSString *)phoneNumber
+                       email:(NSString *)email
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] identify:userInfo];
+        [[TikTokBusiness getInstance] identifyWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
+        
     }
 }
 
@@ -430,9 +434,17 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)identify:(NSDictionary *)userInfo
+- (void)identifyWithExternalID:(NSString *)externalID
+        externalUserName:(NSString *)externalUserName
+             phoneNumber:(NSString *)phoneNumber
+                       email:(NSString *)email
 {
-    self.userInfo = userInfo;
+    if(self.userInfo != nil) {
+        [self.logger warn:@"TikTok SDK has already identified. If you want to switch to another user, please call the function TikTokBusinessSDK.logout()"];
+        return;
+    }
+    
+    self.userInfo = [TikTokIdentifyUtility generateUserInfoWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
     [self.logger verbose:@"AnonymousID on identify: %@", self.anonymousID];
     [self.logger verbose:@"Identified with user info: %@", self.userInfo];
     [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
@@ -440,15 +452,14 @@ static dispatch_once_t onceToken = 0;
 
 - (void)logout
 {
-    // clear old anonymousID from NSUserDefaults
-    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    NSString *anonymousIDkey = @"AnonymousID";
-    [preferences setObject:nil forKey:anonymousIDkey];
+    // clear old anonymousID and userInfo from NSUserDefaults
+    [TikTokIdentifyUtility resetNSUserDefaults];
     
     self.userInfo = nil;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
     [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
+    [self.queue flush:TikTokAppEventsFlushReasonLogout];
 }
 
 - (BOOL)isTrackingEnabled

@@ -7,6 +7,8 @@
 
 #import "TikTokTypeUtility.h"
 #import "TikTokErrorHandler.h"
+#import <CommonCrypto/CommonDigest.h>
+
 
 @implementation TikTokTypeUtility
 
@@ -41,6 +43,30 @@
       [TikTokErrorHandler handleErrorWithOrigin:origin message:@"JSONSerialization JSONObjectWithData:options:error failure" exception:exception];
   }
   return object;
+}
+
++ (NSString *)toSha256:(NSObject *)input
+{
+  NSData *data = nil;
+
+  if ([input isKindOfClass:[NSData class]]) {
+    data = (NSData *)input;
+  } else if ([input isKindOfClass:[NSString class]]) {
+    data = [(NSString *)input dataUsingEncoding:NSUTF8StringEncoding];
+  }
+
+  if (!data) {
+    return nil;
+  }
+
+  uint8_t digest[CC_SHA256_DIGEST_LENGTH];
+  CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
+  NSMutableString *hashedItem = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+  for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+    [hashedItem appendFormat:@"%02x", digest[i]];
+  }
+
+  return [hashedItem copy];
 }
 
 @end

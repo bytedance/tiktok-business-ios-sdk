@@ -77,7 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Use this method once user has logged in or registered
 */
-+ (void)identify:(NSDictionary *)userInfo;
++ (void)identifyWithExternalID:(nullable NSString *)externalID
+          externalUserName:(nullable NSString *)externalUserName
+               phoneNumber:(nullable NSString *)phoneNumber
+                         email:(nullable NSString *)email;
 
 /**
  * @brief Call this method when user has logged out
@@ -184,7 +187,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)trackEventAndEagerlyFlush: (NSString *)eventName withType: (NSString *)type;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
-- (void)identify:(NSDictionary *)userInfo;
+- (void)identifyWithExternalID:(nullable NSString *)externalID
+          externalUserName:(nullable NSString *)externalUserName
+               phoneNumber:(nullable NSString *)phoneNumber
+                         email:(nullable NSString *)email;
 - (void)logout;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;

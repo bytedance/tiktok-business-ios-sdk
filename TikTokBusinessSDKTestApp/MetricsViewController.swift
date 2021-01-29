@@ -127,10 +127,7 @@ class MetricsViewController: UIViewController {
     }
     
     @IBAction func identify(_ sender: UIButton) {
-        let userInfo: NSDictionary = [
-            "name": "Test User"
-        ];
-        TikTokBusiness.identify(userInfo as! [AnyHashable : Any]);
+        TikTokBusiness.identify(withExternalID: "123", externalUserName: "johnsmith", phoneNumber: "123456", email: "johnsmith@bytedance.com")
     }
     
     @IBAction func logout(_ sender: UIButton) {
