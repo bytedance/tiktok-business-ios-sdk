@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
                             error:(NSError **)error
                            origin:(NSString *)origin;
 
+/**
+ * @brief Sha256 hash for input
+ */
++ (NSString *)toSha256: (NSObject*)input;
+
 @end
 
 NS_ASSUME_NONNULL_END
