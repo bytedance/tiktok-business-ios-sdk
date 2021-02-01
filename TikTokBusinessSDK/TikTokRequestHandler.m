@@ -15,6 +15,7 @@
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import "TikTokAppEventUtility.h"
 
 #define SDK_VERSION @"iOS0.1.8"
 
@@ -157,6 +158,10 @@
             @"app": app,
             @"att_authorization_status": attAuthorizationStatus,
             @"device": device,
+            @"library": @{
+                @"name": @"tiktok-business-ios-sdk",
+                @"version":SDK_VERSION,
+            },
             @"locale": deviceInfo.localeInfo,
             @"ip": deviceInfo.ipInfo,
             @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
@@ -189,7 +194,7 @@
     
     NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
     [self.logger verbose:@"[TikTokRequestHandler] Access token: %@", [[TikTokBusiness getInstance] accessToken]];
-    [self.logger verbose:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
+    [self.logger info:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;
@@ -238,8 +243,33 @@
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
-            // code != 0 indicates error from API call
-            if([code intValue] != 0) {
+            
+            // code == 20001 indicates partial error from API call
+            if([code intValue] == 20001) {
+                NSString *message = [dataDictionary objectForKey:@"message"];
+                [self.logger error:@"[TikTokRequestHandler] partial error: %@, message: %@", code, message];
+                NSDictionary *data = [dataDictionary objectForKey:@"data"];
+                NSArray *failedEventsFromResponse = [data objectForKey:@"failed_events"];
+                NSMutableIndexSet *failedIndicesSet = [[NSMutableIndexSet alloc] init];
+                for(NSDictionary* event in failedEventsFromResponse) {
+                    if([event objectForKey:@"order_in_batch"] != nil) {
+                        [failedIndicesSet addIndex:[[event objectForKey:@"order_in_batch"] intValue]];
+                    }
+                }
+                NSMutableArray *failedEventsToPersist = [[NSMutableArray alloc] init];
+                for(int i = 0; i < [eventsToBeFlushed count]; i++) {
+                    if([failedIndicesSet containsIndex:i]) {
+                        [failedEventsToPersist addObject:[eventsToBeFlushed objectAtIndex:i]];
+                    }
+                }
+                @synchronized(self) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [TikTokAppEventStore persistAppEvents:failedEventsToPersist];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
+                    });
+                }
+                [self.logger error:@"[TikTokRequestHandler] partial error data: %@", data];
+            } else if([code intValue] != 0) { // code != 0 indicates error from API call
                 NSString *message = [dataDictionary objectForKey:@"message"];
                 [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 @synchronized(self) {
