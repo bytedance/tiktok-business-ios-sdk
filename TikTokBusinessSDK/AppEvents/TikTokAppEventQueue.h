@@ -45,11 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, nullable) TikTokConfig *config;
 
-/**
- * @brief Flag to see if first flush has occurred
- */
-@property (nonatomic) BOOL hasFirstFlushOccurred;
-
 
 - (id)init;
 
@@ -74,6 +69,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Flush logic
  */
 - (void)flush:(TikTokAppEventsFlushReason)flushReason;
+
+/**
+ * @brief Logic to resume or reinstantiate timer with number of seconds
+ */
+- (void)initializeFlushTimerWithSeconds:(long)seconds;
 
 @end
 

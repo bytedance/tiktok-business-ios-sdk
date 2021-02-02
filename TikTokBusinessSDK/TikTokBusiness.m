@@ -272,7 +272,12 @@ static dispatch_once_t onceToken = 0;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.anonymousID = anonymousID;
     [self.logger info:@"[TikTokRequestHandler] anonymousID: %@", self.anonymousID];
-        
+    
+    // set boolean for whether first flush has occured in NSUserDefaults
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    NSString *hasFirstFlushOccurredKey = @"HasFirstFlushOccurred";
+    [preferences setBool:NO forKey:hasFirstFlushOccurredKey];
+    
     [self loadUserAgent];
 
     self.requestHandler = [TikTokFactory getRequestHandler];
@@ -361,6 +366,13 @@ static dispatch_once_t onceToken = 0;
 {
     [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
     [self.queue.eventQueue removeAllObjects];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    BOOL hasFirstFlushOccurred = [preferences boolForKey:@"HasFirstFlushOccurred"];
+    if(!hasFirstFlushOccurred) {
+        [preferences setInteger:[self.queue timeInSecondsUntilFlush] forKey:@"TimeInSecondsUntilFlush"];
+        // pause timer when entering background when first flush has not happened
+        [self.queue.flushTimer invalidate];
+    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -376,7 +388,15 @@ static dispatch_once_t onceToken = 0;
         [self track2DRetention];
     }
     
-    [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
+    BOOL hasFirstFlushOccurred = [defaults boolForKey:@"HasFirstFlushOccurred"];
+    if(!hasFirstFlushOccurred) {
+        // if first flush has not occurred, resume timer without flushing
+        [self.queue initializeFlushTimerWithSeconds:[defaults integerForKey:@"TimeInSecondsUntilFlush"]];
+    } else {
+        // else flush when entering foreground
+        [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
+    }
+
 }
 
 - (nullable NSString *)idfa

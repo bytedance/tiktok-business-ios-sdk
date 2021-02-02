@@ -43,29 +43,28 @@
     }
     
     self.eventQueue = [NSMutableArray array];
-    
-    self.hasFirstFlushOccurred = NO;
-    
+        
     __weak TikTokAppEventQueue *weakSelf = self;
     
-    if(@available(iOS 10, *)){
-        if(!self.hasFirstFlushOccurred) {
-            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:config.initialFlushDelay
-                repeats:NO block:^(NSTimer *timer) {
-                self.hasFirstFlushOccurred = YES;
-                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-                self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                    repeats:YES block:^(NSTimer *timer) {
-                    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-                }];
-            }];
-        } else {
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    BOOL hasFirstFlushOccurred = [preferences boolForKey:@"HasFirstFlushOccurred"];
+    
+    // flush timer logic
+    if(!hasFirstFlushOccurred) {
+        [self initializeFlushTimerWithSeconds:config.initialFlushDelay];
+    } else {
+        if(@available(iOS 10, *)){
             self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
                 repeats:YES block:^(NSTimer *timer) {
                 [weakSelf flush:TikTokAppEventsFlushReasonTimer];
             }];
+        } else {
+            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
         }
-        
+    }
+    
+    // log timer logic
+    if(@available(iOS 10, *)){
         self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
             
             NSDate *fireDate = [self.flushTimer fireDate];
@@ -75,11 +74,9 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
         }];
     } else {
-        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
         self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleLogTimerUpdate:) userInfo:nil repeats:YES];
     }
     
-
     self.config = config;
     
     self.logger = [TikTokFactory getLogger];
@@ -98,6 +95,14 @@
     [weakSelf flush:TikTokAppEventsFlushReasonTimer];
 }
 
+- (void)handleFlushTimerUpdateOnFirstFlush:(NSTimer*)timer
+{
+    __weak TikTokAppEventQueue *weakSelf = self;
+    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+    // return to normal 15 second timer after first flush
+    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
+}
+
 // function used for pre iOS 10, since selector takes timer as an argument
 - (void)handleLogTimerUpdate:(NSTimer*)timer
 {
@@ -106,6 +111,25 @@
     self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+}
+
+- (void)initializeFlushTimerWithSeconds:(long)seconds
+{
+    __weak TikTokAppEventQueue *weakSelf = self;
+    if(@available(iOS 10, *)){
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds
+            repeats:NO block:^(NSTimer *timer) {
+            NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+            [preferences setBool:YES forKey:@"HasFirstFlushOccurred"];
+            [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                repeats:YES block:^(NSTimer *timer) {
+                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+            }];
+        }];
+    } else {
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(handleFlushTimerUpdateOnFirstFlush:) userInfo:nil repeats:YES];
+    }
 }
 
 - (void)addEvent:(TikTokAppEvent *)event
