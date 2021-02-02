@@ -127,9 +127,15 @@
         @"idfv": deviceInfo.deviceVendorId,
     };
     
+    NSDictionary *library = @{
+        @"name": @"tiktok-business-ios-sdk",
+        @"version": SDK_VERSION
+    };
+    
     NSDictionary *context = @{
         @"app": app,
         @"device": device,
+        @"library": library,
         @"locale": deviceInfo.localeInfo,
         @"ip": deviceInfo.ipInfo,
         @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
@@ -154,6 +160,7 @@
     
     NSDictionary *parametersDict = @{
         @"app_id" : config.appID,
+        @"tiktok_app_id": config.tiktokAppID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
         @"sdk_version": SDK_VERSION,
