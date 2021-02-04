@@ -127,11 +127,15 @@ class MetricsViewController: UIViewController {
     }
     
     @IBAction func identify(_ sender: UIButton) {
-        TikTokBusiness.identify(withExternalID: "123", externalUserName: "johnsmith", phoneNumber: "123456", email: "johnsmith@bytedance.com")
+        TikTokBusiness.identify(withExternalID: "123", externalUserName: "testuser", phoneNumber: "123456", email: "testuser@bytedance.com")
     }
     
     @IBAction func logout(_ sender: UIButton) {
         TikTokBusiness.logout();
+    }
+    
+    @IBAction func flush(_ sender: UIButton) {
+        TikTokBusiness.explicitlyFlush();
     }
     
     func randomText(from: Int, to: Int, justLowerCase: Bool = false) -> String {

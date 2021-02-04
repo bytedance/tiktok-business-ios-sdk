@@ -88,6 +88,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)logout;
 
 /**
+ * @brief Call this method to explicitly flush
+*/
++ (void)explicitlyFlush;
+
+/**
  * @brief Use this method to update accessToken
 */
 + (void)updateAccessToken: (nonnull NSString *)accessToken;
@@ -192,6 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
                phoneNumber:(nullable NSString *)phoneNumber
                          email:(nullable NSString *)email;
 - (void)logout;
+- (void)explicitlyFlush;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
 - (BOOL)appIsInactive;

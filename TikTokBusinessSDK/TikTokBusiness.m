@@ -175,6 +175,13 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)explicitlyFlush
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] explicitlyFlush];
+    }
+}
+
 + (BOOL)appInForeground
 {
     @synchronized (self) {
@@ -480,6 +487,11 @@ static dispatch_once_t onceToken = 0;
     [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
     [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
     [self.queue flush:TikTokAppEventsFlushReasonLogout];
+}
+
+- (void)explicitlyFlush
+{
+    [self.queue flush:TikTokAppEventsFlushReasonExplicitlyFlush];
 }
 
 - (BOOL)isTrackingEnabled
