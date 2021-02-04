@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic) NSString *accessToken;
 @property (nonatomic) NSString *anonymousID;
-@property (nonatomic, nullable) NSDictionary *userInfo;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -77,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Use this method once user has logged in or registered
 */
-+ (void)identifyWithExternalID:(nullable NSString *)externalID
++ (void)identifyWithExternalID:(NSString *)externalID
           externalUserName:(nullable NSString *)externalUserName
                phoneNumber:(nullable NSString *)phoneNumber
                          email:(nullable NSString *)email;
@@ -192,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)trackEventAndEagerlyFlush: (NSString *)eventName withType: (NSString *)type;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
-- (void)identifyWithExternalID:(nullable NSString *)externalID
+- (void)identifyWithExternalID:(NSString *)externalID
           externalUserName:(nullable NSString *)externalUserName
                phoneNumber:(nullable NSString *)phoneNumber
                          email:(nullable NSString *)email;

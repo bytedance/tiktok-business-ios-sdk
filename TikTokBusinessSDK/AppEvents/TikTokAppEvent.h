@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nonnull) NSString *type;
 
 /**
+ * @brief AnonymousID at the time event is tracked.
+ */
+@property (nonatomic) NSString *anonymousID;
+
+/**
  * @brief User info at the time event is tracked. If not logged in, will be nil
  */
 @property (nonatomic, nullable) NSDictionary *userInfo;

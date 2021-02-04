@@ -8,6 +8,7 @@
 #import "TikTokAppEvent.h"
 #import "TikTokAppEventUtility.h"
 #import "TikTokBusiness.h"
+#import "TikTokIdentifyUtility.h"
 
 #define TIKTOKSDK_EVENTNAME_KEY @"eventName"
 #define TIKTOKSDK_TIMESTAMP_KEY @"timestamp"
@@ -47,7 +48,8 @@
     self.eventName = eventName;
     self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
     self.properties = properties;
-    self.userInfo = [[TikTokBusiness getInstance] userInfo];
+    self.anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    self.userInfo = [TikTokIdentifyUtility getUserInfoDictionaryFromNSUserDefaults];
     self.type = @"track"; // when type not defined, automatically assume it is track
    
     return self;
@@ -65,7 +67,8 @@
     self.eventName = eventName;
     self.timestamp = [TikTokAppEventUtility getCurrentTimestampInISO8601];
     self.properties = properties;
-    self.userInfo = [[TikTokBusiness getInstance] userInfo];
+    self.anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    self.userInfo = [TikTokIdentifyUtility getUserInfoDictionaryFromNSUserDefaults];
     self.type = type;
    
     return self;

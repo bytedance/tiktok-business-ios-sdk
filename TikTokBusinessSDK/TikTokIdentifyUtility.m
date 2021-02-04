@@ -33,7 +33,7 @@
     return uuid;
 }
 
-+ (NSDictionary *)generateUserInfoWithExternalID:(nullable NSString *)externalID
++ (void)setUserInfoDefaultsWithExternalID:(NSString *)externalID
                                 externalUserName:(nullable NSString *)externalUserName
                                      phoneNumber:(nullable NSString *)phoneNumber
                                            email:(nullable NSString *)email
@@ -44,29 +44,42 @@
     NSString* hashedEmail = [TikTokTypeUtility toSha256:email];
     
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-
+ 
+    NSString *isIdentifiedKey = @"IsIdentified";
     NSString *externalIDKey = @"ExternalID";
     NSString *externalNameKey = @"ExternalName";
     NSString *phoneNumberKey = @"PhoneNumber";
     NSString *emailKey = @"Email";
-
+    
+    [preferences setObject:@"true" forKey:isIdentifiedKey];
     [preferences setObject:hashedExternalID forKey:externalIDKey];
     [preferences setObject:hashedExternalUserName forKey:externalNameKey];
     [preferences setObject:hashedPhoneNumber forKey:phoneNumberKey];
     [preferences setObject:hashedEmail forKey:emailKey];
+    [preferences synchronize];
+}
 
++ (NSDictionary *)getUserInfoDictionaryFromNSUserDefaults
+{
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
-    if(hashedExternalID != nil) {
-        [userInfo setObject:hashedExternalID forKey:@"external_id"];
+    
+    NSString *externalIDKey = @"ExternalID";
+    NSString *externalNameKey = @"ExternalName";
+    NSString *phoneNumberKey = @"PhoneNumber";
+    NSString *emailKey = @"Email";
+    
+    if ([preferences objectForKey:externalIDKey] != nil) {
+        [userInfo setObject:[preferences stringForKey:externalIDKey] forKey:@"external_id"];
     }
-    if(hashedExternalUserName != nil) {
-        [userInfo setObject:hashedExternalUserName forKey:@"external_username"];
+    if ([preferences objectForKey:externalNameKey] != nil) {
+        [userInfo setObject:[preferences stringForKey:externalNameKey] forKey:@"external_username"];
     }
-    if(hashedPhoneNumber != nil) {
-        [userInfo setObject:hashedPhoneNumber forKey:@"phone_number"];
+    if ([preferences objectForKey:phoneNumberKey] != nil) {
+        [userInfo setObject:[preferences stringForKey:phoneNumberKey] forKey:@"phone_number"];
     }
-    if(hashedEmail != nil) {
-        [userInfo setObject:hashedEmail forKey:@"email"];
+    if ([preferences objectForKey:emailKey] != nil) {
+        [userInfo setObject:[preferences stringForKey:emailKey] forKey:@"email"];
     }
     
     return userInfo;
@@ -75,6 +88,7 @@
 + (void)resetNSUserDefaults
 {
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    NSString *isIdentifiedKey = @"IsIdentified";
     NSString *anonymousIDkey = @"AnonymousID";
     NSString *externalIDKey = @"ExternalID";
     NSString *externalNameKey = @"ExternalName";
@@ -86,6 +100,8 @@
     [preferences setObject:nil forKey:externalNameKey];
     [preferences setObject:nil forKey:phoneNumberKey];
     [preferences setObject:nil forKey:emailKey];
+    [preferences setObject:@"false" forKey:isIdentifiedKey];
+    [preferences synchronize];
 }
 
 

@@ -158,7 +158,7 @@
         if(event.userInfo != nil) {
             [user addEntriesFromDictionary:event.userInfo];
         }
-        [user setObject:[[TikTokBusiness getInstance] anonymousID] forKey:@"anonymous_id"];
+        [user setObject:event.anonymousID forKey:@"anonymous_id"];
         
         NSDictionary *context = @{
             @"app": app,

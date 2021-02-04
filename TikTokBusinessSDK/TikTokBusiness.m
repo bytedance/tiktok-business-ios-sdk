@@ -157,7 +157,7 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)identifyWithExternalID:(nullable NSString *)externalID
++ (void)identifyWithExternalID:(NSString *)externalID
         externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
@@ -278,7 +278,6 @@ static dispatch_once_t onceToken = 0;
     self.accessToken = tiktokConfig.accessToken;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.anonymousID = anonymousID;
-    [self.logger info:@"[TikTokRequestHandler] anonymousID: %@", self.anonymousID];
     
     // set boolean for whether first flush has occured in NSUserDefaults
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
@@ -461,19 +460,19 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)identifyWithExternalID:(nullable NSString *)externalID
+- (void)identifyWithExternalID:(NSString *)externalID
         externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
 {
-    if(self.userInfo != nil) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([[defaults objectForKey:@"IsIdentified"]  isEqual: @"true"]){
         [self.logger warn:@"TikTok SDK has already identified. If you want to switch to another user, please call the function TikTokBusinessSDK.logout()"];
         return;
     }
     
-    self.userInfo = [TikTokIdentifyUtility generateUserInfoWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
-    [self.logger verbose:@"AnonymousID on identify: %@", self.anonymousID];
-    [self.logger verbose:@"Identified with user info: %@", self.userInfo];
+    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
     [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
 }
 
@@ -481,8 +480,7 @@ static dispatch_once_t onceToken = 0;
 {
     // clear old anonymousID and userInfo from NSUserDefaults
     [TikTokIdentifyUtility resetNSUserDefaults];
-    
-    self.userInfo = nil;
+       
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
     [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
