@@ -123,7 +123,23 @@
         @"build": deviceInfo.appBuild,
     };
     
+    // ATT Authorization Status switch determined at flush
+    // default status is NOT_APPLICABLE
+    NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
+    if (@available(iOS 14, *)) {
+        if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+            attAuthorizationStatus = @"AUTHORIZED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
+            attAuthorizationStatus = @"DENIED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
+            attAuthorizationStatus = @"NOT_DETERMINED";
+        } else { // Restricted
+            attAuthorizationStatus = @"RESTRICTED";
+        }
+    }
+    
     NSDictionary *device = @{
+        @"att_status": attAuthorizationStatus,
         @"platform" : deviceInfo.devicePlatform,
         @"idfa": deviceInfo.deviceIdForAdvertisers,
         @"idfv": deviceInfo.deviceVendorId,
@@ -144,24 +160,8 @@
         }
         [user setObject:[[TikTokBusiness getInstance] anonymousID] forKey:@"anonymous_id"];
         
-        // ATT Authorization Status switch
-        // default status is NOT_APPLICABLE
-        NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
-        if (@available(iOS 14, *)) {
-            if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
-                attAuthorizationStatus = @"AUTHORIZED";
-            } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
-                attAuthorizationStatus = @"DENIED";
-            } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
-                attAuthorizationStatus = @"NOT_DETERMINED";
-            } else { // Restricted
-                attAuthorizationStatus = @"RESTRICTED";
-            }
-        }
-        
         NSDictionary *context = @{
             @"app": app,
-            @"att_authorization_status": attAuthorizationStatus,
             @"device": device,
             @"library": library,
             @"locale": deviceInfo.localeInfo,
