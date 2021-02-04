@@ -157,10 +157,10 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)identifyWithExternalID:(NSString *)externalID
-        externalUserName:(NSString *)externalUserName
-             phoneNumber:(NSString *)phoneNumber
-                       email:(NSString *)email
++ (void)identifyWithExternalID:(nullable NSString *)externalID
+        externalUserName:(nullable NSString *)externalUserName
+             phoneNumber:(nullable NSString *)phoneNumber
+                       email:(nullable NSString *)email
 {
     @synchronized (self) {
         [[TikTokBusiness getInstance] identifyWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
@@ -454,10 +454,10 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)identifyWithExternalID:(NSString *)externalID
-        externalUserName:(NSString *)externalUserName
-             phoneNumber:(NSString *)phoneNumber
-                       email:(NSString *)email
+- (void)identifyWithExternalID:(nullable NSString *)externalID
+        externalUserName:(nullable NSString *)externalUserName
+             phoneNumber:(nullable NSString *)phoneNumber
+                       email:(nullable NSString *)email
 {
     if(self.userInfo != nil) {
         [self.logger warn:@"TikTok SDK has already identified. If you want to switch to another user, please call the function TikTokBusinessSDK.logout()"];

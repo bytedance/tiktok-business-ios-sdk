@@ -33,10 +33,10 @@
     return uuid;
 }
 
-+ (NSDictionary *)generateUserInfoWithExternalID:(NSString *)externalID
-                                externalUserName:(NSString *)externalUserName
-                                     phoneNumber:(NSString *)phoneNumber
-                                           email:(NSString *)email
++ (NSDictionary *)generateUserInfoWithExternalID:(nullable NSString *)externalID
+                                externalUserName:(nullable NSString *)externalUserName
+                                     phoneNumber:(nullable NSString *)phoneNumber
+                                           email:(nullable NSString *)email
 {
     NSString* hashedExternalID = [TikTokTypeUtility toSha256:externalID];
     NSString* hashedExternalUserName = [TikTokTypeUtility toSha256:externalUserName];
@@ -44,23 +44,30 @@
     NSString* hashedEmail = [TikTokTypeUtility toSha256:email];
     
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    
+
     NSString *externalIDKey = @"ExternalID";
     NSString *externalNameKey = @"ExternalName";
     NSString *phoneNumberKey = @"PhoneNumber";
     NSString *emailKey = @"Email";
-    
+
     [preferences setObject:hashedExternalID forKey:externalIDKey];
     [preferences setObject:hashedExternalUserName forKey:externalNameKey];
     [preferences setObject:hashedPhoneNumber forKey:phoneNumberKey];
     [preferences setObject:hashedEmail forKey:emailKey];
-    
-    NSDictionary *userInfo = @{
-        @"external_id" : hashedExternalID,
-        @"external_username": hashedExternalUserName,
-        @"phone_number": hashedPhoneNumber,
-        @"email": hashedEmail,
-    };
+
+    NSMutableDictionary *userInfo = [NSMutableDictionary new];
+    if(hashedExternalID != nil) {
+        [userInfo setObject:hashedExternalID forKey:@"external_id"];
+    }
+    if(hashedExternalUserName != nil) {
+        [userInfo setObject:hashedExternalUserName forKey:@"external_username"];
+    }
+    if(hashedPhoneNumber != nil) {
+        [userInfo setObject:hashedPhoneNumber forKey:@"phone_number"];
+    }
+    if(hashedEmail != nil) {
+        [userInfo setObject:hashedEmail forKey:@"email"];
+    }
     
     return userInfo;
 }
