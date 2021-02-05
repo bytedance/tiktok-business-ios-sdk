@@ -186,7 +186,6 @@
     
     NSDictionary *parametersDict = @{
         @"app_id" : config.appID,
-        @"tiktok_app_id": config.tiktokAppID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
         @"sdk_version": SDK_VERSION,

@@ -208,7 +208,7 @@
     @try {
         [self.logger info:@"[TikTokAppEventQueue] Total number events to be flushed: %lu", eventsToBeFlushed.count];
         if(eventsToBeFlushed.count > 0) {
-            if([[TikTokBusiness getInstance] isTrackingEnabled] && [[TikTokBusiness getInstance] accessToken] != nil && self.config.appID != nil && self.config.tiktokAppID != nil) {
+            if([[TikTokBusiness getInstance] isTrackingEnabled] && [[TikTokBusiness getInstance] accessToken] != nil && self.config.appID != nil) {
                 // chunk eventsToBeFlushed into subarrays of API_LIMIT length or less and send requests for each
                 NSMutableArray *eventChunks = [[NSMutableArray alloc] init];
                 NSUInteger eventsRemaining = eventsToBeFlushed.count;
@@ -233,9 +233,6 @@
                 }
                 if(self.config.appID == nil) {
                     [self.logger info:@"[TikTokAppEventQueue] Request not sent because application ID is null"];
-                }
-                if(self.config.tiktokAppID == nil) {
-                    [self.logger info:@"[TikTokAppEventQueue] Request not sent because TikTok application ID is null"];
                 }
             }
         }
