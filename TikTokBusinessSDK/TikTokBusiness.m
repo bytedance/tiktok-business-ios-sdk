@@ -6,7 +6,7 @@
 //
 
 /**
- * Import headers for Apple's App Tracking Transparency Requirements 
+ * Import headers for Apple's App Tracking Transparency Requirements
  * - Default: App Tracking Dialog is shown to the user
  * - Use suppressAppTrackingDialog flag while initializing TikTokConfig to disable IDFA collection
 */
@@ -279,11 +279,6 @@ static dispatch_once_t onceToken = 0;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.anonymousID = anonymousID;
     
-    // set boolean for whether first flush has occured in NSUserDefaults
-    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    NSString *hasFirstFlushOccurredKey = @"HasFirstFlushOccurred";
-    [preferences setBool:NO forKey:hasFirstFlushOccurredKey];
-    
     [self loadUserAgent];
 
     self.requestHandler = [TikTokFactory getRequestHandler];
@@ -373,8 +368,7 @@ static dispatch_once_t onceToken = 0;
     [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
     [self.queue.eventQueue removeAllObjects];
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    BOOL hasFirstFlushOccurred = [preferences boolForKey:@"HasFirstFlushOccurred"];
-    if(!hasFirstFlushOccurred) {
+    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         [preferences setInteger:[self.queue timeInSecondsUntilFlush] forKey:@"TimeInSecondsUntilFlush"];
         // pause timer when entering background when first flush has not happened
         [self.queue.flushTimer invalidate];
@@ -394,10 +388,10 @@ static dispatch_once_t onceToken = 0;
         [self track2DRetention];
     }
     
-    BOOL hasFirstFlushOccurred = [defaults boolForKey:@"HasFirstFlushOccurred"];
-    if(!hasFirstFlushOccurred) {
+    if(![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         // if first flush has not occurred, resume timer without flushing
         [self.queue initializeFlushTimerWithSeconds:[defaults integerForKey:@"TimeInSecondsUntilFlush"]];
+        [self.logger info:@"first flush has not yet occurred %@", [defaults objectForKey:@"HasFirstFlushOccurred"]];
     } else {
         // else flush when entering foreground
         [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];

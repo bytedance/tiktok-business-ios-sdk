@@ -47,10 +47,9 @@
     __weak TikTokAppEventQueue *weakSelf = self;
     
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    BOOL hasFirstFlushOccurred = [preferences boolForKey:@"HasFirstFlushOccurred"];
     
     // flush timer logic
-    if(!hasFirstFlushOccurred) {
+    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         [self initializeFlushTimerWithSeconds:config.initialFlushDelay];
     } else {
         if(@available(iOS 10, *)){
@@ -120,7 +119,7 @@
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds
             repeats:NO block:^(NSTimer *timer) {
             NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-            [preferences setBool:YES forKey:@"HasFirstFlushOccurred"];
+            [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
             [weakSelf flush:TikTokAppEventsFlushReasonTimer];
             self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
                 repeats:YES block:^(NSTimer *timer) {
