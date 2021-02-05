@@ -284,7 +284,14 @@ static dispatch_once_t onceToken = 0;
     self.requestHandler = [TikTokFactory getRequestHandler];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"true" forKey:@"AreTimersOn"];
+    
     [self getGlobalConfig:tiktokConfig isFirstInitialization:YES];
+    
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 // Internally used method for 2D-Retention
@@ -369,9 +376,8 @@ static dispatch_once_t onceToken = 0;
     [self.queue.eventQueue removeAllObjects];
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
-        [preferences setInteger:[self.queue timeInSecondsUntilFlush] forKey:@"TimeInSecondsUntilFlush"];
         // pause timer when entering background when first flush has not happened
-        [self.queue.flushTimer invalidate];
+        [preferences setObject:@"false" forKey:@"AreTimersOn"];
     }
 }
 
@@ -387,11 +393,11 @@ static dispatch_once_t onceToken = 0;
     if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled) {
         [self track2DRetention];
     }
+    [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
     
     if(![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         // if first flush has not occurred, resume timer without flushing
-        [self.queue initializeFlushTimerWithSeconds:[defaults integerForKey:@"TimeInSecondsUntilFlush"]];
-        [self.logger info:@"first flush has not yet occurred %@", [defaults objectForKey:@"HasFirstFlushOccurred"]];
+        [defaults setObject:@"true" forKey:@"AreTimersOn"];
     } else {
         // else flush when entering foreground
         [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
@@ -503,22 +509,29 @@ static dispatch_once_t onceToken = 0;
         self.isRemoteSwitchOn = isRemoteSwitchOn;
         self.isGlobalConfigFetched = isGlobalConfigFetched;
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
         if(!self.isRemoteSwitchOn) {
             [self.logger info:@"Remote switch is off"];
-            [self.queue.flushTimer invalidate];
-            [self.queue.logTimer invalidate];
+            [defaults setObject:@"false" forKey:@"AreTimersOn"];
             self.queue.timeInSecondsUntilFlush = 0;
             return;
         }
         
         [self.logger info:@"Remote switch is on"];
         
-        if(isFirstInitialization) {
+        // restart timers if they are off
+        if ([[defaults objectForKey:@"AreTimersOn"]  isEqual: @"false"]) {
+            [defaults setObject:@"true" forKey:@"AreTimersOn"];
+        }
+        
+        // if SDK has not been initialized, we initialize it
+        if(isFirstInitialization || ![[defaults objectForKey:@"HasBeenInitialized"]  isEqual: @"true"]) {
+
             [self.logger info:@"TikTok SDK Initialized Successfully!"];
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
             NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
-            
+
             // Enabled: Tracking, Auto Tracking, Install Tracking
             // Launched Before: False
             if(self.automaticTrackingEnabled && !launchedBefore && self.installTrackingEnabled){
@@ -532,35 +545,32 @@ static dispatch_once_t onceToken = 0;
                 [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
                 [defaults synchronize];
             }
-            
+
             // Enabled: Tracking, Auto Tracking, Launch Logging
             if(self.automaticTrackingEnabled && self.launchTrackingEnabled){
                 [self trackEvent:@"LaunchAPP"];
             }
-            
+
             // Enabled: Auto Tracking, 2DRetention Tracking
             // Install Date: Available
             // 2D Limit has not been passed
             if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled){
                 [self track2DRetention];
             }
-            
+
             if(self.automaticTrackingEnabled && self.paymentTrackingEnabled){
                 [TikTokPaymentObserver startObservingTransactions];
             }
-            
+
             if(!self.automaticTrackingEnabled){
                 [TikTokPaymentObserver stopObservingTransactions];
             }
-            
+
             // Remove this later, based on where modal needs to be called to start tracking
             // This will be needed to be called before we can call a function to get IDFA
             if(!self.appTrackingDialogSuppressed) {
                 [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
             }
-            NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-            [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-            [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         }
     }];
 }

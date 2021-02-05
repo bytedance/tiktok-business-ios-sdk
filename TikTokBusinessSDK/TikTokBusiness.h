@@ -203,7 +203,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)idfa;
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 - (void)getGlobalConfig:(TikTokConfig *)config
-       isFirstInitialization:(BOOL)isFirstInitialization;
+  isFirstInitialization:(BOOL)isFirstInitialization;
 
 @end
 

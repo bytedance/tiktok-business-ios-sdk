@@ -43,38 +43,17 @@
     }
     
     self.eventQueue = [NSMutableArray array];
-        
-    __weak TikTokAppEventQueue *weakSelf = self;
-    
+            
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     
     // flush timer logic
     if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         [self initializeFlushTimerWithSeconds:config.initialFlushDelay];
     } else {
-        if(@available(iOS 10, *)){
-            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                repeats:YES block:^(NSTimer *timer) {
-                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-            }];
-        } else {
-            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
-        }
+        [self initializeFlushTimer];
     }
     
-    // log timer logic
-    if(@available(iOS 10, *)){
-        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
-            
-            NSDate *fireDate = [self.flushTimer fireDate];
-            NSDate *nowDate = [NSDate date];
-            self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
-        }];
-    } else {
-        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleLogTimerUpdate:) userInfo:nil repeats:YES];
-    }
+    [self initializeLogTimer];
     
     self.config = config;
     
@@ -90,44 +69,93 @@
 // function used for pre iOS 10, since selector takes timer as an argument
 - (void)handleFlushTimerUpdate:(NSTimer*)timer
 {
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+
     __weak TikTokAppEventQueue *weakSelf = self;
-    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+    if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
+        [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+    }
 }
 
+// function used for pre iOS 10, since selector takes timer as an argument
 - (void)handleFlushTimerUpdateOnFirstFlush:(NSTimer*)timer
 {
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     __weak TikTokAppEventQueue *weakSelf = self;
-    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-    // return to normal 15 second timer after first flush
-    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
+    if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
+        [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+        // return to normal 15 second timer after first flush
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
+    }
 }
 
 // function used for pre iOS 10, since selector takes timer as an argument
 - (void)handleLogTimerUpdate:(NSTimer*)timer
 {
-    NSDate *fireDate = [self.flushTimer fireDate];
-    NSDate *nowDate = [NSDate date];
-    self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
+
+        NSDate *fireDate = [self.flushTimer fireDate];
+        NSDate *nowDate = [NSDate date];
+        self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+    }
 }
 
 - (void)initializeFlushTimerWithSeconds:(long)seconds
 {
     __weak TikTokAppEventQueue *weakSelf = self;
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+
     if(@available(iOS 10, *)){
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds
             repeats:NO block:^(NSTimer *timer) {
-            NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-            [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
-            [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                repeats:YES block:^(NSTimer *timer) {
+            if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
+                [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
                 [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-            }];
+                self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                    repeats:YES block:^(NSTimer *timer) {
+                    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+                }];
+            }
         }];
     } else {
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(handleFlushTimerUpdateOnFirstFlush:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)initializeFlushTimer
+{
+    __weak TikTokAppEventQueue *weakSelf = self;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(@available(iOS 10, *)){
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+            repeats:YES block:^(NSTimer *timer) {
+            if ([[defaults objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
+                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+            }
+        }];
+    } else {
+        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)initializeLogTimer
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(@available(iOS 10, *)){
+        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *time) {
+            if([[defaults objectForKey:@"AreTimersOn"]  isEqual: @"true"]){
+                NSDate *fireDate = [self.flushTimer fireDate];
+                NSDate *nowDate = [NSDate date];
+                self.timeInSecondsUntilFlush = [fireDate timeIntervalSinceDate:nowDate];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"timeLeft" object:nil];
+            }
+        }];
+    } else {
+        self.logTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleLogTimerUpdate:) userInfo:nil repeats:YES];
     }
 }
 
