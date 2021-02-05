@@ -246,10 +246,17 @@
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
+            NSString *message = [dataDictionary objectForKey:@"message"];
+            
+            // code == 40000 indicates error from API call
+            // meaning all events have unhashed values
+            // we do not persist events in the scenario
+            if([code intValue] == 40000) {
+                [self.logger error:@"[TikTokRequestHandler] unhashed PII data error: %@, message: %@", code, message];
             
             // code == 20001 indicates partial error from API call
-            if([code intValue] == 20001) {
-                NSString *message = [dataDictionary objectForKey:@"message"];
+            // meaning some events have unhashed values
+            } else if([code intValue] == 20001) {
                 [self.logger error:@"[TikTokRequestHandler] partial error: %@, message: %@", code, message];
                 NSDictionary *data = [dataDictionary objectForKey:@"data"];
                 NSArray *failedEventsFromResponse = [data objectForKey:@"failed_events"];
@@ -259,21 +266,13 @@
                         [failedIndicesSet addIndex:[[event objectForKey:@"order_in_batch"] intValue]];
                     }
                 }
-                NSMutableArray *failedEventsToPersist = [[NSMutableArray alloc] init];
                 for(int i = 0; i < [eventsToBeFlushed count]; i++) {
                     if([failedIndicesSet containsIndex:i]) {
-                        [failedEventsToPersist addObject:[eventsToBeFlushed objectAtIndex:i]];
+                        [self.logger error:@"[TikTokRequestHandler] event with error was not processed: %@", [[eventsToBeFlushed objectAtIndex:i] eventName]];
                     }
-                }
-                @synchronized(self) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [TikTokAppEventStore persistAppEvents:failedEventsToPersist];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
-                    });
                 }
                 [self.logger error:@"[TikTokRequestHandler] partial error data: %@", data];
             } else if([code intValue] != 0) { // code != 0 indicates error from API call
-                NSString *message = [dataDictionary objectForKey:@"message"];
                 [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{
