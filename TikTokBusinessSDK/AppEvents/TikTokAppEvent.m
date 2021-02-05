@@ -33,7 +33,7 @@
         return nil;
     }
     
-    return [self initWithEventName:eventName withProperties:@{} withType:@"identify"];
+    return [self initWithEventName:eventName withProperties:@{} withType:type];
     
 }
 

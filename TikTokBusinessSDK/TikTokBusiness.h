@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Use this method once user has logged in or registered
 */
-+ (void)identifyWithExternalID:(NSString *)externalID
++ (void)identifyWithExternalID:(nullable NSString *)externalID
           externalUserName:(nullable NSString *)externalUserName
                phoneNumber:(nullable NSString *)phoneNumber
                          email:(nullable NSString *)email;
@@ -191,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)trackEventAndEagerlyFlush: (NSString *)eventName withType: (NSString *)type;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
-- (void)identifyWithExternalID:(NSString *)externalID
+- (void)identifyWithExternalID:(nullable NSString *)externalID
           externalUserName:(nullable NSString *)externalUserName
                phoneNumber:(nullable NSString *)phoneNumber
                          email:(nullable NSString *)email;

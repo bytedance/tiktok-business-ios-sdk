@@ -157,7 +157,7 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)identifyWithExternalID:(NSString *)externalID
++ (void)identifyWithExternalID:(nullable NSString *)externalID
         externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
@@ -393,7 +393,10 @@ static dispatch_once_t onceToken = 0;
     if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled) {
         [self track2DRetention];
     }
-    [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
+    
+    if ([[defaults objectForKey:@"HasBeenInitialized"]  isEqual: @"true"]) {
+        [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
+    }
     
     if(![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         // if first flush has not occurred, resume timer without flushing
@@ -460,7 +463,7 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-- (void)identifyWithExternalID:(NSString *)externalID
+- (void)identifyWithExternalID:(nullable NSString *)externalID
         externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email

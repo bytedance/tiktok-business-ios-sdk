@@ -21,6 +21,7 @@
     {
         anonymousID = [self generateNewAnonymousID];
         [preferences setObject:anonymousID forKey:anonymousIDkey];
+        [preferences synchronize];
     }   else {
         anonymousID = [preferences stringForKey:anonymousIDkey];
     }
@@ -33,7 +34,7 @@
     return uuid;
 }
 
-+ (void)setUserInfoDefaultsWithExternalID:(NSString *)externalID
++ (void)setUserInfoDefaultsWithExternalID:(nullable NSString *)externalID
                                 externalUserName:(nullable NSString *)externalUserName
                                      phoneNumber:(nullable NSString *)phoneNumber
                                            email:(nullable NSString *)email
