@@ -25,10 +25,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) NSDictionary *properties;
 
+/**
+ * @brief Type of event ('track' or 'identify')
+ */
+@property (nonatomic, nonnull) NSString *type;
+
+/**
+ * @brief AnonymousID at the time event is tracked.
+ */
+@property (nonatomic) NSString *anonymousID;
+
+/**
+ * @brief User info at the time event is tracked. If not logged in, will be nil
+ */
+@property (nonatomic, nullable) NSDictionary *userInfo;
+
 - (instancetype)initWithEventName: (NSString *)eventName;
 
 - (instancetype)initWithEventName: (NSString *)eventName
+                         withType: (NSString *)type;
+
+- (instancetype)initWithEventName: (NSString *)eventName
                    withProperties: (NSDictionary *)properties;
+
+- (instancetype)initWithEventName: (NSString *)eventName
+                   withProperties: (NSDictionary *)properties
+                         withType: (NSString *)type;
 
 @end
 

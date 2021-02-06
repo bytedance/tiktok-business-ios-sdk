@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL userTrackingEnabled;
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic) NSString *accessToken;
+@property (nonatomic) NSString *anonymousID;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -31,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @note See TikTokConfig.h for more configuration options
  *
  * @param tiktokConfig The configuration object must be initialized before this function is called.
- *                     This object contains the accessToken, appID and tiktokAppID, which can be acquired from
+ *                     This object contains the accessToken and appID which can be acquired from
  *                     TikTok's Marketing API dashboard.
 */
 + (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
@@ -71,6 +72,24 @@ NS_ASSUME_NONNULL_BEGIN
  * @brief Use this method to disable collection of User Agent automatically and set a custom User Agent
 */
 + (void)setCustomUserAgent: (NSString *)customUserAgent;
+
+/**
+ * @brief Use this method once user has logged in or registered
+*/
++ (void)identifyWithExternalID:(nullable NSString *)externalID
+          externalUserName:(nullable NSString *)externalUserName
+               phoneNumber:(nullable NSString *)phoneNumber
+                         email:(nullable NSString *)email;
+
+/**
+ * @brief Call this method when user has logged out
+*/
++ (void)logout;
+
+/**
+ * @brief Call this method to explicitly flush
+*/
++ (void)explicitlyFlush;
 
 /**
  * @brief Use this method to update accessToken
@@ -166,15 +185,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 - (void)trackEvent: (NSString *)eventName;
 - (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
+- (void)trackEvent: (NSString *)eventName withType: (NSString *)type;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName withProperties: (NSDictionary *)properties;
+- (void)trackEventAndEagerlyFlush: (NSString *)eventName withType: (NSString *)type;
 - (void)setCustomUserAgent: (NSString *)customUserAgent;
 - (void)updateAccessToken: (nonnull NSString *)accessToken;
+- (void)identifyWithExternalID:(nullable NSString *)externalID
+          externalUserName:(nullable NSString *)externalUserName
+               phoneNumber:(nullable NSString *)phoneNumber
+                         email:(nullable NSString *)email;
+- (void)logout;
+- (void)explicitlyFlush;
 - (BOOL)appInForeground;
 - (BOOL)appInBackground;
 - (BOOL)appIsInactive;
 - (nullable NSString *)idfa;
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 - (void)getGlobalConfig:(TikTokConfig *)config
-       isFirstInitialization:(BOOL)isFirstInitialization;
+  isFirstInitialization:(BOOL)isFirstInitialization;
 
 @end
 

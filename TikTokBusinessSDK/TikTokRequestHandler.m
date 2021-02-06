@@ -14,8 +14,10 @@
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import "TikTokAppEventUtility.h"
 
-#define SDK_VERSION @"iOS0.1.7"
+#define SDK_VERSION @"iOS0.1.8"
 
 @interface TikTokRequestHandler()
 
@@ -121,7 +123,23 @@
         @"build": deviceInfo.appBuild,
     };
     
+    // ATT Authorization Status switch determined at flush
+    // default status is NOT_APPLICABLE
+    NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
+    if (@available(iOS 14, *)) {
+        if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+            attAuthorizationStatus = @"AUTHORIZED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
+            attAuthorizationStatus = @"DENIED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
+            attAuthorizationStatus = @"NOT_DETERMINED";
+        } else { // Restricted
+            attAuthorizationStatus = @"RESTRICTED";
+        }
+    }
+    
     NSDictionary *device = @{
+        @"att_status": attAuthorizationStatus,
         @"platform" : deviceInfo.devicePlatform,
         @"idfa": deviceInfo.deviceIdForAdvertisers,
         @"idfv": deviceInfo.deviceVendorId,
@@ -132,20 +150,28 @@
         @"version": SDK_VERSION
     };
     
-    NSDictionary *context = @{
-        @"app": app,
-        @"device": device,
-        @"library": library,
-        @"locale": deviceInfo.localeInfo,
-        @"ip": deviceInfo.ipInfo,
-        @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
-    };
-    
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
+        
+        NSMutableDictionary *user = [NSMutableDictionary new];
+        if(event.userInfo != nil) {
+            [user addEntriesFromDictionary:event.userInfo];
+        }
+        [user setObject:event.anonymousID forKey:@"anonymous_id"];
+        
+        NSDictionary *context = @{
+            @"app": app,
+            @"device": device,
+            @"library": library,
+            @"locale": deviceInfo.localeInfo,
+            @"ip": deviceInfo.ipInfo,
+            @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
+            @"user": user,
+        };
+        
         NSDictionary *eventDict = @{
-            @"type" : @"track",
+            @"type" : event.type,
             @"event": event.eventName,
             @"timestamp":event.timestamp,
             @"context": context,
@@ -160,7 +186,6 @@
     
     NSDictionary *parametersDict = @{
         @"app_id" : config.appID,
-        @"tiktok_app_id": config.tiktokAppID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
         @"sdk_version": SDK_VERSION,
@@ -220,9 +245,33 @@
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
-            // code != 0 indicates error from API call
-            if([code intValue] != 0) {
-                NSString *message = [dataDictionary objectForKey:@"message"];
+            NSString *message = [dataDictionary objectForKey:@"message"];
+            
+            // code == 40000 indicates error from API call
+            // meaning all events have unhashed values
+            // we do not persist events in the scenario
+            if([code intValue] == 40000) {
+                [self.logger error:@"[TikTokRequestHandler] unhashed PII data error: %@, message: %@", code, message];
+            
+            // code == 20001 indicates partial error from API call
+            // meaning some events have unhashed values
+            } else if([code intValue] == 20001) {
+                [self.logger error:@"[TikTokRequestHandler] partial error: %@, message: %@", code, message];
+                NSDictionary *data = [dataDictionary objectForKey:@"data"];
+                NSArray *failedEventsFromResponse = [data objectForKey:@"failed_events"];
+                NSMutableIndexSet *failedIndicesSet = [[NSMutableIndexSet alloc] init];
+                for(NSDictionary* event in failedEventsFromResponse) {
+                    if([event objectForKey:@"order_in_batch"] != nil) {
+                        [failedIndicesSet addIndex:[[event objectForKey:@"order_in_batch"] intValue]];
+                    }
+                }
+                for(int i = 0; i < [eventsToBeFlushed count]; i++) {
+                    if([failedIndicesSet containsIndex:i]) {
+                        [self.logger error:@"[TikTokRequestHandler] event with error was not processed: %@", [[eventsToBeFlushed objectAtIndex:i] eventName]];
+                    }
+                }
+                [self.logger error:@"[TikTokRequestHandler] partial error data: %@", data];
+            } else if([code intValue] != 0) { // code != 0 indicates error from API call
                 [self.logger error:@"[TikTokRequestHandler] code error: %@, message: %@", code, message];
                 @synchronized(self) {
                     dispatch_async(dispatch_get_main_queue(), ^{

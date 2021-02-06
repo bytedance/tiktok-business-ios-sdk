@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         /* POPULATE WITH ACCESS TOKEN, APPLICATION ID AND TIKTOK APPLICATION ID IN CONFIG */
-        let config = TikTokConfig.init(accessToken: nil, appID: nil, tiktokAppID: nil)
+        let config = TikTokConfig.init(accessToken: nil, appID: nil)
 
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config?.disableSKAdNetworkSupport()                 // Disable SKAdNetwork Support
         config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
         config?.setCustomUserAgent("CUSTOM USER AGENT")     // Set Custom User Agent Collection
+        config?.setDelayForATTUserAuthorizationInSeconds(20) // Set delay for ATT
 
         */
         /* ADD LINE HERE */

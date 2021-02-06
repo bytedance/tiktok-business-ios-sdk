@@ -126,6 +126,19 @@ class MetricsViewController: UIViewController {
         }
     }
     
+    @IBAction func identify(_ sender: UIButton) {
+        // enter identify values here
+        TikTokBusiness.identify(withExternalID: nil, externalUserName: nil, phoneNumber: nil, email: nil)
+    }
+    
+    @IBAction func logout(_ sender: UIButton) {
+        TikTokBusiness.logout();
+    }
+    
+    @IBAction func flush(_ sender: UIButton) {
+        TikTokBusiness.explicitlyFlush();
+    }
+    
     func randomText(from: Int, to: Int, justLowerCase: Bool = false) -> String {
         var text = ""
         let range = UInt32(to - from)

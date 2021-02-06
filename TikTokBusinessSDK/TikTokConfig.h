@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly, nonnull) NSString *accessToken;
 @property (nonatomic, copy, readonly, nonnull) NSString *appID;
-@property (nonatomic, copy, readonly, nonnull) NSString *tiktokAppID;
 @property (nonatomic, assign) BOOL trackingEnabled;
 @property (nonatomic, assign) BOOL automaticTrackingEnabled;
 @property (nonatomic, assign) BOOL installTrackingEnabled;
@@ -25,9 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 
+@property (nonatomic) long initialFlushDelay;
+
 + (nullable TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken
-                                           appID:(nullable NSString *)appID
-                                     tiktokAppID:(nullable NSString *)tiktokAppID;
+                                           appID:(nullable NSString *)appID;
 
 - (void)disableTracking;
 - (void)disableAutomaticTracking;
@@ -39,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableSKAdNetworkSupport;
 - (void)setCustomUserAgent:(NSString *)customUserAgent;
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
+- (void)setDelayForATTUserAuthorizationInSeconds:(long)seconds;
 
 - (nullable id)initWithAccessToken:(nullable NSString *)accessToken
-                             appID:(nullable NSString *)appID
-                       tiktokAppID:(nullable NSString *)tiktokAppID;
+                             appID:(nullable NSString *)appID;
 
 @end
 

@@ -6,7 +6,7 @@
 //
 
 /**
- * Import headers for Apple's App Tracking Transparency Requirements 
+ * Import headers for Apple's App Tracking Transparency Requirements
  * - Default: App Tracking Dialog is shown to the user
  * - Use suppressAppTrackingDialog flag while initializing TikTokConfig to disable IDFA collection
 */
@@ -22,6 +22,7 @@
 #import "TikTokPaymentObserver.h"
 #import "TikTokFactory.h"
 #import "TikTokErrorHandler.h"
+#import "TikTokIdentifyUtility.h"
 #import "TikTokUserAgentCollector.h"
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
@@ -156,6 +157,31 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)identifyWithExternalID:(nullable NSString *)externalID
+        externalUserName:(nullable NSString *)externalUserName
+             phoneNumber:(nullable NSString *)phoneNumber
+                       email:(nullable NSString *)email
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] identifyWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
+        
+    }
+}
+
++ (void)logout
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] logout];
+    }
+}
+
++ (void)explicitlyFlush
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] explicitlyFlush];
+    }
+}
+
 + (BOOL)appInForeground
 {
     @synchronized (self) {
@@ -250,13 +276,22 @@ static dispatch_once_t onceToken = 0;
     self.appTrackingDialogSuppressed = tiktokConfig.appTrackingDialogSuppressed;
     self.SKAdNetworkSupportEnabled = tiktokConfig.SKAdNetworkSupportEnabled;
     self.accessToken = tiktokConfig.accessToken;
-        
+    NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    self.anonymousID = anonymousID;
+    
     [self loadUserAgent];
 
     self.requestHandler = [TikTokFactory getRequestHandler];
     self.queue = [[TikTokAppEventQueue alloc] initWithConfig:tiktokConfig];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:@"true" forKey:@"AreTimersOn"];
+    
     [self getGlobalConfig:tiktokConfig isFirstInitialization:YES];
+    
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 // Internally used method for 2D-Retention
@@ -304,10 +339,46 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
+- (void)trackEvent:(NSString *)eventName
+          withType:(NSString *)type
+{
+    TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withType:type];
+    [self.queue addEvent:appEvent];
+    if([eventName isEqualToString:@"Purchase"]) {
+        [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+    }
+}
+
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+{
+    [self trackEvent:eventName];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+       withProperties: (NSDictionary *)properties
+{
+    [self trackEvent:eventName withProperties:properties];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
+- (void)trackEventAndEagerlyFlush:(NSString *)eventName
+       withType:(NSString *)type
+{
+    [self trackEvent:eventName withType:type];
+    [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
+}
+
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
     [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
     [self.queue.eventQueue removeAllObjects];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+        // pause timer when entering background when first flush has not happened
+        [preferences setObject:@"false" forKey:@"AreTimersOn"];
+    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -323,7 +394,18 @@ static dispatch_once_t onceToken = 0;
         [self track2DRetention];
     }
     
-    [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
+    if ([[defaults objectForKey:@"HasBeenInitialized"]  isEqual: @"true"]) {
+        [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
+    }
+    
+    if(![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+        // if first flush has not occurred, resume timer without flushing
+        [defaults setObject:@"true" forKey:@"AreTimersOn"];
+    } else {
+        // else flush when entering foreground
+        [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
+    }
+
 }
 
 - (nullable NSString *)idfa
@@ -381,6 +463,38 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
+- (void)identifyWithExternalID:(nullable NSString *)externalID
+        externalUserName:(nullable NSString *)externalUserName
+             phoneNumber:(nullable NSString *)phoneNumber
+                       email:(nullable NSString *)email
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([[defaults objectForKey:@"IsIdentified"]  isEqual: @"true"]){
+        [self.logger warn:@"TikTok SDK has already identified. If you want to switch to another user, please call the function TikTokBusinessSDK.logout()"];
+        return;
+    }
+    
+    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
+    [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
+}
+
+- (void)logout
+{
+    // clear old anonymousID and userInfo from NSUserDefaults
+    [TikTokIdentifyUtility resetNSUserDefaults];
+       
+    NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
+    [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
+    [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
+    [self.queue flush:TikTokAppEventsFlushReasonLogout];
+}
+
+- (void)explicitlyFlush
+{
+    [self.queue flush:TikTokAppEventsFlushReasonExplicitlyFlush];
+}
+
 - (BOOL)isTrackingEnabled
 {
     return self.trackingEnabled;
@@ -398,22 +512,29 @@ static dispatch_once_t onceToken = 0;
         self.isRemoteSwitchOn = isRemoteSwitchOn;
         self.isGlobalConfigFetched = isGlobalConfigFetched;
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
         if(!self.isRemoteSwitchOn) {
             [self.logger info:@"Remote switch is off"];
-            [self.queue.flushTimer invalidate];
-            [self.queue.logTimer invalidate];
+            [defaults setObject:@"false" forKey:@"AreTimersOn"];
             self.queue.timeInSecondsUntilFlush = 0;
             return;
         }
         
         [self.logger info:@"Remote switch is on"];
         
-        if(isFirstInitialization) {
+        // restart timers if they are off
+        if ([[defaults objectForKey:@"AreTimersOn"]  isEqual: @"false"]) {
+            [defaults setObject:@"true" forKey:@"AreTimersOn"];
+        }
+        
+        // if SDK has not been initialized, we initialize it
+        if(isFirstInitialization || ![[defaults objectForKey:@"HasBeenInitialized"]  isEqual: @"true"]) {
+
             [self.logger info:@"TikTok SDK Initialized Successfully!"];
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
             NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
-            
+
             // Enabled: Tracking, Auto Tracking, Install Tracking
             // Launched Before: False
             if(self.automaticTrackingEnabled && !launchedBefore && self.installTrackingEnabled){
@@ -427,35 +548,32 @@ static dispatch_once_t onceToken = 0;
                 [defaults setObject:currentLaunch forKey:@"tiktokInstallDate"];
                 [defaults synchronize];
             }
-            
+
             // Enabled: Tracking, Auto Tracking, Launch Logging
             if(self.automaticTrackingEnabled && self.launchTrackingEnabled){
                 [self trackEvent:@"LaunchAPP"];
             }
-            
+
             // Enabled: Auto Tracking, 2DRetention Tracking
             // Install Date: Available
             // 2D Limit has not been passed
             if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled){
                 [self track2DRetention];
             }
-            
+
             if(self.automaticTrackingEnabled && self.paymentTrackingEnabled){
                 [TikTokPaymentObserver startObservingTransactions];
             }
-            
+
             if(!self.automaticTrackingEnabled){
                 [TikTokPaymentObserver stopObservingTransactions];
             }
-            
+
             // Remove this later, based on where modal needs to be called to start tracking
             // This will be needed to be called before we can call a function to get IDFA
             if(!self.appTrackingDialogSuppressed) {
                 [self requestTrackingAuthorizationWithCompletionHandler:^(NSUInteger status) {}];
             }
-            NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-            [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-            [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         }
     }];
 }
