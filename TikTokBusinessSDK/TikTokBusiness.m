@@ -532,6 +532,7 @@ static dispatch_once_t onceToken = 0;
         if(isFirstInitialization || ![[defaults objectForKey:@"HasBeenInitialized"]  isEqual: @"true"]) {
 
             [self.logger info:@"TikTok SDK Initialized Successfully!"];
+            [defaults setObject:@"true" forKey:@"HasBeenInitialized"];
             BOOL launchedBefore = [defaults boolForKey:@"tiktokLaunchedBefore"];
             NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
 
