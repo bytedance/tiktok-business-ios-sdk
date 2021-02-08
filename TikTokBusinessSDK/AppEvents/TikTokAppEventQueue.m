@@ -180,6 +180,14 @@
         return;
     }
     
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    
+    // if there is initialFlushDelay, flush reason is not due to timer and first flush has not occurred, we don't flush
+    if(self.config.initialFlushDelay && flushReason != TikTokAppEventsFlushReasonTimer && ![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+        [self.logger info:@"[TikTokAppEventQueue] Flush logic not invoked due to delay for ATT"];
+        return;
+    }
+    
     @try {
         @synchronized (self) {
             [self.logger info:@"[TikTokAppEventQueue] Start flush, with flush reason: %lu current queue count: %lu", flushReason, self.eventQueue.count];
