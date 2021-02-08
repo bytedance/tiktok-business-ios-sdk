@@ -35,14 +35,15 @@
 }
 
 + (void)setUserInfoDefaultsWithExternalID:(nullable NSString *)externalID
-                                externalUserName:(nullable NSString *)externalUserName
-                                     phoneNumber:(nullable NSString *)phoneNumber
-                                           email:(nullable NSString *)email
+                         externalUserName:(nullable NSString *)externalUserName
+                              phoneNumber:(nullable NSString *)phoneNumber
+                                    email:(nullable NSString *)email
+                                   origin:(nullable NSString *)origin
 {
-    NSString* hashedExternalID = [TikTokTypeUtility toSha256:externalID];
-    NSString* hashedExternalUserName = [TikTokTypeUtility toSha256:externalUserName];
-    NSString* hashedPhoneNumber = [TikTokTypeUtility toSha256:phoneNumber];
-    NSString* hashedEmail = [TikTokTypeUtility toSha256:email];
+    NSString* hashedExternalID = [TikTokTypeUtility toSha256:externalID origin:origin];
+    NSString* hashedExternalUserName = [TikTokTypeUtility toSha256:externalUserName origin:origin];
+    NSString* hashedPhoneNumber = [TikTokTypeUtility toSha256:phoneNumber origin:origin];
+    NSString* hashedEmail = [TikTokTypeUtility toSha256:email origin:origin];
     
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
  

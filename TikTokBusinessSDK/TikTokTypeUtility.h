@@ -30,7 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @brief Sha256 hash for input
  */
-+ (nullable NSString *)toSha256: (nullable NSObject*)input;
++ (nullable NSString *)toSha256: (nullable NSObject*)input
+                         origin:(nullable NSString *)origin;
 
 @end
 

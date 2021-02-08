@@ -46,6 +46,7 @@
 }
 
 + (NSString *)toSha256:(NSObject *)input
+                origin:(nullable NSString *)origin
 {
   NSData *data = nil;
 
@@ -56,6 +57,7 @@
   }
 
   if (!data) {
+    [TikTokErrorHandler handleErrorWithOrigin:origin message:@"input for SHA256 conversion is incorrect"];
     return nil;
   }
 

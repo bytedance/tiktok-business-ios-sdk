@@ -475,7 +475,7 @@ static dispatch_once_t onceToken = 0;
         return;
     }
     
-    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
+    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email origin:NSStringFromClass([self class])];
     [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
 }
 
