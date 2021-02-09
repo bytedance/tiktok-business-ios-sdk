@@ -47,7 +47,7 @@
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     
     // flush timer logic
-    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+    if(config.initialFlushDelay && ![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         [self initializeFlushTimerWithSeconds:config.initialFlushDelay];
     } else {
         [self initializeFlushTimer];
