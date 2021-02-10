@@ -375,7 +375,8 @@ static dispatch_once_t onceToken = 0;
     [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
     [self.queue.eventQueue removeAllObjects];
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+    
+    if(self.queue.config.initialFlushDelay && ![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         // pause timer when entering background when first flush has not happened
         [preferences setObject:@"false" forKey:@"AreTimersOn"];
     }
@@ -398,7 +399,7 @@ static dispatch_once_t onceToken = 0;
         [self getGlobalConfig:self.queue.config isFirstInitialization:NO];
     }
     
-    if(![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+    if(self.queue.config.initialFlushDelay && ![[defaults objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         // if first flush has not occurred, resume timer without flushing
         [defaults setObject:@"true" forKey:@"AreTimersOn"];
     } else {
