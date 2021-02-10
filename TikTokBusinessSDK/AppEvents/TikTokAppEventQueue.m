@@ -84,6 +84,7 @@
     __weak TikTokAppEventQueue *weakSelf = self;
     if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
         [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+        [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
         // return to normal 15 second timer after first flush
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
     }
