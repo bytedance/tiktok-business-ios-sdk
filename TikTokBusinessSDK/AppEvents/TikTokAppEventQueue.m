@@ -47,7 +47,7 @@
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     
     // flush timer logic
-    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+    if(config.initialFlushDelay && ![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
         [self initializeFlushTimerWithSeconds:config.initialFlushDelay];
     } else {
         [self initializeFlushTimer];
@@ -84,9 +84,9 @@
     __weak TikTokAppEventQueue *weakSelf = self;
     if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
         [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-        // return to normal 15 second timer after first flush
-        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
     }
+    // return to normal 15 second timer after first flush
+    self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS target:self selector:@selector(handleFlushTimerUpdate:) userInfo:nil repeats:YES];
 }
 
 // function used for pre iOS 10, since selector takes timer as an argument
@@ -112,13 +112,12 @@
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds
             repeats:NO block:^(NSTimer *timer) {
             if ([[preferences objectForKey:@"AreTimersOn"]  isEqual: @"true"]) {
-                [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
                 [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-                self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                    repeats:YES block:^(NSTimer *timer) {
-                    [weakSelf flush:TikTokAppEventsFlushReasonTimer];
-                }];
             }
+            self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                repeats:YES block:^(NSTimer *timer) {
+                [weakSelf flush:TikTokAppEventsFlushReasonTimer];
+            }];
         }];
     } else {
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(handleFlushTimerUpdateOnFirstFlush:) userInfo:nil repeats:YES];
@@ -178,6 +177,18 @@
     if([[TikTokBusiness getInstance] isRemoteSwitchOn] == NO) {
         [self.logger info:@"[TikTokAppEventQueue] Remote switch is off, no flush logic invoked"];
         return;
+    }
+    
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    
+    // if there is initialFlushDelay, flush reason is not due to timer and first flush has not occurred, we don't flush
+    if(self.config.initialFlushDelay && flushReason != TikTokAppEventsFlushReasonTimer && ![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+        [self.logger info:@"[TikTokAppEventQueue] Flush logic not invoked due to delay for ATT"];
+        return;
+    }
+    
+    if(![[preferences objectForKey:@"HasFirstFlushOccurred"]  isEqual: @"true"]) {
+        [preferences setObject:@"true" forKey:@"HasFirstFlushOccurred"];
     }
     
     @try {

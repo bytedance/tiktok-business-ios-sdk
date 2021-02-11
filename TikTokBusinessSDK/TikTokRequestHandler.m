@@ -17,7 +17,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 
-#define SDK_VERSION @"iOS0.1.8"
+#define SDK_VERSION @"0.1.8"
 
 @interface TikTokRequestHandler()
 
@@ -146,7 +146,6 @@
     };
     
     NSDictionary *library = @{
-        @"name": @"tiktok-business-ios-sdk",
         @"version": SDK_VERSION
     };
     

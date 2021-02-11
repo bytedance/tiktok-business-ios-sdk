@@ -16,9 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)generateNewAnonymousID;
 
 + (void)setUserInfoDefaultsWithExternalID:(nullable NSString *)externalID
-                                externalUserName:(nullable NSString *)externalUserName
-                                     phoneNumber:(nullable NSString *)phoneNumber
-                                               email:(nullable NSString *)email;
+                         externalUserName:(nullable NSString *)externalUserName
+                              phoneNumber:(nullable NSString *)phoneNumber
+                                    email:(nullable NSString *)email
+                                   origin:(nullable NSString *)origin;
 
 + (NSDictionary *)getUserInfoDictionaryFromNSUserDefaults;
 
