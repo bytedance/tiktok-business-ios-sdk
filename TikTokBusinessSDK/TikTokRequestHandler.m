@@ -146,6 +146,7 @@
     };
     
     NSDictionary *library = @{
+        @"name": @"bytedance/tiktok-business-ios-sdk",
         @"version": SDK_VERSION
     };
     
@@ -187,7 +188,6 @@
         @"app_id" : config.appID,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
-        @"sdk_version": SDK_VERSION,
     };
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
