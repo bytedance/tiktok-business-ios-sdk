@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         /* POPULATE WITH ACCESS TOKEN, APPLICATION ID AND TIKTOK APPLICATION ID IN CONFIG */
-        let config = TikTokConfig.init(accessToken: "12312", appId: "2131", tiktokAppId: "123123")
+        let config = TikTokConfig.init(accessToken: nil, appId: nil, tiktokAppId: nil)
         config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         

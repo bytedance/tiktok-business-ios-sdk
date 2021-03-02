@@ -172,6 +172,7 @@
         };
         
         NSDictionary *eventDict = @{
+            @"tiktok_app_id" : config.tiktokAppId,
             @"type" : event.type,
             @"event": event.eventName,
             @"timestamp":event.timestamp,
@@ -186,7 +187,6 @@
     }
     
     NSDictionary *parametersDict = @{
-        @"tiktok_app_id" : config.tiktokAppId,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };
