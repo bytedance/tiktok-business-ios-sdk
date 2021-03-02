@@ -45,7 +45,7 @@
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appID, @"&sdk_version=", SDK_VERSION];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
@@ -117,6 +117,7 @@
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
     NSDictionary *app = @{
+        @"id": config.appId,
         @"name" : deviceInfo.appName,
         @"namespace": deviceInfo.appNamespace,
         @"version": deviceInfo.appVersion,
@@ -185,7 +186,7 @@
     }
     
     NSDictionary *parametersDict = @{
-        @"app_id" : config.appID,
+        @"tiktok_app_id" : config.tiktokAppId,
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };

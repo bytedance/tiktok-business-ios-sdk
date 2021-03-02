@@ -20,9 +20,9 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
++ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appId:(nullable NSString *)appId tiktokAppId:(nullable NSString *)tiktokAppId
 {
-    return [[TikTokConfig alloc] initWithAccessToken:accessToken appID:appID];
+    return [[TikTokConfig alloc] initWithAccessToken:accessToken appId:appId tiktokAppId:tiktokAppId];
 }
 
 - (void)disableTracking
@@ -91,14 +91,15 @@
     [self.logger info:@"[TikTokConfig] Initial flush delay set to: %lu", seconds];
 }
 
-- (id)initWithAccessToken:(nullable NSString *)accessToken appID:(nullable NSString *)appID
+- (id)initWithAccessToken:(nullable NSString *)accessToken appId:(nullable NSString *)appId tiktokAppId:(nullable NSString *)tiktokAppId
 {
     self = [super init];
     
     if(self == nil) return nil;
     
     _accessToken = accessToken;
-    _appID = appID;
+    _appId = appId;
+    _tiktokAppId = tiktokAppId;
     _trackingEnabled = YES;
     _automaticTrackingEnabled = YES;
     _installTrackingEnabled = YES;

@@ -30,7 +30,7 @@
 
 - (void)setUp {
     [super setUp];
-    TikTokConfig *config = [[TikTokConfig alloc] initWithAccessToken:@"ACCESS_TOKEN" appID: @"123" tiktokAppID: @"ABC"];
+    TikTokConfig *config = [[TikTokConfig alloc] initWithAccessToken:@"ACCESS_TOKEN" appId: @"123" tiktokAppId: @"ABC"];
     [TikTokBusiness initializeSdk:config];
     TikTokBusiness *tiktokBusiness = [TikTokBusiness getInstance];
     self.tiktokBusiness = OCMPartialMock(tiktokBusiness);
