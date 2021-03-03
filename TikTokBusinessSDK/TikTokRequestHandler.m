@@ -144,6 +144,7 @@
         @"platform" : deviceInfo.devicePlatform,
         @"idfa": deviceInfo.deviceIdForAdvertisers,
         @"idfv": deviceInfo.deviceVendorId,
+        @"version": deviceInfo.systemVersion
     };
     
     NSDictionary *library = @{

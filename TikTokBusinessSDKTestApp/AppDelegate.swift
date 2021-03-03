@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         /* POPULATE WITH ACCESS TOKEN, APPLICATION ID AND TIKTOK APPLICATION ID IN CONFIG */
         let config = TikTokConfig.init(accessToken: nil, appId: nil, tiktokAppId: nil)
-        config?.setLogLevel(TikTokLogLevelVerbose)          // Set Log Level
+        
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
         config?.disableTracking()                           // Disable All Tracking
