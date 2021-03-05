@@ -116,13 +116,19 @@
 {
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
-    NSDictionary *app = @{
-        @"id": config.appId,
+    
+    NSDictionary *tempApp = @{
         @"name" : deviceInfo.appName,
         @"namespace": deviceInfo.appNamespace,
         @"version": deviceInfo.appVersion,
         @"build": deviceInfo.appBuild,
     };
+    
+    NSMutableDictionary *app = [[NSMutableDictionary alloc] initWithDictionary:tempApp];
+    
+    if(config.tiktokAppId){
+        [app setValue:config.appId forKey:@"id"];
+    }
     
     // ATT Authorization Status switch determined at flush
     // default status is NOT_APPLICABLE
@@ -139,13 +145,19 @@
         }
     }
     
-    NSDictionary *device = @{
+    // API version compatibility b/w 1.0 and 2.0
+    NSDictionary *tempDevice = @{
         @"att_status": attAuthorizationStatus,
         @"platform" : deviceInfo.devicePlatform,
         @"idfa": deviceInfo.deviceIdForAdvertisers,
         @"idfv": deviceInfo.deviceVendorId,
-        @"version": deviceInfo.systemVersion
     };
+    
+    NSMutableDictionary *device = [[NSMutableDictionary alloc] initWithDictionary:tempDevice];
+    
+    if(config.tiktokAppId){
+        [device setValue:deviceInfo.systemVersion forKey:@"version"];
+    }
     
     NSDictionary *library = @{
         @"name": @"bytedance/tiktok-business-ios-sdk",
@@ -173,13 +185,13 @@
         };
         
         NSDictionary *eventDict = @{
-            @"tiktok_app_id" : config.tiktokAppId,
             @"type" : event.type,
             @"event": event.eventName,
             @"timestamp":event.timestamp,
             @"context": context,
             @"properties": event.properties,
         };
+        
         [batch addObject:eventDict];
     }
     
@@ -187,10 +199,19 @@
         self.logger = [TikTokFactory getLogger];
     }
     
-    NSDictionary *parametersDict = @{
+    // API version compatibility b/w 1.0 and 2.0
+    NSDictionary *tempParametersDict = @{
         @"batch": batch,
         @"event_source": @"APP_EVENTS_SDK",
     };
+    
+    NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:tempParametersDict];
+    
+    if(config.tiktokAppId){
+        [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
+    } else {
+        [parametersDict setValue:config.appId forKey:@"app_id"];
+    }
     
     NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
     NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
