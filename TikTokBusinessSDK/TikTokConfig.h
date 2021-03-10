@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly, nonnull) NSString *accessToken;
 @property (nonatomic, copy, readonly, nonnull) NSString *appId;
-@property (nonatomic, copy, readonly, nonnull) NSString *tiktokAppId;
+@property (nonatomic, readonly) NSNumber * tiktokAppId;
 @property (nonatomic, assign) BOOL trackingEnabled;
 @property (nonatomic, assign) BOOL automaticTrackingEnabled;
 @property (nonatomic, assign) BOOL installTrackingEnabled;
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken
                                            appId:(nullable NSString *)appId
-                                     tiktokAppId:(nullable NSString *)tiktokAppId;
+                                     tiktokAppId:(nullable NSNumber *)tiktokAppId;
 
 - (void)disableTracking;
 - (void)disableAutomaticTracking;
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable id)initWithAccessToken:(nullable NSString *)accessToken
                              appId:(nullable NSString *)appId
-                       tiktokAppId:(nullable NSString *)tiktokAppId;
+                       tiktokAppId:(nullable NSNumber *)tiktokAppId;
 
 @end
 
