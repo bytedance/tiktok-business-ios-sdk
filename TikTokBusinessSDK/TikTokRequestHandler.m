@@ -208,8 +208,6 @@
     NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:tempParametersDict];
     
     if(config.tiktokAppId){
-//        NSMutableString *tiktokAppIdAsString = [[NSMutableString alloc] initWithString:[config.tiktokAppId stringValue]];
-//        [tiktokAppIdAsString replaceOccurrencesOfString:@"\"" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [tiktokAppIdAsString length])];
         [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
     } else {
         [parametersDict setValue:config.appId forKey:@"app_id"];
