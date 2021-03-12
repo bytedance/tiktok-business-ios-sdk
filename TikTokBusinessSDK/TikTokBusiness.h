@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @note See TikTokConfig.h for more configuration options
  *
  * @param tiktokConfig The configuration object must be initialized before this function is called.
- *                     This object contains the accessToken and appID which can be acquired from
+ *                     This object contains the accessToken, appId and tiktokAppId which can be acquired from
  *                     TikTok's Marketing API dashboard.
 */
 + (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
