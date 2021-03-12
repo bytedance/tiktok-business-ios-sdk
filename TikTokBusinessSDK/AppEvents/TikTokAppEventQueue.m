@@ -245,9 +245,6 @@
                 if(self.config.appId == nil) {
                     [self.logger info:@"[TikTokAppEventQueue] Request not sent because application ID is null"];
                 }
-                if(self.config.tiktokAppId == nil) {
-                    [self.logger info:@"[TikTokAppEventQueue] Request not sent because TikTok application ID is null"];
-                }
             }
         }
         [self.logger info:@"[TikTokAppEventQueue] End flush, current queue count: %lu", self.eventQueue.count];
