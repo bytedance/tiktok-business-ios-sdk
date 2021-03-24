@@ -158,12 +158,11 @@ static dispatch_once_t onceToken = 0;
 }
 
 + (void)identifyWithExternalID:(nullable NSString *)externalID
-        externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
 {
     @synchronized (self) {
-        [[TikTokBusiness getInstance] identifyWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email];
+        [[TikTokBusiness getInstance] identifyWithExternalID:externalID phoneNumber:phoneNumber email:email];
         
     }
 }
@@ -465,7 +464,6 @@ static dispatch_once_t onceToken = 0;
 }
 
 - (void)identifyWithExternalID:(nullable NSString *)externalID
-        externalUserName:(nullable NSString *)externalUserName
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
 {
@@ -476,7 +474,7 @@ static dispatch_once_t onceToken = 0;
         return;
     }
     
-    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID externalUserName:externalUserName phoneNumber:phoneNumber email:email origin:NSStringFromClass([self class])];
+    [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID phoneNumber:phoneNumber email:email origin:NSStringFromClass([self class])];
     [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
 }
 
