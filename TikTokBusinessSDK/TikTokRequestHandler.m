@@ -17,7 +17,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 
-#define SDK_VERSION @"0.1.10"
+#define SDK_VERSION @"0.1.11"
 
 @interface TikTokRequestHandler()
 
@@ -45,7 +45,7 @@
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tt_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
@@ -270,10 +270,10 @@
             NSString *message = [dataDictionary objectForKey:@"message"];
             
             // code == 40000 indicates error from API call
-            // meaning all events have unhashed values
+            // meaning all events have unhashed values or deprecated field is used
             // we do not persist events in the scenario
             if([code intValue] == 40000) {
-                [self.logger error:@"[TikTokRequestHandler] unhashed PII data error: %@, message: %@", code, message];
+                [self.logger error:@"[TikTokRequestHandler] data error: %@, message: %@", code, message];
             
             // code == 20001 indicates partial error from API call
             // meaning some events have unhashed values
