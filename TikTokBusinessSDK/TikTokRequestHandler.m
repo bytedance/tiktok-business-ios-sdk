@@ -17,7 +17,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 
-#define SDK_VERSION @"0.1.11"
+#define SDK_VERSION @"0.1.12"
 
 @interface TikTokRequestHandler()
 
@@ -45,7 +45,7 @@
 {
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tt_app_id=", config.tiktokAppId];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
