@@ -49,6 +49,8 @@
     NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads-api.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tt_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
+    [request setValue:@"1" forHTTPHeaderField:@"x-use-ppe"];
+    [request setValue:@"ppe_bofang" forHTTPHeaderField:@"x-tt-env"];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
