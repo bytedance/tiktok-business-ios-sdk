@@ -17,7 +17,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 
-#define SDK_VERSION @"0.1.12"
+#define SDK_VERSION @"0.1.13"
 
 @interface TikTokRequestHandler()
 
