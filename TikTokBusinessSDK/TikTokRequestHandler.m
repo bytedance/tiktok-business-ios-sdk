@@ -37,7 +37,7 @@
     // Default API version
     self.apiVersion = @"v.1.1";
     // Default API domain
-    self.apiDomain = @"ads.tiktok.com";
+    self.apiDomain = @"ads-api.tiktok.com";
     return self;
 }
 
@@ -229,7 +229,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", self.apiDomain == nil ? @"ads.tiktok.com" : self.apiDomain, @"/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", self.apiDomain == nil ? @"ads-api.tiktok.com" : self.apiDomain, @"/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
