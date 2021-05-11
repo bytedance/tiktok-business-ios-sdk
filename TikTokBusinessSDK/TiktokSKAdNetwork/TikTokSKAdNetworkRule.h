@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TikTokSKAdNetworkEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<TikTokSKAdNetworkEvent *> *events;
 
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
-- (BOOL)isMatchedWith
+- (BOOL)isMatchedWithRecordedEvents:(NSSet<NSString *> *)recordedEvents recordedValues:(NSDictionary<NSString *, NSDictionary *> *)recordedValues;
 
 @end
 
