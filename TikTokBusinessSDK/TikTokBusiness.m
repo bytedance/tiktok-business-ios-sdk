@@ -26,6 +26,7 @@
 #import "TikTokUserAgentCollector.h"
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
+#import "TikTokSKAdNetworkConversionConfiguration.h"
 
 @interface TikTokBusiness()
 
@@ -322,6 +323,7 @@ static dispatch_once_t onceToken = 0;
 - (void)trackEvent:(NSString *)eventName
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName];
+    [[TikTokSKAdNetworkSupport sharedInstance] matchEventToSKANConfig:eventName withValue:0];
     [self.queue addEvent:appEvent];
     if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
@@ -332,6 +334,7 @@ static dispatch_once_t onceToken = 0;
     withProperties: (NSDictionary *)properties
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
+    [[TikTokSKAdNetworkSupport sharedInstance] matchEventToSKANConfig:eventName withValue:0];
     [self.queue addEvent:appEvent];
     if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
@@ -607,6 +610,20 @@ static dispatch_once_t onceToken = 0;
             }
         }
     }];
+}
+
+-(void)logSKANConfig
+{
+    NSInteger currConversionValue = [TikTokSKAdNetworkSupport sharedInstance].currentConversionValue;
+    NSLog(@"CURRENT CONVERSION VALUE %ld", currConversionValue);
+    [[TikTokSKAdNetworkConversionConfiguration sharedInstance] logAllRules];
+}
+
++ (void)logSKANConfig
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] logSKANConfig];
+    }
 }
 
 @end

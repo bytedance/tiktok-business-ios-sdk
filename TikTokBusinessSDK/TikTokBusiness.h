@@ -202,6 +202,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 - (void)getGlobalConfig:(TikTokConfig *)config
   isFirstInitialization:(BOOL)isFirstInitialization;
+- (void)logSKANConfig;
++ (void)logSKANConfig;
 
 @end
 

@@ -7,7 +7,27 @@
 //
 
 #import "TikTokSKAdNetworkRule.h"
+#import "TikTokTypeUtility.h"
 
 @implementation TikTokSKAdNetworkRule
+
+- (nullable instancetype)initWithJSON:(NSDictionary<NSString *,id> *)dict
+{
+    if((self = [super init])){
+        
+        dict = [TikTokTypeUtility dictionaryValue:dict];
+        if(!dict){
+            return nil;
+        }
+        NSNumber *conversionValue = [dict objectForKey:@"conversion_value"];
+        _conversionValue = conversionValue;
+        id eventDictionary = [dict objectForKey:@"event_funnel"][0];
+        NSString *eventName = [eventDictionary objectForKey:@"event_name_report"];
+        _eventName = eventName;
+        _minRevenue = [dict objectForKey:@"revenue_min"];
+        _maxRevenue = [dict objectForKey:@"revenue_max"];
+    }
+    return self;
+}
 
 @end

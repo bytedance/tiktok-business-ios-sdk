@@ -43,7 +43,7 @@ class MetricsViewController: UIViewController {
             "LoanApproval": ["value"],
             "LoanDisbursal": ["value"],
             "Login": [],
-            "Purchase": ["page_type", "sku_id", "description", "number_of_items", "coupon_used", "currency", "value", "group_type", "game_item_id", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger", "service_type", "service_id"],
+            "Purchase": ["page_type", "value", "sku_id", "description", "number_of_items", "coupon_used", "currency", "group_type", "game_item_id", "room_type", "location", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "outbound_origination_city", "outbound_destination_city", "return_origination_city", "return_destination_city", "class", "number_of_passenger", "service_type", "service_id"],
             "Rate": ["page_type", "sku_id", "content", "rating_value", "max_rating_value", "rate"],
             "Registration": ["registration_method"],
             "Search": ["search_string", "checkin_date", "checkout_date", "number_of_rooms", "number_of_nights", "origination_city", "destination_city", "departure_date", "return_date", "class", "number_of_passenger"],

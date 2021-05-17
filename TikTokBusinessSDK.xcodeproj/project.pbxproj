@@ -29,8 +29,6 @@
 		0ADCF5422538D16900D7B57C /* TikTokRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */; };
 		0ADCF551253A212A00D7B57C /* TikTokTypeUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ADCF54F253A212A00D7B57C /* TikTokTypeUtility.h */; };
 		0ADCF552253A212A00D7B57C /* TikTokTypeUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ADCF550253A212A00D7B57C /* TikTokTypeUtility.m */; };
-		8B16176D264A404F00D7CC86 /* TikTokSKAdNetworkEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B16176B264A404F00D7CC86 /* TikTokSKAdNetworkEvent.h */; };
-		8B16176E264A404F00D7CC86 /* TikTokSKAdNetworkEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B16176C264A404F00D7CC86 /* TikTokSKAdNetworkEvent.m */; };
 		8B1811DB251EABF800CBBE2E /* TikTokPaymentObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */; };
 		8B1811DC251EABF800CBBE2E /* TikTokPaymentObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */; };
 		8B23DF8F2502BA73008351FA /* TikTokBusinessSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B23DF8D2502BA73008351FA /* TikTokBusinessSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -137,8 +135,6 @@
 		0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokRequestHandler.m; sourceTree = "<group>"; };
 		0ADCF54F253A212A00D7B57C /* TikTokTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokTypeUtility.h; sourceTree = "<group>"; };
 		0ADCF550253A212A00D7B57C /* TikTokTypeUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokTypeUtility.m; sourceTree = "<group>"; };
-		8B16176B264A404F00D7CC86 /* TikTokSKAdNetworkEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokSKAdNetworkEvent.h; sourceTree = "<group>"; };
-		8B16176C264A404F00D7CC86 /* TikTokSKAdNetworkEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokSKAdNetworkEvent.m; sourceTree = "<group>"; };
 		8B1811D9251EABF800CBBE2E /* TikTokPaymentObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TikTokPaymentObserver.h; sourceTree = "<group>"; };
 		8B1811DA251EABF800CBBE2E /* TikTokPaymentObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TikTokPaymentObserver.m; sourceTree = "<group>"; };
 		8B23DF8A2502BA73008351FA /* TikTokBusinessSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TikTokBusinessSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -347,8 +343,6 @@
 				8B7512BC2642996D009DE653 /* TikTokSKAdNetworkConversionConfiguration.m */,
 				8B7512C126429A05009DE653 /* TikTokSKAdNetworkRule.h */,
 				8B7512C226429A05009DE653 /* TikTokSKAdNetworkRule.m */,
-				8B16176B264A404F00D7CC86 /* TikTokSKAdNetworkEvent.h */,
-				8B16176C264A404F00D7CC86 /* TikTokSKAdNetworkEvent.m */,
 			);
 			path = TiktokSKAdNetwork;
 			sourceTree = "<group>";
@@ -397,7 +391,6 @@
 				0ADCF551253A212A00D7B57C /* TikTokTypeUtility.h in Headers */,
 				8B93D3042530668600EDAAA1 /* TikTokFactory.h in Headers */,
 				8B23DFBB25080821008351FA /* TikTokConfig.h in Headers */,
-				8B16176D264A404F00D7CC86 /* TikTokSKAdNetworkEvent.h in Headers */,
 				0A29066E250B232B00CF3B73 /* TikTokAppEventUtility.h in Headers */,
 				8B64FDEC2548BA82004AFC49 /* TikTokUserAgentCollector.h in Headers */,
 				0ADCF5412538D16900D7B57C /* TikTokRequestHandler.h in Headers */,
@@ -566,7 +559,6 @@
 				0ADCF552253A212A00D7B57C /* TikTokTypeUtility.m in Sources */,
 				8B7512C426429A05009DE653 /* TikTokSKAdNetworkRule.m in Sources */,
 				0A1A065125095429001463B8 /* TikTokAppEvent.m in Sources */,
-				8B16176E264A404F00D7CC86 /* TikTokSKAdNetworkEvent.m in Sources */,
 				8B64FE052548C68D004AFC49 /* TikTokSKAdNetworkSupport.m in Sources */,
 				0A1A065525095483001463B8 /* TikTokAppEventQueue.m in Sources */,
 				8B93D3052530668600EDAAA1 /* TikTokFactory.m in Sources */,

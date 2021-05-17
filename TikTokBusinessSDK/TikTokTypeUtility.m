@@ -12,6 +12,11 @@
 
 @implementation TikTokTypeUtility
 
++ (id)objectValue:(id)object
+{
+    return ([object isKindOfClass:[NSNull class]] ? nil : object);
+}
+
 + (NSData *)dataWithJSONObject:(id)obj
                        options:(NSJSONWritingOptions)opt
                          error:(NSError *__autoreleasing  _Nullable *)error
@@ -70,5 +75,19 @@
 
   return [hashedItem copy];
 }
+
++ (NSDictionary *)dictionaryValue:(id)object
+{
+      
+    return (NSDictionary *)[self _objectValue:object ofClass:[NSDictionary class]];
+}
+
+#pragma mark - Helper Methods
+
++ (id)_objectValue:(id)object ofClass:(Class)expectedClass
+{
+  return ([object isKindOfClass:expectedClass] ? object : nil);
+}
+
 
 @end

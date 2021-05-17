@@ -6,6 +6,7 @@
 //
 
 #import "TikTokSKAdNetworkSupport.h"
+#import "TikTokSKAdNetworkConversionConfiguration.h"
 
 @interface TikTokSKAdNetworkSupport()
 
@@ -32,6 +33,7 @@
 {
     self = [super init];
     if (self) {
+        _currentConversionValue = 0;
         self.skAdNetworkClass = NSClassFromString(@"SKAdNetwork");
         self.skAdNetworkRegisterAppForAdNetworkAttribution = NSSelectorFromString(@"registerAppForAdNetworkAttribution");
         self.skAdNetworkUpdateConversionValue = NSSelectorFromString(@"updateConversionValue");
@@ -52,6 +54,26 @@
     if (@available(iOS 14.0, *)) {
         ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, conversionValue);
     }
+}
+
+- (void)matchEventToSKANConfig:(NSString *)eventName withValue:(nullable NSString *)value
+{
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    NSNumber *eventValue = [formatter numberFromString:value];
+    NSLog(@"EVENT VALUE: %@", eventValue);
+    NSMutableArray *rules = [TikTokSKAdNetworkConversionConfiguration sharedInstance].conversionValueRules;
+    for(TikTokSKAdNetworkRule *rule in rules){
+        if((NSInteger)rule.conversionValue > _currentConversionValue){
+            if([eventName isEqual:rule.eventName] && eventValue >= rule.minRevenue && eventValue <= rule.maxRevenue){
+                NSLog(@"Prev conversion value: %ld", _currentConversionValue);
+                _currentConversionValue = (NSInteger)rule.conversionValue;
+                NSLog(@"New conversion value: %ld", _currentConversionValue);
+                break;
+            }
+        }
+    }
+    
 }
 
 @end

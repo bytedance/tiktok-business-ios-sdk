@@ -16,6 +16,7 @@
 #import "TikTokTypeUtility.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
+#import "TikTokSKAdNetworkConversionConfiguration.h"
 
 #define SDK_VERSION @"0.1.12"
 
@@ -40,9 +41,14 @@
     return self;
 }
 
+
+
 - (void)getRemoteSwitch:(TikTokConfig *)config
   withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
+    NSString *SKANEventConfigString = [NSString stringWithFormat:@"%@", @"{ \"skan_event_config\":  [{\"conversion_value\":63, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":62, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":61, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":60, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"AddToCart\"}]}, {\"conversion_value\":59, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":58, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":57, \"revenue_min\": 20, \"revenue_max\": 100,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]} ] }"];
+    
+    NSData *SKANEventConfigData = [SKANEventConfigString dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
@@ -82,67 +88,21 @@
         }
         
         id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
+        id skanEventConfigParsed = [TikTokTypeUtility JSONObjectWithData:SKANEventConfigData options:0 error:nil origin:NSStringFromClass([self class])];
         
-        NSDictionary *event1 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:63], @"conversionValue",
-                                @"ViewContent", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:0], @"revenueMax",
-                                [NSNumber numberWithInt:3], @"occurence",
-                                [NSNumber numberWithInt:1], @"priority",
-                                nil];
-        NSDictionary *event2 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:62], @"conversionValue",
-                                @"ViewContent", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:0], @"revenueMax",
-                                [NSNumber numberWithInt:3], @"occurence",
-                                [NSNumber numberWithInt:1], @"priority",
-                                nil];
-        NSDictionary *event3 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:61], @"conversionValue",
-                                @"ViewContent", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:0], @"revenueMax",
-                                [NSNumber numberWithInt:3], @"occurence",
-                                [NSNumber numberWithInt:1], @"priority",
-                                nil];
-        NSDictionary *event4 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:60], @"conversionValue",
-                                @"AddToCart", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:0], @"revenueMax",
-                                [NSNumber numberWithInt:1], @"occurence",
-                                [NSNumber numberWithInt:2], @"priority",
-                                nil];
-        NSDictionary *event5 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:59], @"conversionValue",
-                                @"Purchase", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:10], @"revenueMax",
-                                [NSNumber numberWithInt:2], @"occurence",
-                                [NSNumber numberWithInt:3], @"priority",
-                                nil];
-        NSDictionary *event6 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:58], @"conversionValue",
-                                @"Purchase", @"eventName",
-                                [NSNumber numberWithInt:0], @"revenueMin",
-                                [NSNumber numberWithInt:10], @"revenueMax",
-                                [NSNumber numberWithInt:2], @"occurence",
-                                [NSNumber numberWithInt:3], @"priority",
-                                nil];
-        NSDictionary *event7 = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithInt:57], @"conversionValue",
-                                @"Purchase", @"eventName",
-                                [NSNumber numberWithInt:20], @"revenueMin",
-                                [NSNumber numberWithInt:100], @"revenueMax",
-                                [NSNumber numberWithInt:1], @"occurence",
-                                [NSNumber numberWithInt:4], @"priority",
-                                nil];
+        [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithJSON:skanEventConfigParsed];
+//        [skanEventConfigParsed isKindOfClass:[NSDictionary class]];
+////        NSLog(@"Parsed JSON Object: %@", skanEventConfigParsed);
+//        NSMutableArray *skanEvents = [skanEventConfigParsed objectForKey:@"skan_event_config"];
+////        NSLog(@"Parse array of JSON object: %@", skanEvents);
+//
+//        for(id skanEvent in skanEvents){
+////            NSLog(@"SKAN EVENT: --- %@", skanEvent);
+//            NSNumber* conversionValue = [skanEvent objectForKey:@"conversion_value"];
+//            NSLog(@"Conversion Value: --- %@", conversionValue);
+//
+//        }
         
-        NSArray *skanEventArray = [NSArray arrayWithObjects:event1, event2, event3, event4, event5, event6, event7, nil];
-        NSDictionary *skanEventConf = [NSDictionary dictionaryWithObjectsAndKeys:skanEventArray, @"skanEventConf", nil];
-
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
             // code != 0 indicates error from API call
@@ -155,7 +115,7 @@
                 return;
             }
             NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
-            NSLog(@"%@", skanEventConf);
+//            NSLog(@"%@", skanEventConf);
             NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
             isSwitchOn = [[businessSDKConfig objectForKey:@"enable_sdk"] boolValue];
             NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];

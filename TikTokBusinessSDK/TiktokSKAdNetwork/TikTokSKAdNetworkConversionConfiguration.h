@@ -7,10 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TikTokSKAdNetworkRule.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTokSKAdNetworkConversionConfiguration : NSObject
+
+@property (nonatomic, readonly, copy) NSMutableArray<TikTokSKAdNetworkRule *> *conversionValueRules;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *conversionValueConfig;
+
++ (TikTokSKAdNetworkConversionConfiguration *)sharedInstance;
+- (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
+- (void)logAllRules;
 
 @end
 
