@@ -50,9 +50,14 @@
     
     NSData *SKANEventConfigData = [SKANEventConfigString dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
+//    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
+    // TODO: Remove after testing
+    NSString *url = [NSString stringWithFormat:@"%@", @"https://haapi-boe.byteintl.net/open_api/business_sdk_config/get/?skan_config=true&app_id=com.shopee.sg&tiktok_app_id=6948219211399348225"];
     [request setURL:[NSURL URLWithString:url]];
-    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
+    [request setValue:@"boe_bitcoin" forHTTPHeaderField:@"x-tt-env"];
+    [request setValue:@"1" forHTTPHeaderField:@"x-use-boe"];
+    [request setValue:@"d5db46888d3884b1b91b1b77542b16514e788f6f" forHTTPHeaderField:@"Access-Token"];
+//    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
@@ -88,20 +93,6 @@
         }
         
         id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
-        id skanEventConfigParsed = [TikTokTypeUtility JSONObjectWithData:SKANEventConfigData options:0 error:nil origin:NSStringFromClass([self class])];
-        
-        [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithJSON:skanEventConfigParsed];
-//        [skanEventConfigParsed isKindOfClass:[NSDictionary class]];
-////        NSLog(@"Parsed JSON Object: %@", skanEventConfigParsed);
-//        NSMutableArray *skanEvents = [skanEventConfigParsed objectForKey:@"skan_event_config"];
-////        NSLog(@"Parse array of JSON object: %@", skanEvents);
-//
-//        for(id skanEvent in skanEvents){
-////            NSLog(@"SKAN EVENT: --- %@", skanEvent);
-//            NSNumber* conversionValue = [skanEvent objectForKey:@"conversion_value"];
-//            NSLog(@"Conversion Value: --- %@", conversionValue);
-//
-//        }
         
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
@@ -115,7 +106,6 @@
                 return;
             }
             NSDictionary *dataValue = [dataDictionary objectForKey:@"data"];
-//            NSLog(@"%@", skanEventConf);
             NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
             isSwitchOn = [[businessSDKConfig objectForKey:@"enable_sdk"] boolValue];
             NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];
@@ -123,6 +113,14 @@
                 self.apiVersion = apiVersion;
             }
             isGlobalConfigFetched = YES;
+            
+//            NSData *SKANEventConfigDataL = [NSKeyedArchiver archivedDataWithRootObject:dataValue];
+//            NSLog(@"%@", dataValue);
+//            NSLog(@"%@ DATA", SKANEventConfigData);
+
+            id skanEventConfigParsed = [TikTokTypeUtility JSONObjectWithData:SKANEventConfigData options:0 error:nil origin:NSStringFromClass([self class])];
+            
+            [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithJSON:skanEventConfigParsed];
             NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             [self.logger verbose:@"[TikTokRequestHandler] Request global config response: %@", requestResponse];
         }

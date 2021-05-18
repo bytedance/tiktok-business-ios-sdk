@@ -25,9 +25,7 @@
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
 {
     if ((self = [super init])) {
-        
-        
-        
+                
         @try {
             _conversionValueConfig = [dict objectForKey:@"skan_event_config"];
             _conversionValueRules = [[NSMutableArray alloc] init];
