@@ -36,7 +36,7 @@
         _currentConversionValue = 0;
         self.skAdNetworkClass = NSClassFromString(@"SKAdNetwork");
         self.skAdNetworkRegisterAppForAdNetworkAttribution = NSSelectorFromString(@"registerAppForAdNetworkAttribution");
-        self.skAdNetworkUpdateConversionValue = NSSelectorFromString(@"updateConversionValue");
+        self.skAdNetworkUpdateConversionValue = NSSelectorFromString(@"updateConversionValue:");
     }
     return self;
 }
@@ -44,6 +44,7 @@
 - (void)registerAppForAdNetworkAttribution
 {
     if (@available(iOS 14.0, *)) {
+        NSLog(@"App registered for ad network attribution");
         ((id (*)(id, SEL))[self.skAdNetworkClass methodForSelector:self.skAdNetworkRegisterAppForAdNetworkAttribution])(self.skAdNetworkClass, self.skAdNetworkRegisterAppForAdNetworkAttribution);
     }
 }
@@ -52,6 +53,8 @@
 {
     // Equivalent call: [SKAdNetwork updateConversionValue:conversionValue]
     if (@available(iOS 14.0, *)) {
+        // TODO: Remove comment after QA testing
+        NSLog(@"Conversion value updated to: %ld", conversionValue);
         ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, conversionValue);
     }
 }
@@ -61,14 +64,17 @@
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     formatter.numberStyle = NSNumberFormatterDecimalStyle;
     NSNumber *eventValue = [formatter numberFromString:value];
-    NSLog(@"EVENT VALUE: %@", eventValue);
     NSMutableArray *rules = [TikTokSKAdNetworkConversionConfiguration sharedInstance].conversionValueRules;
+    
     for(TikTokSKAdNetworkRule *rule in rules){
-        if((NSInteger)rule.conversionValue > _currentConversionValue){
-            if([eventName isEqual:rule.eventName] && eventValue >= rule.minRevenue && eventValue <= rule.maxRevenue){
-                NSLog(@"Prev conversion value: %ld", _currentConversionValue);
-                _currentConversionValue = (NSInteger)rule.conversionValue;
-                NSLog(@"New conversion value: %ld", _currentConversionValue);
+        if([rule.conversionValue intValue] > [_currentConversionValue intValue]){
+            if([eventName isEqual:rule.eventName] && [eventValue intValue] >= [rule.minRevenue intValue] && [eventValue intValue] <= [rule.maxRevenue intValue]){
+                _currentConversionValue = rule.conversionValue;
+                [self updateConversionValue:[_currentConversionValue intValue]];
+//                [self registerAppForAdNetworkAttribution];
+//                if (@available(iOS 14.0, *)) {
+//                    ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, [_currentConversionValue intValue]);
+//                }
                 break;
             }
         }

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TikTokSKAdNetworkSupport : NSObject
 
-@property (nonatomic, assign) NSInteger currentConversionValue;
+@property (nonatomic, assign) NSNumber *currentConversionValue;
 
 /* The maximum time for app install attribution is set to 3 days by default,
  * but this value can be changed using setSKAdNetworkCalloutMaxTimeSinceInstall()
