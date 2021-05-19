@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TikTokSKAdNetworkConversionConfiguration : NSObject
 
 @property (nonatomic, readonly, copy) NSMutableArray<TikTokSKAdNetworkRule *> *conversionValueRules;
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *conversionValueConfig;
+@property (nonatomic, readonly, copy) NSDictionary *conversionValueConfig;
 
 + (TikTokSKAdNetworkConversionConfiguration *)sharedInstance;
-- (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
+- (nullable instancetype)initWithDict:(nullable NSDictionary *)dict;
 - (void)logAllRules;
 
 @end

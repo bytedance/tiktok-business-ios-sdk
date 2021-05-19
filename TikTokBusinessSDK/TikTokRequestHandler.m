@@ -46,9 +46,10 @@
 - (void)getRemoteSwitch:(TikTokConfig *)config
   withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
+    // TODO: Remove after QA
     NSString *SKANEventConfigString = [NSString stringWithFormat:@"%@", @"{ \"skan_event_config\":  [{\"conversion_value\":63, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":62, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":61, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":60, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"AddToCart\"}]}, {\"conversion_value\":59, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":58, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":57, \"revenue_min\": 20, \"revenue_max\": 100,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]} ] }"];
-    
-    NSData *SKANEventConfigData = [SKANEventConfigString dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSData *SKANEventDummyData = [SKANEventConfigString dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 //    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     // TODO: Remove after testing
@@ -93,7 +94,6 @@
         }
         
         id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
-        
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
             // code != 0 indicates error from API call
@@ -114,13 +114,7 @@
             }
             isGlobalConfigFetched = YES;
             
-//            NSData *SKANEventConfigDataL = [NSKeyedArchiver archivedDataWithRootObject:dataValue];
-//            NSLog(@"%@", dataValue);
-//            NSLog(@"%@ DATA", SKANEventConfigData);
-
-            id skanEventConfigParsed = [TikTokTypeUtility JSONObjectWithData:SKANEventConfigData options:0 error:nil origin:NSStringFromClass([self class])];
-            
-            [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithJSON:skanEventConfigParsed];
+            [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithDict:dataValue];
             NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             [self.logger verbose:@"[TikTokRequestHandler] Request global config response: %@", requestResponse];
         }

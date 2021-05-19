@@ -618,18 +618,4 @@ static dispatch_once_t onceToken = 0;
     }];
 }
 
--(void)logSKANConfig
-{
-    NSInteger currConversionValue = [TikTokSKAdNetworkSupport sharedInstance].currentConversionValue;
-    NSLog(@"CURRENT CONVERSION VALUE %ld", currConversionValue);
-    [[TikTokSKAdNetworkConversionConfiguration sharedInstance] logAllRules];
-}
-
-+ (void)logSKANConfig
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] logSKANConfig];
-    }
-}
-
 @end

@@ -11,7 +11,7 @@
 
 @implementation TikTokSKAdNetworkRule
 
-- (nullable instancetype)initWithJSON:(NSDictionary<NSString *,id> *)dict
+- (nullable instancetype)initWithDict:(NSDictionary *)dict
 {
     if((self = [super init])){
         

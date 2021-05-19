@@ -22,7 +22,7 @@
 }
 
 
-- (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
+- (nullable instancetype)initWithDict:(NSDictionary *)dict
 {
     if ((self = [super init])) {
                 
@@ -30,7 +30,7 @@
             _conversionValueConfig = [dict objectForKey:@"skan_event_config"];
             _conversionValueRules = [[NSMutableArray alloc] init];
             for(id conversionRule in _conversionValueConfig){
-                TikTokSKAdNetworkRule *convRule = [[TikTokSKAdNetworkRule alloc] initWithJSON:conversionRule];
+                TikTokSKAdNetworkRule *convRule = [[TikTokSKAdNetworkRule alloc] initWithDict:conversionRule];
                 [_conversionValueRules addObject:convRule];
             }
             // Reversing the array

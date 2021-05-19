@@ -16,10 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *eventName;
 @property (nonatomic) NSNumber *minRevenue;
 @property (nonatomic) NSNumber *maxRevenue;
-//@property (nonatomic, copy) TikTokSKAdNetworkEvent *event;
 
-- (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
-//- (BOOL)isMatchedWithRecordedEvents:(NSSet<NSString *> *)recordedEvents recordedValues:(NSDictionary<NSString *, NSDictionary *> *)recordedValues;
+- (nullable instancetype)initWithDict:(NSDictionary *)dict;
 
 @end
 

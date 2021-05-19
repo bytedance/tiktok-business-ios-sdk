@@ -71,10 +71,6 @@
             if([eventName isEqual:rule.eventName] && [eventValue intValue] >= [rule.minRevenue intValue] && [eventValue intValue] <= [rule.maxRevenue intValue]){
                 _currentConversionValue = rule.conversionValue;
                 [self updateConversionValue:[_currentConversionValue intValue]];
-//                [self registerAppForAdNetworkAttribution];
-//                if (@available(iOS 14.0, *)) {
-//                    ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, [_currentConversionValue intValue]);
-//                }
                 break;
             }
         }
