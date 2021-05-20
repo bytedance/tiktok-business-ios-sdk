@@ -27,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) long initialFlushDelay;
 
-+ (nullable TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken
-                                           appId:(nullable NSString *)appId
-                                     tiktokAppId:(nullable NSNumber *)tiktokAppId;
++ (nullable TikTokConfig *)configWithAccessToken:(NSString *)accessToken
+                                           appId:(NSString *)appId
+                                     tiktokAppId:(NSNumber *)tiktokAppId;
 
 - (void)disableTracking;
 - (void)disableAutomaticTracking;
@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
 - (void)setDelayForATTUserAuthorizationInSeconds:(long)seconds;
 
-- (nullable id)initWithAccessToken:(nullable NSString *)accessToken
-                             appId:(nullable NSString *)appId
-                       tiktokAppId:(nullable NSNumber *)tiktokAppId;
+- (nullable id)initWithAccessToken:(NSString *)accessToken
+                             appId:(NSString *)appId
+                       tiktokAppId:(NSNumber *)tiktokAppId;
 
 @end
 
