@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TikTokTypeUtility : NSObject
 
 /**
+ * @brief Returns the provided object if it is non-null
+ */
++ (nullable id)objectValue:(id)object;
+
+/**
  * @brief Safety wrapper around Foundation's NSJSONSerialization:dataWithJSONObject:options:error:
  */
 + (nullable NSData *)dataWithJSONObject:(id)obj
@@ -32,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable NSString *)toSha256: (nullable NSObject*)input
                          origin:(nullable NSString *)origin;
+
++ (NSDictionary *)dictionaryValue:(id)object;
 
 @end
 
