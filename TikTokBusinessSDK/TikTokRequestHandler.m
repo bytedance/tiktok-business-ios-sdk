@@ -18,7 +18,7 @@
 #import "TikTokAppEventUtility.h"
 #import "TikTokSKAdNetworkConversionConfiguration.h"
 
-#define SDK_VERSION @"0.1.12"
+#define SDK_VERSION @"0.1.13"
 
 @interface TikTokRequestHandler()
 
@@ -35,9 +35,10 @@
     }
     
     self.logger = [TikTokFactory getLogger];
-    // default API version
+    // Default API version
     self.apiVersion = @"v.1.1";
-    
+    // Default API domain
+    self.apiDomain = @"business-api.tiktok.com";
     return self;
 }
 
@@ -47,7 +48,7 @@
   withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://business-api.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
@@ -100,8 +101,12 @@
             NSDictionary *businessSDKConfig = [dataValue objectForKey:@"business_sdk_config"];
             isSwitchOn = [[businessSDKConfig objectForKey:@"enable_sdk"] boolValue];
             NSString *apiVersion = [businessSDKConfig objectForKey:@"available_version"];
+            NSString *apiDomain = [businessSDKConfig objectForKey:@"domain"];
             if(apiVersion != nil) {
                 self.apiVersion = apiVersion;
+            }
+            if(apiDomain != nil){
+                self.apiDomain = apiDomain;
             }
             isGlobalConfigFetched = YES;
 
@@ -224,7 +229,8 @@
     [self.logger verbose:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = [NSString stringWithFormat:@"%@%@%@", @"https://ads.tiktok.com/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];;
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", self.apiDomain == nil ? @"ads-api.tiktok.com" : self.apiDomain, @"/open_api/", self.apiVersion == nil ? @"v1.1" : self.apiVersion, @"/app/batch/"];
     [request setURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];

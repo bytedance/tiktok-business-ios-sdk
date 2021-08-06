@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (atomic, strong, nullable) NSURLSession *session;
 @property (atomic, strong) NSString *apiVersion;
+@property (atomic, strong) NSString *apiDomain;
 
 /**
  * @brief Method to obtain remote switch with completion handler

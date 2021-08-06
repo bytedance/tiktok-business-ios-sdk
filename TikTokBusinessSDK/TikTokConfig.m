@@ -20,7 +20,7 @@
 
 @implementation TikTokConfig: NSObject
 
-+ (TikTokConfig *)configWithAccessToken:(nullable NSString *)accessToken appId:(nullable NSString *)appId tiktokAppId:(nullable NSNumber *)tiktokAppId
++ (TikTokConfig *)configWithAccessToken:(NSString *)accessToken appId:(NSString *)appId tiktokAppId:(NSNumber *)tiktokAppId
 {
     return [[TikTokConfig alloc] initWithAccessToken:accessToken appId:appId tiktokAppId:tiktokAppId];
 }
@@ -91,7 +91,7 @@
     [self.logger info:@"[TikTokConfig] Initial flush delay set to: %lu", seconds];
 }
 
-- (id)initWithAccessToken:(nullable NSString *)accessToken appId:(nullable NSString *)appId tiktokAppId:(nullable NSNumber *)tiktokAppId
+- (id)initWithAccessToken:(NSString *)accessToken appId:(NSString *)appId tiktokAppId:(NSNumber *)tiktokAppId
 {
     self = [super init];
     
