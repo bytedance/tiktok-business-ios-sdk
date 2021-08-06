@@ -16,8 +16,9 @@
 #import "TikTokTypeUtility.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
+#import "TikTokSKAdNetworkConversionConfiguration.h"
 
-#define SDK_VERSION @"0.1.13"
+#define SDK_VERSION @"0.1.14"
 
 @interface TikTokRequestHandler()
 
@@ -41,10 +42,11 @@
     return self;
 }
 
+
+
 - (void)getRemoteSwitch:(TikTokConfig *)config
   withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
-    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://business-api.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
@@ -84,7 +86,6 @@
         }
         
         id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
-        
         if([dataDictionary isKindOfClass:[NSDictionary class]]) {
             NSNumber *code = [dataDictionary objectForKey:@"code"];
             // code != 0 indicates error from API call
@@ -108,6 +109,8 @@
                 self.apiDomain = apiDomain;
             }
             isGlobalConfigFetched = YES;
+
+            [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithDict:dataValue];
             NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             [self.logger verbose:@"[TikTokRequestHandler] Request global config response: %@", requestResponse];
         }

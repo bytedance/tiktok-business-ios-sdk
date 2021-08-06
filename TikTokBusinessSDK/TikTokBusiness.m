@@ -26,6 +26,7 @@
 #import "TikTokUserAgentCollector.h"
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
+#import "TikTokSKAdNetworkConversionConfiguration.h"
 
 @interface TikTokBusiness()
 
@@ -322,6 +323,9 @@ static dispatch_once_t onceToken = 0;
 - (void)trackEvent:(NSString *)eventName
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName];
+    if(self.SKAdNetworkSupportEnabled) {
+        [[TikTokSKAdNetworkSupport sharedInstance] matchEventToSKANConfig:eventName withValue:@"0"];
+    }
     [self.queue addEvent:appEvent];
     if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
@@ -332,6 +336,11 @@ static dispatch_once_t onceToken = 0;
     withProperties: (NSDictionary *)properties
 {
     TikTokAppEvent *appEvent = [[TikTokAppEvent alloc] initWithEventName:eventName withProperties:properties];
+     
+    if(self.SKAdNetworkSupportEnabled) {
+        NSString *value = [properties objectForKey:@"value"];
+        [[TikTokSKAdNetworkSupport sharedInstance] matchEventToSKANConfig:eventName withValue:value];
+    }
     [self.queue addEvent:appEvent];
     if([eventName isEqualToString:@"Purchase"]) {
         [self.queue flush:TikTokAppEventsFlushReasonEagerlyFlushingEvent];
