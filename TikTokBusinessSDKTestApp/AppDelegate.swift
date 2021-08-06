@@ -19,8 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         /* POPULATE WITH ACCESS TOKEN, APPLICATION ID AND TIKTOK APPLICATION ID IN CONFIG */
-//        let config = TikTokConfig.init(accessToken: nil, appId: nil, tiktokAppId: nil)
-        let config = TikTokConfig.init(accessToken: "d5db46888d3884b1b91b1b77542b16514e788f6f", appId: "com.shopee.my", tiktokAppId: 6936342330270154753)
+        let config = TikTokConfig.init(accessToken: nil, appId: nil, tiktokAppId: nil)
         /* UNCOMMENT TO CUSTOMIZE OPTIONS BEFORE INITIALIZING SDK
         
         config?.disableTracking()                           // Disable All Tracking

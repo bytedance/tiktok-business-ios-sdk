@@ -46,19 +46,10 @@
 - (void)getRemoteSwitch:(TikTokConfig *)config
   withCompletionHandler:(void (^)(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched))completionHandler
 {
-    // TODO: Remove after QA
-    NSString *SKANEventConfigString = [NSString stringWithFormat:@"%@", @"{ \"skan_event_config\":  [{\"conversion_value\":63, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":62, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":61, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"ViewContent\"}]}, {\"conversion_value\":60, \"revenue_min\": 0, \"revenue_max\": 0,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"AddToCart\"}]}, {\"conversion_value\":59, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":58, \"revenue_min\": 0, \"revenue_max\": 10,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]}, {\"conversion_value\":57, \"revenue_min\": 20, \"revenue_max\": 100,  \"event_funnel\": [{\"event_value\": 145, \"event_name\":\"active_pay\", \"event_name_report\": \"Purchase\"}]} ] }"];
-
-    NSData *SKANEventDummyData = [SKANEventConfigString dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-//    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
-    // TODO: Remove after testing
-    NSString *url = [NSString stringWithFormat:@"%@", @"https://haapi-boe.byteintl.net/open_api/business_sdk_config/get/?skan_config=true&app_id=com.shopee.sg&tiktok_app_id=6948219211399348225"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@%@", @"https://ads.tiktok.com/open_api/business_sdk_config/get/?app_id=", config.appId, @"&sdk_version=", SDK_VERSION, @"&tiktok_app_id=", config.tiktokAppId];
     [request setURL:[NSURL URLWithString:url]];
-    [request setValue:@"boe_bitcoin" forHTTPHeaderField:@"x-tt-env"];
-    [request setValue:@"1" forHTTPHeaderField:@"x-use-boe"];
-    [request setValue:@"d5db46888d3884b1b91b1b77542b16514e788f6f" forHTTPHeaderField:@"Access-Token"];
-//    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
+    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
     [request setHTTPMethod:@"GET"];
     
     if(self.logger == nil) {
@@ -113,7 +104,7 @@
                 self.apiVersion = apiVersion;
             }
             isGlobalConfigFetched = YES;
-            
+
             [[TikTokSKAdNetworkConversionConfiguration sharedInstance] initWithDict:dataValue];
             NSString *requestResponse = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             [self.logger verbose:@"[TikTokRequestHandler] Request global config response: %@", requestResponse];

@@ -52,9 +52,7 @@
 -(void)updateConversionValue:(NSInteger)conversionValue
 {
     // Equivalent call: [SKAdNetwork updateConversionValue:conversionValue]
-    if (@available(iOS 14.0, *)) {
-        // TODO: Remove comment after QA testing
-        NSLog(@"Conversion value updated to: %ld", conversionValue);
+    if (@available(iOS 14.0, *)) {        
         ((id (*)(id, SEL, NSInteger))[self.skAdNetworkClass methodForSelector:self.skAdNetworkUpdateConversionValue])(self.skAdNetworkClass, self.skAdNetworkUpdateConversionValue, conversionValue);
     }
 }
