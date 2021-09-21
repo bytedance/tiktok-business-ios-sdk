@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TikTokLogger.h>
-#import <TikTokRequestHandler.h>
+#import "TikTokLogger.h"
+#import "TikTokRequestHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
