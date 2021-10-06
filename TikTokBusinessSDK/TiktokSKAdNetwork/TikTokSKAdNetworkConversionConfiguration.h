@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TikTokSKAdNetworkRule.h>
+#import "TikTokSKAdNetworkRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
