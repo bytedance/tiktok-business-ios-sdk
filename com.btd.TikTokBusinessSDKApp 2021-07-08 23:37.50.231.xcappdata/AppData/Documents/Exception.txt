@@ -1,0 +1,1 @@
+https://business-api.tiktok.com/open_api/v1.2/app/batch/

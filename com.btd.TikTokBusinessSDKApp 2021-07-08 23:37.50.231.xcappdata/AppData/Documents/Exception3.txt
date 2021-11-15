@@ -1,0 +1,48 @@
+=============Exception crash report =============
+name:
+NSRangeException
+reason:
+*** -[__NSArrayI objectAtIndexedSubscript:]: index 2 beyond bounds [0 .. 1]
+callStackSymbols:
+0   CoreFoundation                      0x00000001a6bc1128 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 1155368
+1   libobjc.A.dylib                     0x00000001ba45dcb4 objc_exception_throw + 56
+2   CoreFoundation                      0x00000001a6c2b398 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 1590168
+3   CoreFoundation                      0x00000001a6ac53f0 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 123888
+4   TikTokBusinessSDK                   0x00000001045adf24 -[TikTokAppEventQueue flush:] + 892
+5   TikTokBusinessSDK                   0x00000001045a0fe4 -[TikTokBusiness applicationDidBecomeActive:] + 752
+6   CoreFoundation                      0x00000001a6b24098 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 512152
+7   CoreFoundation                      0x00000001a6b24058 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 512088
+8   CoreFoundation                      0x00000001a6b23650 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 509520
+9   CoreFoundation                      0x00000001a6b23048 _CFXNotificationPost + 696
+10  Foundation                          0x00000001a7d46b20 A0089247-6F38-3097-B144-F5E2C90ADD3A + 27424
+11  UIKitCore                           0x00000001a93feee8 B718818B-0B80-3807-83BF-BB4FD626F70C + 11652840
+12  UIKitCore                           0x00000001a8ae5cb8 B718818B-0B80-3807-83BF-BB4FD626F70C + 2112696
+13  UIKitCore                           0x00000001a8ae6004 B718818B-0B80-3807-83BF-BB4FD626F70C + 2113540
+14  UIKitCore                           0x00000001a8ae58c0 B718818B-0B80-3807-83BF-BB4FD626F70C + 2111680
+15  UIKitCore                           0x00000001a8aed460 B718818B-0B80-3807-83BF-BB4FD626F70C + 2143328
+16  UIKitCore                           0x00000001a8f223a8 B718818B-0B80-3807-83BF-BB4FD626F70C + 6554536
+17  UIKitCore                           0x00000001a9020458 _UISceneSettingsDiffActionPerformChangesWithTransitionContext + 244
+18  UIKitCore                           0x00000001a8aed1f8 B718818B-0B80-3807-83BF-BB4FD626F70C + 2142712
+19  UIKitCore                           0x00000001a892f390 B718818B-0B80-3807-83BF-BB4FD626F70C + 316304
+20  UIKitCore                           0x00000001a892de30 B718818B-0B80-3807-83BF-BB4FD626F70C + 310832
+21  UIKitCore                           0x00000001a892efdc B718818B-0B80-3807-83BF-BB4FD626F70C + 315356
+22  UIKitCore                           0x00000001a8f4908c B718818B-0B80-3807-83BF-BB4FD626F70C + 6713484
+23  FrontBoardServices                  0x00000001b54784a0 BC7B821F-13EE-3747-8535-E8EABB919812 + 38048
+24  FrontBoardServices                  0x00000001b54a0cdc BC7B821F-13EE-3747-8535-E8EABB919812 + 203996
+25  FrontBoardServices                  0x00000001b5485400 BC7B821F-13EE-3747-8535-E8EABB919812 + 91136
+26  FrontBoardServices                  0x00000001b54a0c28 BC7B821F-13EE-3747-8535-E8EABB919812 + 203816
+27  libdispatch.dylib                   0x00000001a67fa280 8F32B2C5-489A-364F-B00B-5AA01AE4CF4A + 397952
+28  libdispatch.dylib                   0x00000001a67d319c 8F32B2C5-489A-364F-B00B-5AA01AE4CF4A + 237980
+29  FrontBoardServices                  0x00000001b54c44a8 BC7B821F-13EE-3747-8535-E8EABB919812 + 349352
+30  FrontBoardServices                  0x00000001b54c4170 BC7B821F-13EE-3747-8535-E8EABB919812 + 348528
+31  FrontBoardServices                  0x00000001b54c4644 BC7B821F-13EE-3747-8535-E8EABB919812 + 349764
+32  CoreFoundation                      0x00000001a6b41240 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 631360
+33  CoreFoundation                      0x00000001a6b41140 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 631104
+34  CoreFoundation                      0x00000001a6b40488 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 627848
+35  CoreFoundation                      0x00000001a6b3aa40 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 604736
+36  CoreFoundation                      0x00000001a6b3a200 CFRunLoopRunSpecific + 572
+37  GraphicsServices                    0x00000001bccb7598 GSEventRunModal + 160
+38  UIKitCore                           0x00000001a9403bcc B718818B-0B80-3807-83BF-BB4FD626F70C + 11672524
+39  UIKitCore                           0x00000001a94091a0 UIApplicationMain + 164
+40  TikTokBusinessSDKTestApp            0x0000000104535584 main + 88
+41  libdyld.dylib                       0x00000001a6819588 97942B47-8579-3037-ABC2-61C035EF1E70 + 5512

@@ -1,0 +1,23 @@
+=============Exception crash report =============
+name:
+NSRangeException
+reason:
+*** -[__NSArrayI objectAtIndexedSubscript:]: index 2 beyond bounds [0 .. 1]
+callStackSymbols:
+0   CoreFoundation                      0x00000001a6bc1128 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 1155368
+1   libobjc.A.dylib                     0x00000001ba45dcb4 objc_exception_throw + 56
+2   CoreFoundation                      0x00000001a6c2b398 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 1590168
+3   CoreFoundation                      0x00000001a6ac53f0 58021D2F-E0D8-3FD1-805D-ECF92B4E0CB0 + 123888
+4   TikTokBusinessSDK                   0x00000001028cbc54 -[TikTokBusiness initializeSdk:] + 416
+5   TikTokBusinessSDK                   0x00000001028ca988 +[TikTokBusiness initializeSdk:] + 132
+6   TikTokBusinessSDKTestApp            0x0000000102860a90 $s24TikTokBusinessSDKTestApp0E8DelegateC11application_29didFinishLaunchingWithOptionsSbSo13UIApplicationC_SDySo0m6LaunchL3KeyaypGSgtF + 440
+7   TikTokBusinessSDKTestApp            0x0000000102860d44 $s24TikTokBusinessSDKTestApp0E8DelegateC11application_29didFinishLaunchingWithOptionsSbSo13UIApplicationC_SDySo0m6LaunchL3KeyaypGSgtFTo + 212
+8   UIKitCore                           0x00000001a9400120 B718818B-0B80-3807-83BF-BB4FD626F70C + 11657504
+9   UIKitCore                           0x00000001a94020c0 B718818B-0B80-3807-83BF-BB4FD626F70C + 11665600
+10  UIKitCore                           0x00000001a9407874 B718818B-0B80-3807-83BF-BB4FD626F70C + 11688052
+11  UIKitCore                           0x00000001a8ae5730 B718818B-0B80-3807-83BF-BB4FD626F70C + 2111280
+12  UIKitCore                           0x00000001a94037a0 B718818B-0B80-3807-83BF-BB4FD626F70C + 11671456
+13  UIKitCore                           0x00000001a9403ba8 B718818B-0B80-3807-83BF-BB4FD626F70C + 11672488
+14  UIKitCore                           0x00000001a94091a0 UIApplicationMain + 164
+15  TikTokBusinessSDKTestApp            0x0000000102861584 main + 88
+16  libdyld.dylib                       0x00000001a6819588 97942B47-8579-3037-ABC2-61C035EF1E70 + 5512

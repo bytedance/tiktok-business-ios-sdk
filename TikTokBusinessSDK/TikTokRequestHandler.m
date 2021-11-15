@@ -8,12 +8,12 @@
 #import "TikTokAppEvent.h"
 #import "TikTokRequestHandler.h"
 #import "TikTokAppEventStore.h"
-#import "TikTokDeviceInfo.h"
 #import "TikTokConfig.h"
 #import "TikTokBusiness.h"
 #import "TikTokLogger.h"
 #import "TikTokFactory.h"
 #import "TikTokTypeUtility.h"
+#import "TikTokIdentifyUtility.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 #import "TikTokSKAdNetworkConversionConfiguration.h"
@@ -124,71 +124,32 @@
 {
     
     TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
-    
-    NSDictionary *tempApp = @{
-        @"name" : deviceInfo.appName,
-        @"namespace": deviceInfo.appNamespace,
-        @"version": deviceInfo.appVersion,
-        @"build": deviceInfo.appBuild,
-    };
-    
-    NSMutableDictionary *app = [[NSMutableDictionary alloc] initWithDictionary:tempApp];
-    
-    if(config.tiktokAppId){
-        [app setValue:config.appId forKey:@"id"];
-    }
-    
-    // ATT Authorization Status switch determined at flush
-    // default status is NOT_APPLICABLE
-    NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
-    if (@available(iOS 14, *)) {
-        if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
-            attAuthorizationStatus = @"AUTHORIZED";
-        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
-            attAuthorizationStatus = @"DENIED";
-        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
-            attAuthorizationStatus = @"NOT_DETERMINED";
-        } else { // Restricted
-            attAuthorizationStatus = @"RESTRICTED";
-        }
-    }
-    
-    // API version compatibility b/w 1.0 and 2.0
-    NSDictionary *tempDevice = @{
-        @"att_status": attAuthorizationStatus,
-        @"platform" : deviceInfo.devicePlatform,
-        @"idfa": deviceInfo.deviceIdForAdvertisers,
-        @"idfv": deviceInfo.deviceVendorId,
-    };
-    
-    NSMutableDictionary *device = [[NSMutableDictionary alloc] initWithDictionary:tempDevice];
-    
-    if(config.tiktokAppId){
-        [device setValue:deviceInfo.systemVersion forKey:@"version"];
-    }
-    
-    NSDictionary *library = @{
-        @"name": @"bytedance/tiktok-business-ios-sdk",
-        @"version": SDK_VERSION
-    };
-    
+
+    // APP Info
+    NSDictionary *app = [TikTokRequestHandler getAPPWithDeviceInfo:deviceInfo config:config];
+
+    // Device Info
+    NSDictionary *device = [TikTokRequestHandler getDeviceInfo:deviceInfo withConfig:config];
+
+    // Library Info
+    NSDictionary *library = [TikTokRequestHandler getLibrary];
+
     // format events into object[]
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (TikTokAppEvent* event in eventsToBeFlushed) {
-        
         NSMutableDictionary *user = [NSMutableDictionary new];
         if(event.userInfo != nil) {
             [user addEntriesFromDictionary:event.userInfo];
         }
         [user setObject:event.anonymousID forKey:@"anonymous_id"];
-        
+
         NSDictionary *context = @{
             @"app": app,
             @"device": device,
             @"library": library,
             @"locale": deviceInfo.localeInfo,
             @"ip": deviceInfo.ipInfo,
-            @"user_agent":( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent],
+            @"user_agent": [TikTokRequestHandler getUserAgentWithDeviceInfo:deviceInfo],
             @"user": user,
         };
         
@@ -320,4 +281,173 @@
     }] resume];
 }
 
+- (void)sendCrashReport:(NSDictionary *)crashReport
+             withConfig:(TikTokConfig *)config
+  withCompletionHandler:(void (^)(void))completionHandler
+{
+    TikTokDeviceInfo *deviceInfo = [TikTokDeviceInfo deviceInfoWithSdkPrefix:@""];
+    
+    NSDictionary *tempApp = [TikTokRequestHandler getAPPWithDeviceInfo:deviceInfo config:config];
+    NSMutableDictionary *app = [[NSMutableDictionary alloc] initWithDictionary:tempApp];
+    [app setValue:deviceInfo.appNamespace forKey:@"app_namespace"];
+    [app removeObjectForKey:@"namespace"];
+    NSDictionary *device = [TikTokRequestHandler getDeviceInfo:deviceInfo withConfig:config];
+    NSDictionary *library = [TikTokRequestHandler getLibrary];
+    NSDictionary *user = [TikTokRequestHandler getUser];
+    
+    NSDictionary *context = @{
+        @"app": app,
+        @"device": device,
+        @"library": library,
+        @"user_agent":[TikTokRequestHandler getUserAgentWithDeviceInfo:deviceInfo],
+        @"user": user,
+        @"crash_report": crashReport,
+    };
+    
+    NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:context];
+    
+    if(config.tiktokAppId){
+        [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
+    } else {
+        [parametersDict setValue:config.appId forKey:@"app_id"];
+    }
+    
+    NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
+    NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
+    
+    NSString *postDataJSONString = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+    [self.logger verbose:@"[TikTokRequestHandler] Access token: %@", [[TikTokBusiness getInstance] accessToken]];
+    [self.logger verbose:@"[TikTokRequestHandler] postDataJSON: %@", postDataJSONString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", self.apiDomain == nil ? @"haapi.byteintl.net" : self.apiDomain, @"/open_api/", self.apiVersion == nil ? @"v1.2" : self.apiVersion, @"/app/monitor/"];
+    [request setURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[[TikTokBusiness getInstance] accessToken] forHTTPHeaderField:@"Access-Token"];
+    
+    [request setValue:@"1" forHTTPHeaderField:@"x-use-ppe"];
+    [request setValue:@"ppe_yuzhong" forHTTPHeaderField:@"x-tt-env"];
+    
+    
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:postData];
+    
+    if(self.session == nil) {
+        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    }
+    [[self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // handle basic connectivity issues
+        if(error) {
+            [self.logger error:@"[TikTokRequestHandler] error in connection: %@", error];
+            return;
+        }
+
+        // handle HTTP errors
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+            
+            if (statusCode != 200) {
+                [self.logger error:@"[TikTokRequestHandler] HTTP error status code: %lu", statusCode];
+                return;
+            }
+            
+            id dataDictionary = [TikTokTypeUtility JSONObjectWithData:data options:0 error:nil origin:NSStringFromClass([self class])];
+            NSLog(@"dataDictionary: %@", dataDictionary);
+            if([dataDictionary isKindOfClass:[NSDictionary class]]) {
+                NSNumber *code = [dataDictionary objectForKey:@"code"];
+                NSString *message = [dataDictionary objectForKey:@"message"];
+                
+                if([code intValue] == 0) {
+                    completionHandler();
+                } else {
+                    [self.logger error:@"[TikTokRequestHandler] Response error code: %lu; message %@", statusCode, message];
+                }
+            }
+        }
+    }] resume];
+}
+
++ (NSString *)getSDKVersion
+{
+    return SDK_VERSION;
+}
+
++ (NSDictionary *)getAPPWithDeviceInfo:(TikTokDeviceInfo *)deviceInfo
+                                config:(TikTokConfig *)config
+{
+    NSDictionary *tempApp = @{
+        @"name" : deviceInfo.appName,
+        @"namespace": deviceInfo.appNamespace,
+        @"version": deviceInfo.appVersion,
+        @"build": deviceInfo.appBuild,
+    };
+    
+    NSMutableDictionary *app = [[NSMutableDictionary alloc] initWithDictionary:tempApp];
+    
+    if(config.tiktokAppId){
+        [app setValue:config.appId forKey:@"id"];
+    }
+    
+    return [app copy];
+}
+
++ (NSDictionary *)getDeviceInfo:(TikTokDeviceInfo *)deviceInfo
+                     withConfig:(TikTokConfig *)config
+{
+    // ATT Authorization Status switch determined at flush
+    // default status is NOT_APPLICABLE
+    NSString *attAuthorizationStatus = @"NOT_APPLICABLE";
+    if (@available(iOS 14, *)) {
+        if(ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+            attAuthorizationStatus = @"AUTHORIZED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusDenied){
+            attAuthorizationStatus = @"DENIED";
+        } else if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusNotDetermined){
+            attAuthorizationStatus = @"NOT_DETERMINED";
+        } else { // Restricted
+            attAuthorizationStatus = @"RESTRICTED";
+        }
+    }
+    
+    // API version compatibility b/w 1.0 and 2.0
+    NSDictionary *tempDevice = @{
+        @"att_status": attAuthorizationStatus,
+        @"platform" : deviceInfo.devicePlatform,
+        @"idfa": deviceInfo.deviceIdForAdvertisers,
+        @"idfv": deviceInfo.deviceVendorId,
+    };
+    
+    NSMutableDictionary *device = [[NSMutableDictionary alloc] initWithDictionary:tempDevice];
+    
+    if(config.tiktokAppId){
+        [device setValue:deviceInfo.systemVersion forKey:@"version"];
+    }
+    
+    return [device copy];
+}
+
++ (NSDictionary *)getLibrary
+{
+    NSDictionary *library = @{
+        @"name": @"bytedance/tiktok-business-ios-sdk",
+        @"version": SDK_VERSION
+    };
+    
+    return library;
+}
+
++ (NSDictionary *)getUser
+{
+    NSMutableDictionary *user = [NSMutableDictionary new];
+    [user setObject:[TikTokIdentifyUtility getOrGenerateAnonymousID] forKey:@"anonymous_id"];
+    
+    return [user copy];
+}
+
++ (NSString *)getUserAgentWithDeviceInfo:(TikTokDeviceInfo *)deviceInfo
+{
+    return ( [deviceInfo getUserAgent] != nil) ? [NSString stringWithFormat:@"%@ %@", ([deviceInfo getUserAgent]), ([deviceInfo fallbackUserAgent])]  : [deviceInfo fallbackUserAgent];
+}
 @end
