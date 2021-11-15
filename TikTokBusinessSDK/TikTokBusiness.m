@@ -292,6 +292,19 @@ static dispatch_once_t onceToken = 0;
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [self sendCrashReportWithConfig: tiktokConfig];
+}
+
+- (void)sendCrashReportWithConfig:(TikTokConfig *)config
+{
+    NSDictionary<NSString *, id> *crashLog = [TikTokErrorHandler getLastestCrashLog];
+
+    if (crashLog != nil) {
+        [self.requestHandler sendCrashReport:crashLog withConfig:config withCompletionHandler: ^(void){
+            [TikTokErrorHandler clearCrashReportFiles];
+        }];
+    }
 }
 
 // Internally used method for 2D-Retention

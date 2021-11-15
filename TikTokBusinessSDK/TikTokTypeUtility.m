@@ -89,5 +89,11 @@
   return ([object isKindOfClass:expectedClass] ? object : nil);
 }
 
++ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
+{
+  if (object && key) {
+    dictionary[key] = object;
+  }
+}
 
 @end
