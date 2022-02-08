@@ -23,7 +23,10 @@ The TikTok Business SDK is the easiest way to log events (e.g. app install, purc
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'TikTokBusinessSDK/**/*'
-  s.exclude_files = "TikTokBusinessSDK/*.plist"
+  s.exclude_files = [
+      "TikTokBusinessSDK/*.plist",
+      "TikTokBusinessSDK/Public/TikTokBusinessSDK/*.h"
+  ]
   s.swift_version = '5.0'
 
 end
