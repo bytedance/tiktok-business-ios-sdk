@@ -29,6 +29,18 @@ typedef NS_ENUM(NSUInteger, TikTokAppEventsFlushReason)
  */
 + (NSString *)getCurrentTimestampInISO8601;
 
+/**
+ * @brief Method to obtain timestamp in milliseconds
+ */
++ (long)getCurrentTimestamp;
+
+/**
+ * @brief Method to obtain timestamp in milliseconds as a string
+ */
++ (NSString *)getCurrentTimestampAsString;
+
++ (NSNumber *)getCurrentTimestampAsNumber;
+
 @end
 
 NS_ASSUME_NONNULL_END

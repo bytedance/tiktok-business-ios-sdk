@@ -40,6 +40,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)dictionaryValue:(id)object;
 
+/**
+ * @brief  Sets an object for a key in a mutable dictionary if both object and key are not nil.
+ */
++ (void)dictionary:(NSMutableDictionary *)dictionary
+         setObject:(nullable id)object
+            forKey:(nullable id<NSCopying>)key;
+
 @end
 
 NS_ASSUME_NONNULL_END

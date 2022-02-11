@@ -320,9 +320,9 @@
 				0ADCF5402538D16900D7B57C /* TikTokRequestHandler.m */,
 				0ADCF54F253A212A00D7B57C /* TikTokTypeUtility.h */,
 				0ADCF550253A212A00D7B57C /* TikTokTypeUtility.m */,
-				8B23DF8E2502BA73008351FA /* Info.plist */,
 				0A41C64225BF52B900245575 /* TikTokIdentifyUtility.h */,
 				0A41C64325BF52B900245575 /* TikTokIdentifyUtility.m */,
+				8B23DF8E2502BA73008351FA /* Info.plist */,
 			);
 			path = TikTokBusinessSDK;
 			sourceTree = "<group>";

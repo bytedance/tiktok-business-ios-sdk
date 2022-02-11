@@ -51,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithEventName: (NSString *)eventName
                    withProperties: (NSDictionary *)properties
                          withType: (NSString *)type;
-
 @end
 
 NS_ASSUME_NONNULL_END

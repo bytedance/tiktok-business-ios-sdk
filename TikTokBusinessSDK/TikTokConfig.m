@@ -25,6 +25,11 @@
     return [[TikTokConfig alloc] initWithAccessToken:accessToken appId:appId tiktokAppId:tiktokAppId];
 }
 
++ (TikTokConfig *)configWithAppId:(NSString *)appId tiktokAppId:(NSNumber *)tiktokAppId
+{
+    return [[TikTokConfig alloc] initWithAppId:appId tiktokAppId:tiktokAppId];
+}
+
 - (void)disableTracking
 {
     self.trackingEnabled = NO;
@@ -98,6 +103,29 @@
     if(self == nil) return nil;
     
     _accessToken = accessToken;
+    _appId = appId;
+    _tiktokAppId = tiktokAppId;
+    _trackingEnabled = YES;
+    _automaticTrackingEnabled = YES;
+    _installTrackingEnabled = YES;
+    _launchTrackingEnabled = YES;
+    _retentionTrackingEnabled = YES;
+    _paymentTrackingEnabled = YES;
+    _appTrackingDialogSuppressed = NO;
+    _SKAdNetworkSupportEnabled = YES;
+    _userAgentCollectionEnabled = YES;
+    
+    self.logger = [TikTokFactory getLogger];
+    return self;
+}
+
+- (id)initWithAppId:(NSString *)appId tiktokAppId:(NSNumber *)tiktokAppId
+{
+    self = [super init];
+    
+    if(self == nil) return nil;
+    
+    _accessToken = @"";
     _appId = appId;
     _tiktokAppId = tiktokAppId;
     _trackingEnabled = YES;

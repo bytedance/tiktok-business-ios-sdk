@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qxn-vb-y8U">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qxn-vb-y8U">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -501,6 +501,21 @@
                                     <action selector="flush:" destination="507-Wg-4bh" eventType="touchUpInside" id="xx4-at-idb"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iMj-bB-ZDt">
+                                <rect key="frame" x="47" y="742" width="320" height="61"/>
+                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="61" id="1fV-Bs-HE1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Crash App">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="crashhApp:" destination="507-Wg-4bh" eventType="touchUpInside" id="R5U-V3-efJ"/>
+                                    <action selector="logout:" destination="507-Wg-4bh" eventType="touchUpInside" id="U6Q-IG-ebX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Lre-yn-pas"/>
                         <color key="backgroundColor" systemColor="systemTealColor"/>
@@ -520,6 +535,8 @@
                             <constraint firstItem="FIE-gr-eng" firstAttribute="trailing" secondItem="liI-e0-3JR" secondAttribute="trailing" id="RW3-S0-Iqy"/>
                             <constraint firstItem="FIE-gr-eng" firstAttribute="baseline" secondItem="nGS-e1-CeJ" secondAttribute="baseline" id="VIx-Ey-gsf"/>
                             <constraint firstItem="Lre-yn-pas" firstAttribute="trailing" secondItem="Jhr-v4-Hhi" secondAttribute="trailing" constant="120" id="VXI-gg-sG6"/>
+                            <constraint firstItem="iMj-bB-ZDt" firstAttribute="leading" secondItem="Lre-yn-pas" secondAttribute="leading" constant="47" id="Xeq-W9-02w"/>
+                            <constraint firstItem="Lre-yn-pas" firstAttribute="trailing" secondItem="iMj-bB-ZDt" secondAttribute="trailing" constant="47" id="Xzo-E9-X2y"/>
                             <constraint firstItem="l9h-zb-pSd" firstAttribute="trailing" secondItem="yQg-eH-P63" secondAttribute="trailing" id="YYm-xD-kiH"/>
                             <constraint firstItem="l9h-zb-pSd" firstAttribute="leading" secondItem="JAw-rv-GWI" secondAttribute="leading" id="Yzr-cf-fSG"/>
                             <constraint firstItem="kxP-Vx-VMk" firstAttribute="centerX" secondItem="hVa-S2-6XL" secondAttribute="centerX" id="Z0M-da-ydQ"/>
@@ -535,10 +552,12 @@
                             <constraint firstItem="Lre-yn-pas" firstAttribute="trailing" secondItem="nGS-e1-CeJ" secondAttribute="trailing" constant="120" id="kbV-Yg-22L"/>
                             <constraint firstItem="Jhr-v4-Hhi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FuY-T5-Iyy" secondAttribute="trailing" constant="8" symbolic="YES" id="lWv-tr-R3d"/>
                             <constraint firstItem="yQg-eH-P63" firstAttribute="top" secondItem="l9h-zb-pSd" secondAttribute="bottom" constant="16" id="oAK-xy-5Db"/>
+                            <constraint firstItem="iMj-bB-ZDt" firstAttribute="top" secondItem="yQg-eH-P63" secondAttribute="bottom" constant="15" id="oPp-c0-iTm"/>
                             <constraint firstItem="xz3-VW-avr" firstAttribute="leading" secondItem="Lre-yn-pas" secondAttribute="leading" constant="107" id="obq-bp-1Iv"/>
                             <constraint firstItem="Jhr-v4-Hhi" firstAttribute="top" secondItem="Lre-yn-pas" secondAttribute="top" constant="62" id="rE1-Z1-8Hd"/>
                             <constraint firstItem="VaB-d7-pOZ" firstAttribute="top" secondItem="FuY-T5-Iyy" secondAttribute="bottom" constant="18" id="s7U-aV-ZrO"/>
                             <constraint firstItem="38U-kj-xuz" firstAttribute="centerX" secondItem="hVa-S2-6XL" secondAttribute="centerX" id="tVt-AP-Si6"/>
+                            <constraint firstItem="Lre-yn-pas" firstAttribute="bottom" secondItem="iMj-bB-ZDt" secondAttribute="bottom" constant="10" id="uHZ-V7-wwM"/>
                             <constraint firstItem="xz3-VW-avr" firstAttribute="top" secondItem="FIE-gr-eng" secondAttribute="bottom" constant="18" id="uhW-gT-1M1"/>
                             <constraint firstItem="38U-kj-xuz" firstAttribute="top" secondItem="JAw-rv-GWI" secondAttribute="bottom" constant="18" id="wzN-DE-LcQ"/>
                             <constraint firstItem="FuY-T5-Iyy" firstAttribute="top" secondItem="Lre-yn-pas" secondAttribute="top" constant="62" id="x06-sD-Hg8"/>
@@ -594,7 +613,7 @@
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

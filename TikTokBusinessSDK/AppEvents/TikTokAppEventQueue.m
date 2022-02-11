@@ -43,6 +43,7 @@
     }
     
     self.eventQueue = [NSMutableArray array];
+    self.monitorQueue = [NSMutableArray array];
             
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
     

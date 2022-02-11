@@ -131,6 +131,14 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
++ (void)trackEvent:(NSString *)eventName
+withType:(NSString *)type
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] trackEvent:eventName withType:type];
+    }
+}
+
 + (void)setTrackingEnabled:(BOOL)enabled
 {
     @synchronized (self) {
@@ -265,6 +273,7 @@ static dispatch_once_t onceToken = 0;
         [self.logger warn:@"TikTok SDK has been initialized already!"];
         return;
     }
+    NSNumber *initStartTimestamp = [TikTokAppEventUtility getCurrentTimestampAsNumber];
 
     NSSetUncaughtExceptionHandler(handleUncaughtExceptionPointer);
     self.trackingEnabled = tiktokConfig.trackingEnabled;
@@ -286,12 +295,84 @@ static dispatch_once_t onceToken = 0;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:@"true" forKey:@"AreTimersOn"];
+//    [defaults setObject:@"monitorInitStartTime" forKey:@"monitorInitStartTime"];
     
     [self getGlobalConfig:tiktokConfig isFirstInitialization:YES];
+    
+    /* Monitor Init Start */
+    /* ------------------ */
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [self sendCrashReportWithConfig: tiktokConfig];
+    NSNumber *initEndTimestamp = [TikTokAppEventUtility getCurrentTimestampAsNumber];
+    [self monitorInitialization:initStartTimestamp andEndTime:initEndTimestamp];
+}
+
+- (void)monitorInitialization:(NSNumber *)initStartTime andEndTime:(NSNumber *)initEndTime
+{
+    NSDictionary *startMeta = @{
+        @"ts": initStartTime,
+    };
+    NSDictionary *endMeta = @{
+        @"ts": initEndTime,
+        @"latency": [NSNumber numberWithDouble:[initEndTime floatValue] - [initEndTime floatValue]],
+    };
+    NSDictionary *monitorInitStartProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"init_start",
+        @"meta": startMeta
+    };
+    TikTokAppEvent *monitorInitStart = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorInitStartProperties withType:@"monitor"];
+    NSDictionary *monitorInitEndProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"init_end",
+        @"meta": endMeta
+    };
+    TikTokAppEvent *monitorInitEnd = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorInitEndProperties withType:@"monitor"];
+    NSMutableArray *appEventsToBeFlushed = [[NSMutableArray alloc] init];
+    [appEventsToBeFlushed addObject:monitorInitStart];
+    [appEventsToBeFlushed addObject:monitorInitEnd];
+    @synchronized(self) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [TikTokAppEventStore persistAppEvents:appEventsToBeFlushed];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
+        });
+    }
+}
+
+- (void)sendCrashReportWithConfig:(TikTokConfig *)config
+{
+    NSDictionary<NSString *, id> *crashLog = [TikTokErrorHandler getLastestCrashLog];
+    
+    NSLog(@"crashLog: %@", crashLog);
+    
+    if (crashLog != nil) {
+//        [self.requestHandler sendCrashReport:crashLog withConfig:config withCompletionHandler: ^(void){
+//            [TikTokErrorHandler clearCrashReportFiles];
+//        }];
+        NSDictionary *meta = @{
+            @"ts": [NSNumber numberWithInt:[[crashLog objectForKey:@"timestamp"] intValue]],
+            @"ex_stack": [crashLog objectForKey:@"crash_info"],
+        };
+        NSDictionary *monitorCrashLogProperties = @{
+            @"monitor_type": @"exception",
+            @"monitor_name": @"exception",
+            @"meta": meta
+        };
+        TikTokAppEvent *monitorCrashLogEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorCrashLogProperties withType:@"monitor"];
+        NSMutableArray *appEventsToBeFlushed = [[NSMutableArray alloc] init];
+        [appEventsToBeFlushed addObject:monitorCrashLogEvent];
+        @synchronized(self) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [TikTokAppEventStore persistAppEvents:appEventsToBeFlushed];
+                [TikTokErrorHandler clearCrashReportFiles];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
+            });
+        }
+    }
 }
 
 // Internally used method for 2D-Retention
@@ -380,6 +461,7 @@ static dispatch_once_t onceToken = 0;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
+    NSNumber *backgroundMonitorTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     [TikTokAppEventStore persistAppEvents:self.queue.eventQueue];
     [self.queue.eventQueue removeAllObjects];
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
@@ -388,6 +470,8 @@ static dispatch_once_t onceToken = 0;
         // pause timer when entering background when first flush has not happened
         [preferences setObject:@"false" forKey:@"AreTimersOn"];
     }
+    [preferences setObject:backgroundMonitorTime forKey:@"backgroundMonitorTime"];
+    
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -395,10 +479,10 @@ static dispatch_once_t onceToken = 0;
     // Enabled: Tracking, Auto Logging, 2DRetention Logging
     // Install Date: Available
     // 2D Limit has not been passed
-    
+    NSNumber *foregroundMonitorTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDate *installDate = (NSDate *)[defaults objectForKey:@"tiktokInstallDate"];
-    
+
     if(self.automaticTrackingEnabled && installDate && self.retentionTrackingEnabled) {
         [self track2DRetention];
     }
@@ -414,7 +498,35 @@ static dispatch_once_t onceToken = 0;
         // else flush when entering foreground
         [self.queue flush:TikTokAppEventsFlushReasonAppBecameActive];
     }
-
+    
+    if([defaults objectForKey:@"backgroundMonitorTime"] != nil) {
+        NSNumber *backgroundMonitorTime = [defaults objectForKey:@"backgroundMonitorTime"];
+        NSNumber *lastForegroundMonitorTime = [defaults objectForKey:@"foregroundMonitorTime"];
+        NSDictionary *meta = @{
+            @"ts": foregroundMonitorTime,
+            @"latency": [NSNumber numberWithInt:[backgroundMonitorTime intValue] - [lastForegroundMonitorTime intValue]],
+        };
+        NSDictionary *monitorForegroundProperties = @{
+            @"monitor_type": @"metric",
+            @"monitor_name": @"foreground",
+            @"meta": meta
+        };
+        NSDictionary *backgroundMeta = @{
+            @"ts": backgroundMonitorTime,
+            @"latency": [NSNumber numberWithInt:[foregroundMonitorTime intValue] - [backgroundMonitorTime intValue]],
+        };
+        NSDictionary *monitorBackgroundProperties = @{
+            @"monitor_type": @"metric",
+            @"monitor_name": @"background",
+            @"meta": backgroundMeta
+        };
+        TikTokAppEvent *monitorForegroundEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorForegroundProperties withType:@"monitor"];
+        TikTokAppEvent *monitorBackgroundEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorBackgroundProperties withType:@"monitor"];
+        [self.queue addEvent:monitorForegroundEvent];
+        [self.queue addEvent:monitorBackgroundEvent];
+    }
+    [defaults setObject:foregroundMonitorTime forKey:@"foregroundMonitorTime"];
+    [defaults removeObjectForKey:@"backgroundMonitorTime"];
 }
 
 - (nullable NSString *)idfa
@@ -476,6 +588,7 @@ static dispatch_once_t onceToken = 0;
              phoneNumber:(nullable NSString *)phoneNumber
                        email:(nullable NSString *)email
 {
+    NSNumber *identifyMonitorStartTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     if([[defaults objectForKey:@"IsIdentified"]  isEqual: @"true"]){
@@ -485,10 +598,27 @@ static dispatch_once_t onceToken = 0;
     
     [TikTokIdentifyUtility setUserInfoDefaultsWithExternalID:externalID phoneNumber:phoneNumber email:email origin:NSStringFromClass([self class])];
     [self trackEventAndEagerlyFlush:@"Identify" withType: @"identify"];
+    NSNumber *identifyMonitorEndTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
+    NSDictionary *meta = @{
+        @"ts": identifyMonitorStartTime,
+        @"latency": [NSNumber numberWithInt:[identifyMonitorEndTime intValue] - [identifyMonitorStartTime intValue]],
+        @"email": email == nil ? [NSNumber numberWithBool:false] : [NSNumber numberWithBool:true],
+        @"phone": phoneNumber == nil ? [NSNumber numberWithBool:false] : [NSNumber numberWithBool:true],
+        @"extid": externalID == nil ? [NSNumber numberWithBool:false] : [NSNumber numberWithBool:true],
+    };
+    NSDictionary *monitorIdentifyProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"identify",
+        @"meta": meta
+    };
+    TikTokAppEvent *monitorIdentifyEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorIdentifyProperties withType:@"monitor"];
+    [self.queue addEvent:monitorIdentifyEvent];
 }
 
 - (void)logout
 {
+    NSNumber *logoutMonitorStartTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
+    
     // clear old anonymousID and userInfo from NSUserDefaults
     [TikTokIdentifyUtility resetNSUserDefaults];
        
@@ -496,6 +626,19 @@ static dispatch_once_t onceToken = 0;
     [[TikTokBusiness getInstance] setAnonymousID:anonymousID];
     [self.logger verbose:@"AnonymousID on logout: %@", self.anonymousID];
     [self.queue flush:TikTokAppEventsFlushReasonLogout];
+    NSNumber *logoutMonitorEndTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
+    NSDictionary *meta = @{
+        @"ts": logoutMonitorStartTime,
+        @"latency": [NSNumber numberWithInt:[logoutMonitorEndTime intValue] - [logoutMonitorStartTime intValue]],
+    };
+    NSDictionary *monitorIdentifyProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"logout",
+        @"meta": meta
+    };
+    TikTokAppEvent *monitorIdentifyEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorIdentifyProperties withType:@"monitor"];
+    [self.queue addEvent:monitorIdentifyEvent];
+    
 }
 
 - (void)explicitlyFlush
@@ -516,6 +659,7 @@ static dispatch_once_t onceToken = 0;
 - (void)getGlobalConfig:(TikTokConfig *)tiktokConfig
   isFirstInitialization: (BOOL)isFirstInitialization
 {
+    NSNumber *configMonitorStartTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     [self.requestHandler getRemoteSwitch:tiktokConfig withCompletionHandler:^(BOOL isRemoteSwitchOn, BOOL isGlobalConfigFetched) {
         self.isRemoteSwitchOn = isRemoteSwitchOn;
         self.isGlobalConfigFetched = isGlobalConfigFetched;
@@ -588,6 +732,7 @@ static dispatch_once_t onceToken = 0;
 }
 
 - (void)loadUserAgent {
+    NSNumber *userAgentMonitorStartTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     dispatch_async(self.isolationQueue, ^(){
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
         [[TikTokUserAgentCollector singleton] loadUserAgentWithCompletion:^(NSString * _Nullable userAgent) {
@@ -595,6 +740,36 @@ static dispatch_once_t onceToken = 0;
         }];
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     });
+    NSNumber *userAgentMonitorEndTime = [TikTokAppEventUtility getCurrentTimestampAsNumber];
+    NSDictionary *userAgentStartMeta = @{
+        @"ts": userAgentMonitorStartTime,
+    };
+    NSDictionary *monitorUserAgentStartProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"ua_init",
+        @"meta": userAgentStartMeta
+    };
+    NSDictionary *userAgentEndMeta = @{
+        @"ts": userAgentMonitorEndTime,
+        @"latency": [NSNumber numberWithInt:[userAgentMonitorEndTime intValue] - [userAgentMonitorStartTime intValue]],
+        @"success": [NSNumber numberWithBool:true],
+    };
+    NSDictionary *monitorUserAgentEndProperties = @{
+        @"monitor_type": @"metric",
+        @"monitor_name": @"ua_end",
+        @"meta": userAgentEndMeta
+    };
+    TikTokAppEvent *monitorUserAgentStartEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorUserAgentStartProperties withType:@"monitor"];
+    TikTokAppEvent *monitorUserAgentEndEvent = [[TikTokAppEvent alloc] initWithEventName:@"MonitorEvent" withProperties:monitorUserAgentEndProperties withType:@"monitor"];
+    NSMutableArray *appEventsToBeFlushed = [[NSMutableArray alloc] init];
+    [appEventsToBeFlushed addObject:monitorUserAgentStartEvent];
+    [appEventsToBeFlushed addObject:monitorUserAgentEndEvent];
+    @synchronized(self) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [TikTokAppEventStore persistAppEvents:appEventsToBeFlushed];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"inDiskEventQueueUpdated" object:nil];
+        });
+    }
 }
 
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^)(NSUInteger))completion
@@ -616,6 +791,20 @@ static dispatch_once_t onceToken = 0;
             }
         }
     }];
+}
+
+
++(void)produceFatalError
+{
+    @synchronized (self) {
+        return [[TikTokBusiness getInstance] produceFatalError];
+    }
+}
+
+-(void)produceFatalError
+{
+    
+    @throw([NSException exceptionWithName:@"TikTokBusinessSDK" reason:@"This is a test error!" userInfo:nil]);
 }
 
 @end

@@ -128,7 +128,7 @@ class MetricsViewController: UIViewController {
     
     @IBAction func identify(_ sender: UIButton) {
         // enter identify values here
-        TikTokBusiness.identify(withExternalID: "123", phoneNumber: "111", email: "test@bytedance.com")
+        TikTokBusiness.identify(withExternalID: "123", phoneNumber: nil, email: "test@bytedance.com")
     }
     
     @IBAction func logout(_ sender: UIButton) {
@@ -137,6 +137,11 @@ class MetricsViewController: UIViewController {
     
     @IBAction func flush(_ sender: UIButton) {
         TikTokBusiness.explicitlyFlush();
+    }
+    
+    @IBAction func crashhApp(_ sender: UIButton) {
+        print("crash app was called!");
+        TikTokBusiness.produceFatalError()
     }
     
     func randomText(from: Int, to: Int, justLowerCase: Bool = false) -> String {

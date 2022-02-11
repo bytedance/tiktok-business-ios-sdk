@@ -19,10 +19,11 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var eventPickerView = UIPickerView()
     
-    let events = ["CustomEvent", "LaunchAPP", "InstallApp", "2Dretention", "AddPaymentInfo", "AddToCart", "AddToWishList", "Checkout", "CompleteTutorial", "ViewContent", "CreateGroup", "CreateRole", "GenerateLead", "InAppAdClick", "InAppAdImpr", "JoinGroup", "AchieveLevel", "LoanApplication", "LoanApproval", "LoanDisbursal", "Login", "Purchase", "Rate", "Registration", "Search", "SpendCredits", "StartTrial", "Subscribe", "Share", "Contact", "UnlockAchievement"]
+    let events = ["MonitorEvent", "CustomEvent", "LaunchAPP", "InstallApp", "2Dretention", "AddPaymentInfo", "AddToCart", "AddToWishList", "Checkout", "CompleteTutorial", "ViewContent", "CreateGroup", "CreateRole", "GenerateLead", "InAppAdClick", "InAppAdImpr", "JoinGroup", "AchieveLevel", "LoanApplication", "LoanApproval", "LoanDisbursal", "Login", "Purchase", "Rate", "Registration", "Search", "SpendCredits", "StartTrial", "Subscribe", "Share", "Contact", "UnlockAchievement"]
     
     var eventToField =
         [
+            "MonitorEvent": [],
             "CustomEvent": [],
             "LaunchAPP": [],
             "InstallApp": [],
@@ -134,7 +135,11 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         print("Event " + eventTitle + " posted")
         finalPayloadTextField.text = "{\n\t\"response\": \"SUCCESS\"\n}"
         /* UNCOMMENT THIS LINE */
-        TikTokBusiness.trackEvent(eventTitle, withProperties: finalPayloadDictionary as! [AnyHashable : Any])
+        if(eventTitle != "MonitorEvent"){
+            TikTokBusiness.trackEvent(eventTitle, withProperties: finalPayloadDictionary as! [AnyHashable : Any])
+        } else {
+            TikTokBusiness.trackEvent(eventTitle, withType: "monitor")
+        }
 //        TikTokBusiness.logSKANConfig();
         /* Print statements used for debugging */
 //        print("Hello");

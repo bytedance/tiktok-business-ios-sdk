@@ -43,8 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
 - (void)setDelayForATTUserAuthorizationInSeconds:(long)seconds;
 
-- (nullable id)initWithAccessToken:(NSString *)accessToken
-                             appId:(NSString *)appId
+- (nullable id)initWithAppId:(NSString *)appId
                        tiktokAppId:(NSNumber *)tiktokAppId;
 
 @end
