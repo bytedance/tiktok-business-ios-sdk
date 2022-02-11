@@ -19,4 +19,23 @@
     return [dateFormatter stringFromDate:now];
 }
 
++ (long)getCurrentTimestamp
+{
+    long currentTime = (long)(NSTimeInterval)([[NSDate date] timeIntervalSince1970]);
+    NSLog(@"Date: %@", [NSDate date]);
+    return currentTime;
+}
+
++ (NSString *)getCurrentTimestampAsString
+{
+    long currentTime = (long)(NSTimeInterval)([[NSDate date] timeIntervalSince1970]);
+    return [NSString stringWithFormat:@"%ld", currentTime];
+}
+
+
++(NSNumber *)getCurrentTimestampAsNumber
+{
+    NSNumber *currentTime = [NSNumber numberWithInt:(NSTimeInterval)([[NSDate date] timeIntervalSince1970])] ;
+    return currentTime;
+}
 @end

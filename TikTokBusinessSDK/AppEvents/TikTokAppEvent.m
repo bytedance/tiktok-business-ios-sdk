@@ -51,6 +51,9 @@
     self.anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.userInfo = [TikTokIdentifyUtility getUserInfoDictionaryFromNSUserDefaults];
     self.type = @"track"; // when type not defined, automatically assume it is track
+    if([self.eventName isEqual:@"MonitorEvent"]){
+        self.type = @"monitor";
+    }
    
     return self;
 }

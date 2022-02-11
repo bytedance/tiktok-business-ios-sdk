@@ -25,6 +25,16 @@ extern NSUncaughtExceptionHandler *handleUncaughtExceptionPointer;
 + (void)handleErrorWithOrigin:(NSString *)origin
                       message:(NSString *)message;
 
+/**
+ * @brief Load crash logs
+ */
++ (NSDictionary<NSString *, id> *)getLastestCrashLog;
+
+/**
+ * @brief Clear crash logs
+ */
++ (void)clearCrashReportFiles;
+
 @end
 
 NS_ASSUME_NONNULL_END

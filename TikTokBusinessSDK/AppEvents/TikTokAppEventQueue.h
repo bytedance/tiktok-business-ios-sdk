@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *eventQueue;
 
 /**
+ * @brief Monitor queue as a mutable array
+ */
+@property (nonatomic, strong) NSMutableArray *monitorQueue;
+
+/**
  * @brief Timer for flush
  */
 @property (nonatomic, strong) NSTimer *flushTimer;

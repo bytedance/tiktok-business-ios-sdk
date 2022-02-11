@@ -13,6 +13,7 @@ class FormViewController: UIViewController {
     
     var eventToField =
         [
+            "MonitorEvent": [],
             "CustomEvent": [],
             "LaunchAPP": [],
             "InstallApp": [],

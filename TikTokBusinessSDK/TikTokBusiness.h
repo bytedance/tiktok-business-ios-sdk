@@ -63,6 +63,8 @@ NS_ASSUME_NONNULL_BEGIN
 */
 + (void)trackEvent: (NSString *)eventName withProperties: (NSDictionary *)properties;
 
++ (void)trackEvent: (NSString *)eventName withType: (NSString *)type;
+
 /**
  * @brief Use this method to enable or disable event tracking. Tracked events will still be cached locally until tracking is enabled again
 */
@@ -202,7 +204,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 - (void)getGlobalConfig:(TikTokConfig *)config
   isFirstInitialization:(BOOL)isFirstInitialization;
-
++(void)produceFatalError;
+-(void)produceFatalError;
 @end
 
 NS_ASSUME_NONNULL_END
