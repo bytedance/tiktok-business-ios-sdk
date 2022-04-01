@@ -400,7 +400,7 @@
         
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
         
-        NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", @"haapi.byteintl.net", @"/open_api/", self.apiVersion == nil ? @"v1.2" : self.apiVersion, @"/app/monitor/"];
+        NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@", @"https://", self.apiDomain == nil ? @"business-api.tiktok.com" : self.apiDomain, @"/open_api/", self.apiVersion == nil ? @"v1.2" : self.apiVersion, @"/app/monitor/"];
         [request setURL:[NSURL URLWithString:url]];
         [request setHTTPMethod:@"POST"];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
