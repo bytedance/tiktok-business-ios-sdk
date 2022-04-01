@@ -18,7 +18,7 @@
 #import "TikTokAppEventUtility.h"
 #import "TikTokSKAdNetworkConversionConfiguration.h"
 
-#define SDK_VERSION @"0.1.16"
+#define SDK_VERSION @"0.1.17"
 
 @interface TikTokRequestHandler()
 
