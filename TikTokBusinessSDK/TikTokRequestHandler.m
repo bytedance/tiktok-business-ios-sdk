@@ -275,7 +275,8 @@
         NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:tempParametersDict];
         
         if(config.tiktokAppId){
-            [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
+            // make sure the tiktokAppId is an integer value
+            [parametersDict setValue:@([config.tiktokAppId integerValue]) forKey:@"tiktok_app_id"];
         } else {
             [parametersDict setValue:config.appId forKey:@"app_id"];
         }
@@ -390,7 +391,8 @@
         NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:tempParametersDict];
         
         if(config.tiktokAppId){
-            [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
+            // make sure the tiktokAppId is an integer value
+            [parametersDict setValue:@([config.tiktokAppId integerValue]) forKey:@"tiktok_app_id"];
         }
         
         NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
@@ -521,7 +523,8 @@
     NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] initWithDictionary:context];
 
     if(config.tiktokAppId){
-        [parametersDict setValue:config.tiktokAppId forKey:@"tiktok_app_id"];
+        // make sure the tiktokAppId is an integer value
+        [parametersDict setValue:@([config.tiktokAppId integerValue]) forKey:@"tiktok_app_id"];
     } else {
         [parametersDict setValue:config.appId forKey:@"app_id"];
     }
