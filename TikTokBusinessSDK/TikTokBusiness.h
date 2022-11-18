@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isRemoteSwitchOn;
 @property (nonatomic) NSString *accessToken;
 @property (nonatomic) NSString *anonymousID;
+@property (nonatomic, assign, readonly) BOOL isDebugMode;
 
 /**
  * @brief This method should be called in the didFinishLaunching method of your AppDelegate
@@ -36,6 +37,20 @@ NS_ASSUME_NONNULL_BEGIN
  *                     TikTok's Marketing API dashboard.
 */
 + (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
+
+/**
+ * @brief This method should be called in the didFinishLaunching method of your AppDelegate
+ *        This is required to initialize the TikTokBusinessSDK
+ *        The difference is this method could specifies to work in a debug mode
+ *
+ * @note See TikTokConfig.h for more configuration options
+ *
+ * @param tiktokConfig The configuration object must be initialized before this function is called.
+ *                     This object contains the accessToken, appId and tiktokAppId which can be acquired from
+ *                     TikTok's Marketing API dashboard.
+ * @param isDebugMode This parameter should be a BOOL. a switch for debug mode
+*/
++ (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode;
 
 /**
  * @brief This method should be called whenever an event needs to be tracked
@@ -172,6 +187,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 + (void)requestTrackingAuthorizationWithCompletionHandler:(void (^_Nullable)(NSUInteger status))completion;
 
+/*
+ * @brief This method retruns true if SDK is in debug mode
+*/
++ (BOOL)isDebugMode;
+
 /**
  *  @brief Obtain singleton TikTokBusiness class
  *  @return id referencing the singleton TikTokBusiness class
@@ -182,6 +202,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  @brief Reset TikTokBusiness class singleton
 */
 + (void)resetInstance;
+
+/*
+ * @brief This method returns the test event code
+ *
+ * @return Test event code
+ *
+ * @note only works in debug mode
+*/
++ (NSString *)getTestEventCode;
 
 - (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig;
 - (void)trackEvent: (NSString *)eventName;

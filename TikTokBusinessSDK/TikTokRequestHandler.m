@@ -17,6 +17,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import "TikTokAppEventUtility.h"
 #import "TikTokSKAdNetworkConversionConfiguration.h"
+#import "TikTokBusinessSDKMacros.h"
 
 #define SDK_VERSION @"0.1.17"
 
@@ -281,6 +282,11 @@
             [parametersDict setValue:config.appId forKey:@"app_id"];
         }
         
+        if ([TikTokBusiness isDebugMode]
+            && !TT_isEmptyString([TikTokBusiness getTestEventCode])) {
+            [parametersDict setValue:[TikTokBusiness getTestEventCode] forKey:@"test_event_code"];
+        }
+        
         NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
         NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
         
@@ -393,6 +399,11 @@
         if(config.tiktokAppId){
             // make sure the tiktokAppId is an integer value
             [parametersDict setValue:@([config.tiktokAppId integerValue]) forKey:@"tiktok_app_id"];
+        }
+        
+        if ([TikTokBusiness isDebugMode]
+            && !TT_isEmptyString([TikTokBusiness getTestEventCode])) {
+            [parametersDict setValue:[TikTokBusiness getTestEventCode] forKey:@"test_event_code"];
         }
         
         NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];

@@ -27,6 +27,7 @@
 #import "TikTokSKAdNetworkSupport.h"
 #import "UIDevice+TikTokAdditions.h"
 #import "TikTokSKAdNetworkConversionConfiguration.h"
+#import "TikTokBusinessSDKMacros.h"
 
 @interface TikTokBusiness()
 
@@ -44,6 +45,8 @@
 @property (nonatomic, strong, nullable) TikTokAppEventQueue *queue;
 @property (nonatomic, strong, nullable) TikTokRequestHandler *requestHandler;
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
+@property (nonatomic, assign, readwrite) BOOL isDebugMode;
+@property (nonatomic, copy) NSString *testEventCode;
 
 @end
 
@@ -113,6 +116,13 @@ static dispatch_once_t onceToken = 0;
 {
     @synchronized (self) {
         [[TikTokBusiness getInstance] initializeSdk: tiktokConfig];
+    }
+}
+
++ (void)initializeSdk:(TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode
+{
+    @synchronized (self) {
+        [[TikTokBusiness getInstance] initializeSdk:tiktokConfig debugMode:isDebugMode];
     }
 }
 
@@ -267,9 +277,23 @@ withType:(NSString *)type
     }
 }
 
-- (void)initializeSdk:(TikTokConfig *)tiktokConfig
++ (BOOL)isDebugMode
 {
-    if(self.queue != nil) {
+    @synchronized (self) {
+        return [[TikTokBusiness getInstance] isDebugMode];
+    }
+}
+
++ (NSString *)getTestEventCode
+{
+    @synchronized (self) {
+        return [[TikTokBusiness getInstance] testEventCode];
+    }
+}
+
+- (void)initializeSdk:(TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode
+{
+    if (self.queue != nil) {
         [self.logger warn:@"TikTok SDK has been initialized already!"];
         return;
     }
@@ -287,6 +311,8 @@ withType:(NSString *)type
     self.accessToken = tiktokConfig.accessToken;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.anonymousID = anonymousID;
+    self.isDebugMode = isDebugMode;
+    self.testEventCode = isDebugMode ? [self generateTestEventCodeWithConfig:tiktokConfig] : nil;
     
     [self loadUserAgent];
 
@@ -309,6 +335,11 @@ withType:(NSString *)type
     [self sendCrashReportWithConfig: tiktokConfig];
     NSNumber *initEndTimestamp = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     [self monitorInitialization:initStartTimestamp andEndTime:initEndTimestamp];
+}
+
+- (void)initializeSdk:(TikTokConfig *)tiktokConfig
+{
+    [self initializeSdk:tiktokConfig debugMode:NO];
 }
 
 - (void)monitorInitialization:(NSNumber *)initStartTime andEndTime:(NSNumber *)initEndTime
@@ -805,6 +836,16 @@ withType:(NSString *)type
 {
     
     @throw([NSException exceptionWithName:@"TikTokBusinessSDK" reason:@"This is a test error!" userInfo:nil]);
+}
+
+- (NSString *)generateTestEventCodeWithConfig:(TikTokConfig *)config
+{
+    if (!self.isDebugMode
+        || (!config.tiktokAppId)) {
+        return nil;
+    }
+    
+    return [config.tiktokAppId stringValue];
 }
 
 @end
