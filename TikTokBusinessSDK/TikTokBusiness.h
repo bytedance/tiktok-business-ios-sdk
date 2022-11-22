@@ -39,20 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)initializeSdk: (nullable TikTokConfig *)tiktokConfig;
 
 /**
- * @brief This method should be called in the didFinishLaunching method of your AppDelegate
- *        This is required to initialize the TikTokBusinessSDK
- *        The difference is this method could specifies to work in a debug mode
- *
- * @note See TikTokConfig.h for more configuration options
- *
- * @param tiktokConfig The configuration object must be initialized before this function is called.
- *                     This object contains the accessToken, appId and tiktokAppId which can be acquired from
- *                     TikTok's Marketing API dashboard.
- * @param isDebugMode This parameter should be a BOOL. a switch for debug mode
-*/
-+ (void)initializeSdk:(nullable TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode;
-
-/**
  * @brief This method should be called whenever an event needs to be tracked
  *
  * @note See TikTokAppEvent.h for more event options.

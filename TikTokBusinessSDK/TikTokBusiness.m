@@ -119,13 +119,6 @@ static dispatch_once_t onceToken = 0;
     }
 }
 
-+ (void)initializeSdk:(TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode
-{
-    @synchronized (self) {
-        [[TikTokBusiness getInstance] initializeSdk:tiktokConfig debugMode:isDebugMode];
-    }
-}
-
 + (void)trackEvent:(NSString *)eventName
 {
     @synchronized (self) {
@@ -291,7 +284,7 @@ withType:(NSString *)type
     }
 }
 
-- (void)initializeSdk:(TikTokConfig *)tiktokConfig debugMode:(BOOL)isDebugMode
+- (void)initializeSdk:(TikTokConfig *)tiktokConfig
 {
     if (self.queue != nil) {
         [self.logger warn:@"TikTok SDK has been initialized already!"];
@@ -311,8 +304,8 @@ withType:(NSString *)type
     self.accessToken = tiktokConfig.accessToken;
     NSString *anonymousID = [TikTokIdentifyUtility getOrGenerateAnonymousID];
     self.anonymousID = anonymousID;
-    self.isDebugMode = isDebugMode;
-    self.testEventCode = isDebugMode ? [self generateTestEventCodeWithConfig:tiktokConfig] : nil;
+    self.isDebugMode = tiktokConfig.debugModeEnabled;
+    self.testEventCode = self.isDebugMode ? [self generateTestEventCodeWithConfig:tiktokConfig] : nil;
     
     [self loadUserAgent];
 
@@ -335,11 +328,6 @@ withType:(NSString *)type
     [self sendCrashReportWithConfig: tiktokConfig];
     NSNumber *initEndTimestamp = [TikTokAppEventUtility getCurrentTimestampAsNumber];
     [self monitorInitialization:initStartTimestamp andEndTime:initEndTimestamp];
-}
-
-- (void)initializeSdk:(TikTokConfig *)tiktokConfig
-{
-    [self initializeSdk:tiktokConfig debugMode:NO];
 }
 
 - (void)monitorInitialization:(NSNumber *)initStartTime andEndTime:(NSNumber *)initEndTime
