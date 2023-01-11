@@ -78,6 +78,12 @@
     [self.logger info:@"[TikTokConfig] SKAdNetwork Support: NO"];
 }
 
+- (void)enableDebugMode
+{
+    self.debugModeEnabled = YES;
+    [self.logger info:@"[TikTokConfig] debug mode has been opened"];
+}
+
 - (void)setCustomUserAgent: (NSString *)customUserAgent
 {
     [[TikTokUserAgentCollector singleton] setUserAgent:customUserAgent];
@@ -114,6 +120,7 @@
     _appTrackingDialogSuppressed = NO;
     _SKAdNetworkSupportEnabled = YES;
     _userAgentCollectionEnabled = YES;
+    _debugModeEnabled = NO;
     
     self.logger = [TikTokFactory getLogger];
     return self;
@@ -137,6 +144,7 @@
     _appTrackingDialogSuppressed = NO;
     _SKAdNetworkSupportEnabled = YES;
     _userAgentCollectionEnabled = YES;
+    _debugModeEnabled = NO;
     
     self.logger = [TikTokFactory getLogger];
     return self;
