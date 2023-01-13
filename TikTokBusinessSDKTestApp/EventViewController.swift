@@ -92,7 +92,6 @@ class EventViewController: UIViewController, SKPaymentTransactionObserver {
         SKPaymentQueue.default().add(self)
         // Do any additional setup after loading the view.
     }
-    
 
     @IBAction func didSelectEvent(_ sender: Any) {
         
@@ -266,6 +265,7 @@ extension EventViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         eventTextField.text = events[row]
         eventTextField.resignFirstResponder()
+        eventTitle = eventTextField.text!
     }
     
 }
