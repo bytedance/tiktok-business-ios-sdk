@@ -47,6 +47,7 @@
 @property (nonatomic, strong, readwrite) dispatch_queue_t isolationQueue;
 @property (nonatomic, assign, readwrite) BOOL isDebugMode;
 @property (nonatomic, copy) NSString *testEventCode;
+@property (nonatomic, assign, readwrite) BOOL isLDUMode;
 
 @end
 
@@ -284,6 +285,13 @@ withType:(NSString *)type
     }
 }
 
++ (BOOL)isLDUMode
+{
+    @synchronized (self) {
+        return [[TikTokBusiness getInstance] isLDUMode];
+    }
+}
+
 - (void)initializeSdk:(TikTokConfig *)tiktokConfig
 {
     if (self.queue != nil) {
@@ -306,6 +314,7 @@ withType:(NSString *)type
     self.anonymousID = anonymousID;
     self.isDebugMode = tiktokConfig.debugModeEnabled;
     self.testEventCode = self.isDebugMode ? [self generateTestEventCodeWithConfig:tiktokConfig] : nil;
+    self.isLDUMode = tiktokConfig.LDUModeEnabled;
     
     [self loadUserAgent];
 

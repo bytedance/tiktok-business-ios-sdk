@@ -287,6 +287,10 @@
             [parametersDict setValue:[TikTokBusiness getTestEventCode] forKey:@"test_event_code"];
         }
         
+        if ([TikTokBusiness isLDUMode]) {
+            [parametersDict setValue:@(YES) forKey:@"limited_data_use"];
+        }
+        
         NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
         NSString *postLength = [NSString stringWithFormat:@"%lu", [postData length]];
         
@@ -404,6 +408,10 @@
         if ([TikTokBusiness isDebugMode]
             && !TT_isEmptyString([TikTokBusiness getTestEventCode])) {
             [parametersDict setValue:[TikTokBusiness getTestEventCode] forKey:@"test_event_code"];
+        }
+        
+        if ([TikTokBusiness isLDUMode]) {
+            [parametersDict setValue:@(YES) forKey:@"limited_data_use"];
         }
         
         NSData *postData = [TikTokTypeUtility dataWithJSONObject:parametersDict options:NSJSONWritingPrettyPrinted error:nil origin:NSStringFromClass([self class])];
