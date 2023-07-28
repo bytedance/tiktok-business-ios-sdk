@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL SKAdNetworkSupportEnabled;
 @property (nonatomic, assign) BOOL userAgentCollectionEnabled;
 @property (nonatomic, assign) BOOL debugModeEnabled;
+@property (nonatomic, assign) BOOL LDUModeEnabled;
 
 @property (nonatomic) long initialFlushDelay;
 
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLogLevel:(TikTokLogLevel)logLevel;
 - (void)setDelayForATTUserAuthorizationInSeconds:(long)seconds;
 - (void)enableDebugMode;
+- (void)enableLDUMode;
 
 - (nullable id)initWithAppId:(NSString *)appId
                        tiktokAppId:(NSNumber *)tiktokAppId;

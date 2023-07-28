@@ -224,13 +224,17 @@
                 @"user": user,
             };
             
-            NSDictionary *eventDict = @{
+            NSMutableDictionary *eventDict = @{
                 @"type" : event.type,
                 @"event": event.eventName,
                 @"timestamp":event.timestamp,
                 @"context": context,
                 @"properties": event.properties,
-            };
+            }.mutableCopy;
+            
+            if ([TikTokBusiness isLDUMode]) {
+                [eventDict setValue:@(YES) forKey:@"limited_data_use"];
+            }
             
             [batch addObject:eventDict];
             [appEventsToBeFlushed addObject:event];
@@ -248,13 +252,17 @@
                 @"extra": [event.properties objectForKey:@"extra"] == nil ? @{} : [event.properties objectForKey:@"extra"],
             };
             
-            NSDictionary *monitorDict = @{
+            NSMutableDictionary *monitorDict = @{
                 @"monitor": tempMonitorDict,
                 @"app": tempAppDict,
                 @"library": library,
                 @"device": device,
                 @"log_extra": @{}
-            };
+            }.mutableCopy;
+            
+            if ([TikTokBusiness isLDUMode]) {
+                [monitorDict setValue:@(YES) forKey:@"limited_data_use"];
+            }
             
             [monitorBatch addObject:monitorDict];
             [monitorEventsToBeFlushed addObject:event];

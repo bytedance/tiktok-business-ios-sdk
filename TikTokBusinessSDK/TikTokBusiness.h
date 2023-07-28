@@ -179,6 +179,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isDebugMode;
 
 /**
+ * @brief This method returns true if SDK is in LDU mode
+ */
++ (BOOL)isLDUMode;
+
+/**
  *  @brief Obtain singleton TikTokBusiness class
  *  @return id referencing the singleton TikTokBusiness class
 */

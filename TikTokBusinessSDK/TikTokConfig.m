@@ -84,6 +84,12 @@
     [self.logger info:@"[TikTokConfig] debug mode has been opened"];
 }
 
+- (void)enableLDUMode
+{
+    self.LDUModeEnabled = YES;
+    [self.logger info:@"[TikTokConfig] LDU mode has been opened"];
+}
+
 - (void)setCustomUserAgent: (NSString *)customUserAgent
 {
     [[TikTokUserAgentCollector singleton] setUserAgent:customUserAgent];
