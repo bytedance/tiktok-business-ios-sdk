@@ -19,7 +19,7 @@
 #import "TikTokSKAdNetworkConversionConfiguration.h"
 #import "TikTokBusinessSDKMacros.h"
 
-#define SDK_VERSION @"0.1.17"
+#define SDK_VERSION @"0.1.19"
 
 @interface TikTokRequestHandler()
 
