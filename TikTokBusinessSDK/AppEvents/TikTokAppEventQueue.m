@@ -17,7 +17,7 @@
 
 #define FLUSH_LIMIT 100
 #define API_LIMIT 50
-#define FLUSH_PERIOD_IN_SECONDS 15
+#define FLUSH_PERIOD_IN_SECONDS 60
 
 @interface TikTokAppEventQueue()
 
